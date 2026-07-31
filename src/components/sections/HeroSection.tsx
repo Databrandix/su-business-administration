@@ -108,7 +108,7 @@ export default function HeroSection({
             transition={{ delay: 0.35, duration: 0.8 }}
             className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-white uppercase tracking-tight leading-tight drop-shadow-2xl"
           >
-            Mechanical <br /> Engineering <span className="text-button-yellow">(ME)</span>
+            Bachelor of Business <br /> Administration <span className="text-button-yellow">(BBA)</span>
           </motion.h1>
 
           {/* Subtitle */}

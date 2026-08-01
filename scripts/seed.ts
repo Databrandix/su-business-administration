@@ -33,14 +33,16 @@ async function seedDepartmentIdentity() {
     create: {
       id: 'singleton',
       name: 'Department of Mechanical Engineering',
-      shortCode: 'ME',
-      facultyName: 'Faculty of Science & Engineering',
       primaryColor: '#2B3175',
       accentColor: '#CC1579',
       buttonColor: '#F8BD23',
       logoUrl: '/assets/su-colour-logo.webp',
       logoPublicId: null,
       breadcrumbLabel: 'ME',
+      programName: 'Bachelor of Business Administration',
+      programShortForm: 'BBA',
+      programSubtitle:
+        'Shaping engineers who design tomorrow’s machines, systems, and innovations.',
       heroImage1Url: '/assets/hero-1.webp',
       heroImage1PublicId: null,
       heroImage2Url: '/assets/hero-2.webp',

@@ -26,18 +26,22 @@ export default function DepartmentForm({ initial }: { initial: Initial }) {
 
   return (
     <form action={formAction} className="space-y-6">
+      {/* ─── Homepage hero copy ─── */}
+      <Card title="Homepage hero">
+        <TextField label="Program Name" name="programName"
+                   defaultValue={initial?.programName ?? ''} />
+        <TextField label="Program Short Form" name="programShortForm"
+                   defaultValue={initial?.programShortForm ?? ''} />
+        <TextField label="Program Subtitle Name" name="programSubtitle"
+                   defaultValue={initial?.programSubtitle ?? ''} />
+      </Card>
+
       {/* ─── Naming ─── */}
       <Card title="Naming">
         <TextField label="Department name" name="name"
                    defaultValue={initial?.name ?? ''} required />
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <TextField label="Short code" name="shortCode"
-                     defaultValue={initial?.shortCode ?? ''} required />
-          <TextField label="Breadcrumb label" name="breadcrumbLabel"
-                     defaultValue={initial?.breadcrumbLabel ?? ''} required />
-        </div>
-        <TextField label="Faculty name" name="facultyName"
-                   defaultValue={initial?.facultyName ?? ''} required />
+        <TextField label="Breadcrumb label" name="breadcrumbLabel"
+                   defaultValue={initial?.breadcrumbLabel ?? ''} required />
       </Card>
 
       {/* ─── Brand colors ─── */}

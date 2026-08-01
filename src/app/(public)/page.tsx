@@ -65,6 +65,9 @@ export default async function HomePage() {
           dept.heroImage3VerticalPercent,
         ]}
         breadcrumbLabel={dept.breadcrumbLabel}
+        programName={dept.programName || dept.name}
+        programShortForm={dept.programShortForm}
+        programSubtitle={dept.programSubtitle}
       />
       <OverviewSection />
       <ProgramsSection programs={programs} />

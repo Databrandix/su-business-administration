@@ -85,14 +85,21 @@ model Account {
 model DepartmentIdentity {
   id                 String   @id @default("singleton")
   name               String
-  shortCode          String
-  facultyName        String
   primaryColor       String
   accentColor        String
   buttonColor        String
   logoUrl            String
   logoPublicId       String?
   breadcrumbLabel    String
+
+  // Homepage hero copy. programName renders as the big <h1>; the
+  // component inserts the line break, so keep this as plain text.
+  // programShortForm is the yellow "(BBA)" suffix — omit/blank to
+  // render the title without it.
+  programName        String   @default("")
+  programShortForm   String   @default("")
+  programSubtitle    String   @default("")
+
   heroImage1Url             String
   heroImage1PublicId        String?
   heroImage1Alt             String?

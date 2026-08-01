@@ -15,14 +15,17 @@ const optionalNullableString = z.string().nullable().optional();
 
 export const departmentUpdateSchema = z.object({
   name:            z.string().min(1).max(200),
-  shortCode:       z.string().min(1).max(20),
-  facultyName:     z.string().min(1).max(200),
   primaryColor:    hexColor,
   accentColor:     hexColor,
   buttonColor:     hexColor,
   logoUrl:         z.string().min(1),
   logoPublicId:    nullableString,
   breadcrumbLabel: z.string().min(1).max(50),
+  // Hero copy — optional so an empty field falls back to the
+  // department name rather than blocking the whole form save.
+  programName:      z.string().max(200).default(''),
+  programShortForm: z.string().max(20).default(''),
+  programSubtitle:  z.string().max(300).default(''),
   heroImage1Url:             z.string().min(1),
   heroImage1PublicId:        nullableString,
   heroImage1Alt:             optionalNullableString,

@@ -27,14 +27,15 @@ export async function updateDepartmentAction(
 
   const raw = {
     name:               getStr(formData, 'name'),
-    shortCode:          getStr(formData, 'shortCode'),
-    facultyName:        getStr(formData, 'facultyName'),
     primaryColor:       getStr(formData, 'primaryColor'),
     accentColor:        getStr(formData, 'accentColor'),
     buttonColor:        getStr(formData, 'buttonColor'),
     logoUrl:            getStr(formData, 'logoUrl'),
     logoPublicId:       emptyToNull(formData.get('logoPublicId')),
     breadcrumbLabel:    getStr(formData, 'breadcrumbLabel'),
+    programName:        getStr(formData, 'programName'),
+    programShortForm:   getStr(formData, 'programShortForm'),
+    programSubtitle:    getStr(formData, 'programSubtitle'),
     heroImage1Url:             getStr(formData, 'heroImage1Url'),
     heroImage1PublicId:        emptyToNull(formData.get('heroImage1PublicId')),
     heroImage1Alt:             emptyToNull(formData.get('heroImage1Alt')),

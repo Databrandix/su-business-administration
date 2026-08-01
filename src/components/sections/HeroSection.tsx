@@ -22,6 +22,12 @@ type HeroSectionProps = {
   // as imageUrls; defaults to 50 per slot if a value is missing.
   imageVerticalPercents: readonly number[];
   breadcrumbLabel: string;
+  // Hero copy from DepartmentIdentity. programName is the <h1>;
+  // programShortForm renders as the yellow "(…)" suffix and is
+  // dropped when blank. Both fall back to the department name.
+  programName: string;
+  programShortForm: string;
+  programSubtitle: string;
 };
 
 export default function HeroSection({
@@ -29,6 +35,9 @@ export default function HeroSection({
   imageAlts,
   imageVerticalPercents,
   breadcrumbLabel,
+  programName,
+  programShortForm,
+  programSubtitle,
 }: HeroSectionProps) {
   const heroImages = imageUrls.map((src, i) => ({
     src,
@@ -108,7 +117,10 @@ export default function HeroSection({
             transition={{ delay: 0.35, duration: 0.8 }}
             className="text-3xl md:text-5xl lg:text-6xl font-display font-bold text-white uppercase tracking-tight leading-tight drop-shadow-2xl"
           >
-            Bachelor of Business <br /> Administration <span className="text-button-yellow">(BBA)</span>
+            {programName}
+            {programShortForm && (
+              <> <span className="text-button-yellow">({programShortForm})</span></>
+            )}
           </motion.h1>
 
           {/* Subtitle */}
@@ -118,7 +130,7 @@ export default function HeroSection({
             transition={{ delay: 0.6, duration: 0.7 }}
             className="text-sm md:text-base lg:text-lg text-white/85 font-light max-w-2xl leading-relaxed"
           >
-            Shaping engineers who design tomorrow&rsquo;s machines, systems, and innovations.
+            {programSubtitle}
           </motion.p>
         </div>
       </Container>

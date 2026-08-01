@@ -40,6 +40,7 @@ export async function createProgramAction(
   if (denied) return denied;
 
   const raw = {
+    overline:        getStr(formData, 'overline'),
     programName:     getStr(formData, 'programName'),
     degreeCode:      getStr(formData, 'degreeCode'),
     duration:        getStr(formData, 'duration'),
@@ -71,6 +72,7 @@ export async function createProgramAction(
   try {
     await prisma.program.create({
       data: {
+        overline:        parsed.data.overline,
         programName:     parsed.data.programName,
         degreeCode:      parsed.data.degreeCode,
         duration:        parsed.data.duration,
@@ -108,6 +110,7 @@ export async function updateProgramAction(
   if (denied) return denied;
 
   const raw = {
+    overline:        getStr(formData, 'overline'),
     programName:     getStr(formData, 'programName'),
     degreeCode:      getStr(formData, 'degreeCode'),
     duration:        getStr(formData, 'duration'),

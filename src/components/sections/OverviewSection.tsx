@@ -14,10 +14,10 @@ export default function OverviewSection() {
           viewport={{ once: true }}
           className="mb-6 md:mb-8 text-center text-2xl font-bold leading-tight text-primary md:text-[25px]"
         >
-          Bachelor of Business Administration (BBA)
+          Business Administration (BA)
         </motion.h2>
 
-        <div className="mx-auto grid max-w-[1090px] items-start gap-8 lg:gap-12 lg:grid-cols-[520px_1fr]">
+        <div className="mx-auto grid max-w-[1090px] items-start lg:items-stretch gap-8 lg:gap-12 lg:grid-cols-[520px_1fr]">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -25,7 +25,7 @@ export default function OverviewSection() {
             className="order-2 lg:order-1 space-y-6"
           >
             <p className="text-justify text-[16px] font-medium leading-[1.75] tracking-[0.035em] text-black">
-              The department of Business Administration offers four-year undergraduate program titled Bachelor of Business Administration (BBA). The program will make the students capable in identifying, formulating and solving business problems that meet specified performance, cost, time, safety and other quality needs and objectives with professional and ethical responsibility. This program also emphasizes on industry and research based projects, which would enhance their skills to become successful professionals for a holistic development.
+              The Department of Business Administration is committed to developing future business leaders through quality education, innovation, and practical learning. With a strong emphasis on academic excellence, ethical values, and industry engagement, the department equips students with the knowledge, leadership, and problem-solving skills needed to succeed in today&rsquo;s dynamic business environment and contribute meaningfully to society.
             </p>
 
             <div className="grid gap-5 sm:grid-cols-2">
@@ -48,15 +48,15 @@ export default function OverviewSection() {
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="order-1 lg:order-2 overflow-hidden"
+            className="order-1 lg:order-2 overflow-hidden lg:relative"
           >
             <Image
-              src="/assets/homeimg.webp"
-              alt="Sonargaon University Mechanical Engineering students engaged in laboratory work"
-              width={1600}
-              height={900}
+              src="/assets/overview-bba.webp"
+              alt="Sonargaon University Business Administration students"
+              width={1264}
+              height={841}
               sizes="(min-width: 1024px) 540px, 100vw"
-              className="h-auto w-full object-cover lg:h-[294px]"
+              className="h-auto w-full lg:absolute lg:inset-0 lg:h-full lg:w-full lg:object-contain"
             />
           </motion.div>
         </div>

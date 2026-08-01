@@ -40,6 +40,7 @@ export const getPrograms = cache(async () => {
     orderBy: { displayOrder: 'asc' },
     select: {
       id: true,
+      overline: true,
       programName: true,
       degreeCode: true,
       duration: true,
@@ -79,6 +80,7 @@ export const getProgramsWithCta = cache(async () => {
     orderBy: { displayOrder: 'asc' },
     select: {
       id: true,
+      overline: true,
       programName: true,
       degreeCode: true,
       duration: true,

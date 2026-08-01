@@ -157,6 +157,9 @@ model UniversityIdentity {
 
 model Program {
   id              String   @id @default(cuid())
+  // Small label rendered above the program image on the homepage
+  // (e.g. "Undergraduate", "Postgraduate"). Blank hides the label.
+  overline        String   @default("")
   programName     String
   degreeCode      String   @unique
   duration        String

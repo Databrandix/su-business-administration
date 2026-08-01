@@ -32,6 +32,8 @@ export default function ProgramForm({ initial }: { initial: Program | null }) {
   return (
     <form action={formAction} className="space-y-6">
       <Card title="Details">
+        <TextField label="Overline (e.g. Undergraduate, Postgraduate)" name="overline"
+                   defaultValue={initial?.overline ?? ''} />
         <TextField label="Program name" name="programName" required
                    defaultValue={initial?.programName ?? ''} />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

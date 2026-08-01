@@ -80,6 +80,7 @@ export const universityUpdateSchema = z.object({
 // ─────────────────────────────────────────────────────────────────
 
 export const programCreateSchema = z.object({
+  overline:        z.string().max(50).default(''),
   programName:     z.string().min(1).max(300),
   degreeCode:      z.string().min(1).max(50),
   duration:        z.string().min(1).max(100),

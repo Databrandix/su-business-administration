@@ -2,19 +2,15 @@
 
 import Image from 'next/image';
 import { motion } from 'motion/react';
-import { GraduationCap, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Clock, CheckCircle2, ArrowRight } from 'lucide-react';
 import Container from '../ui/Container';
 
-// Convention: super_admin writes `programName` as
-//   "<overline> — <heading>"   (em-dash + spaces)
-// We split on " — "; if the separator is absent the whole string is
-// the heading and the small overline tag is omitted (e.g. "Graduate").
-const PROGRAM_NAME_SEP = ' — ';
 const DEFAULT_PROGRAM_IMAGE = '/assets/program-undergraduate.webp';
 const DEFAULT_CTA_TEXT = 'View More';
 
 type ProgramRow = {
   id: string;
+  overline: string;
   programName: string;
   degreeCode: string;
   duration: string;
@@ -55,26 +51,32 @@ export default function ProgramsSection({ programs }: ProgramsSectionProps) {
 
         <div className="space-y-12 md:space-y-16">
           {programs.map((program, idx) => {
-            const nameParts = program.programName.split(PROGRAM_NAME_SEP);
-            const overline = nameParts.length > 1 ? nameParts[0] : null;
-            const heading =
-              nameParts.length > 1
-                ? nameParts.slice(1).join(PROGRAM_NAME_SEP)
-                : program.programName;
+            const heading = program.programName;
             const imageSrc = program.imageUrl || DEFAULT_PROGRAM_IMAGE;
             const ctaText = program.cta || DEFAULT_CTA_TEXT;
+            // Alternate sides: even rows put the image left, odd rows
+            // flip it to the right. Mobile always stacks image-first.
+            const imageRight = idx % 2 === 1;
 
             return (
+              <div key={program.id}>
+                {/* Overline sits above the whole row, so it stays on the
+                    left even when the image flips to the right. */}
+                {program.overline && (
+                  <p className="mb-4 border-l-[3px] border-accent pl-3 text-[22px] md:text-[26px] font-display font-bold text-primary">
+                    {program.overline}
+                  </p>
+                )}
               <motion.article
-                key={program.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.08, duration: 0.6 }}
-                className="grid items-center gap-8 md:gap-12 lg:gap-16 lg:grid-cols-2"
+                className="grid items-start gap-8 md:gap-12 lg:gap-16 lg:grid-cols-2"
               >
-                {/* Image — left */}
-                <div className="relative rounded-2xl overflow-hidden shadow-2xl group h-[300px] md:h-[400px]">
+                {/* Image — alternates left / right */}
+                <div className={imageRight ? 'order-1 lg:order-2' : 'order-1'}>
+                  <div className="relative rounded-2xl overflow-hidden shadow-2xl group h-[300px] md:h-[400px]">
                   <Image
                     src={imageSrc}
                     alt={program.programName}
@@ -89,19 +91,11 @@ export default function ProgramsSection({ programs }: ProgramsSectionProps) {
                       {program.duration}
                     </span>
                   )}
+                  </div>
                 </div>
 
-                {/* Content — right */}
-                <div>
-                  {overline && (
-                    <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 mb-4">
-                      <GraduationCap size={16} className="text-primary" />
-                      <span className="text-[12px] font-bold uppercase tracking-wider text-primary">
-                        {overline}
-                      </span>
-                    </div>
-                  )}
-
+                {/* Content — alternates right / left */}
+                <div className={imageRight ? 'order-2 lg:order-1' : 'order-2'}>
                   <h3 className="text-2xl md:text-3xl lg:text-[34px] font-display font-bold text-primary leading-tight mb-4">
                     {heading}
                   </h3>
@@ -141,8 +135,10 @@ export default function ProgramsSection({ programs }: ProgramsSectionProps) {
                   </a>
                 </div>
               </motion.article>
+              </div>
             );
           })}
+
         </div>
       </Container>
     </section>

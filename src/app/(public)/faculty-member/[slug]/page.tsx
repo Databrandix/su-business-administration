@@ -60,6 +60,28 @@ const PLACEHOLDER = (
   <p className="text-gray-400 italic text-sm">Information will be updated soon.</p>
 );
 
+// A section list entry: plain string, or { text, link }. When a link is
+// present the text renders as a clickable anchor opening in a new tab.
+function isLinkedItem(v: unknown): v is { text: string; link?: string } {
+  return typeof v === 'object' && v !== null && typeof (v as { text?: unknown }).text === 'string';
+}
+
+function renderItem(item: string | { text: string; link?: string }) {
+  if (isLinkedItem(item) && item.link) {
+    return (
+      <a
+        href={item.link}
+        target="_blank"
+        rel="nofollow noopener noreferrer"
+        className="text-accent underline underline-offset-2 hover:text-primary transition-colors"
+      >
+        {item.text}
+      </a>
+    );
+  }
+  return isLinkedItem(item) ? item.text : item;
+}
+
 function renderSection(value: SectionContent | null | undefined) {
   if (value == null) return PLACEHOLDER;
 
@@ -69,11 +91,11 @@ function renderSection(value: SectionContent | null | undefined) {
 
   if (!Array.isArray(value) || value.length === 0) return PLACEHOLDER;
 
-  if (typeof value[0] === 'string') {
+  if (typeof value[0] === 'string' || isLinkedItem(value[0])) {
     return (
       <ul className="list-disc list-outside pl-5 space-y-2">
-        {(value as string[]).map((item, i) => (
-          <li key={i}>{item}</li>
+        {(value as Array<string | { text: string; link?: string }>).map((item, i) => (
+          <li key={i}>{renderItem(item)}</li>
         ))}
       </ul>
     );
@@ -81,16 +103,18 @@ function renderSection(value: SectionContent | null | undefined) {
 
   return (
     <div className="space-y-6">
-      {(value as { heading: string; items: string[] }[]).map((group, gi) => (
-        <div key={gi}>
-          <h4 className="font-semibold text-primary mb-3 text-[15px]">{group.heading}</h4>
-          <ul className="list-disc list-outside pl-5 space-y-2">
-            {group.items.map((item, i) => (
-              <li key={i}>{item}</li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      {(value as { heading: string; items: Array<string | { text: string; link?: string }> }[]).map(
+        (group, gi) => (
+          <div key={gi}>
+            <h4 className="font-semibold text-primary mb-3 text-[15px]">{group.heading}</h4>
+            <ul className="list-disc list-outside pl-5 space-y-2">
+              {group.items.map((item, i) => (
+                <li key={i}>{renderItem(item)}</li>
+              ))}
+            </ul>
+          </div>
+        ),
+      )}
     </div>
   );
 }

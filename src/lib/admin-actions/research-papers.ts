@@ -43,6 +43,7 @@ function readResearchPaperRow(formData: FormData) {
     area:            getStr(formData, 'area'),
     date:            emptyToNull(formData.get('date')),
     publicationYear: getIntOrNull(formData, 'publicationYear'),
+    link:            emptyToNull(formData.get('link')),
   };
 }
 

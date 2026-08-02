@@ -31,6 +31,9 @@ export default function ResearchPaperForm({ initial }: { initial: ResearchPaper 
                        placeholder="Comma-separated list" />
         <TextAreaField label="Department / Affiliation (area)" name="area" required rows={2}
                        defaultValue={initial?.area ?? ''} />
+        <TextField label="Link (DOI / journal page, optional)" name="link"
+                   defaultValue={initial?.link ?? ''}
+                   placeholder="https://doi.org/…" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <TextField label="Date (free-form, optional)" name="date"
                      defaultValue={initial?.date ?? ''}

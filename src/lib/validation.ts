@@ -186,12 +186,21 @@ export const changeOwnPasswordSchema = z.object({
 // Prisma enum identifiers — underscored (no hyphens allowed).
 export const FacultyType = z.enum(['leadership', 'full_time', 'part_time']);
 
-// SectionContent — string | string[] | { heading, items }[]
+// SectionContent — string | string[] | { heading, items }[], where list
+// entries may be plain strings or { text, link } pairs (used by
+// Publication items so the text can link out).
+const sectionContentItemSchema = z.union([
+  z.string(),
+  z.object({ text: z.string(), link: z.string().url('Link must be a valid URL').optional() }),
+]);
 const sectionContentSchema = z.union([
   z.string(),
-  z.array(z.string()),
+  z.array(sectionContentItemSchema),
   z.array(
-    z.object({ heading: z.string(), items: z.array(z.string()).default([]) }),
+    z.object({
+      heading: z.string(),
+      items: z.array(sectionContentItemSchema).default([]),
+    }),
   ),
 ]);
 
@@ -715,6 +724,7 @@ export const researchPaperCreateSchema = z.object({
   area:            z.string().min(1),
   date:            optionalNullableString,
   publicationYear: z.number().int().min(1900).max(2100).nullable().optional(),
+  link:            urlOrEmpty.optional(),
 });
 
 export const researchPaperUpdateSchema = researchPaperCreateSchema;

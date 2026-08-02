@@ -57,7 +57,13 @@ export default async function ResearchPage() {
 
                 <div className="flex-1 min-w-0">
                   <h3 className="text-[15px] md:text-[16px] font-bold leading-snug text-primary mb-3">
-                    {paper.title}
+                    {paper.link ? (
+                      <a href={paper.link} target="_blank" rel="nofollow" className="hover:underline">
+                        {paper.title}
+                      </a>
+                    ) : (
+                      paper.title
+                    )}
                   </h3>
 
                   <div className="flex flex-wrap gap-x-5 gap-y-2 mb-3 text-[12.5px]">

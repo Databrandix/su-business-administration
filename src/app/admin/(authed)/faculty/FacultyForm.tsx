@@ -191,6 +191,7 @@ export default function FacultyForm({ initial, currentDean, currentHead }: Props
               key={f.name}
               name={f.name}
               label={f.label}
+              enableLinks={f.name === 'publications'}
               initialValue={initial?.[f.name as keyof Faculty] as unknown}
             />
           ))}

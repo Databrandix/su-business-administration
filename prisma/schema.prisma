@@ -844,6 +844,7 @@ model ResearchPaper {
   // structured sort key.
   date            String?
   publicationYear Int?
+  link            String?   @db.Text
   displayOrder    Int
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt

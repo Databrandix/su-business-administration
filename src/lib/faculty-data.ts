@@ -1,15 +1,22 @@
 export type FacultyType = 'leadership' | 'full-time' | 'part-time';
 
 /**
+ * A single list entry. Either plain text, or text paired with an
+ * optional link (used by Publication items — when `link` is present
+ * the frontend renders the text as a clickable anchor).
+ */
+export type SectionItem = string | { text: string; link?: string };
+
+/**
  * Flexible section content. A section can be:
  *  - a plain paragraph (string)
- *  - a simple bullet list (string[])
+ *  - a simple bullet list (string[] or SectionItem[])
  *  - grouped lists with subheadings ({ heading, items }[])
  */
 export type SectionContent =
   | string
-  | string[]
-  | { heading: string; items: string[] }[];
+  | SectionItem[]
+  | { heading: string; items: SectionItem[] }[];
 
 export interface Faculty {
   slug: string;

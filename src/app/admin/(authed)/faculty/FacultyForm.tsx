@@ -31,6 +31,7 @@ const SECTION_FIELDS = [
   { name: 'academicQualification', label: 'Academic Qualification' },
   { name: 'trainingExperience',    label: 'Training Experience' },
   { name: 'teachingArea',          label: 'Teaching Area' },
+  { name: 'fieldOfInterest',       label: 'Field of Interest' },
   { name: 'publications',          label: 'Publication' },
   { name: 'research',              label: 'Research' },
   { name: 'awards',                label: 'Award & Scholarship' },

@@ -39,6 +39,7 @@ type SectionKey =
   | 'academicQualification'
   | 'trainingExperience'
   | 'teachingArea'
+  | 'fieldOfInterest'
   | 'publications'
   | 'research'
   | 'awards'
@@ -49,6 +50,7 @@ const SECTIONS: { key: SectionKey; label: string }[] = [
   { key: 'academicQualification', label: 'Academic Qualification' },
   { key: 'trainingExperience',    label: 'Training Experience' },
   { key: 'teachingArea',          label: 'Teaching Area' },
+  { key: 'fieldOfInterest',       label: 'Field of Interest' },
   { key: 'publications',          label: 'Publication' },
   { key: 'research',              label: 'Research' },
   { key: 'awards',                label: 'Award & Scholarship' },
@@ -67,19 +69,25 @@ function isLinkedItem(v: unknown): v is { text: string; link?: string } {
 }
 
 function renderItem(item: string | { text: string; link?: string }) {
-  if (isLinkedItem(item) && item.link) {
+  if (!isLinkedItem(item)) return item;
+
+  if (item.link) {
     return (
-      <a
-        href={item.link}
-        target="_blank"
-        rel="nofollow noopener noreferrer"
-        className="text-accent underline underline-offset-2 hover:text-primary transition-colors"
-      >
-        {item.text}
-      </a>
+      <div className="space-y-1">
+        <span>{item.text}</span>
+        <a
+          href={item.link}
+          target="_blank"
+          rel="nofollow noopener noreferrer"
+          className="block text-accent underline underline-offset-2 hover:text-primary transition-colors text-[13px]"
+        >
+          {item.link}
+        </a>
+      </div>
     );
   }
-  return isLinkedItem(item) ? item.text : item;
+
+  return item.text;
 }
 
 function renderSection(value: SectionContent | null | undefined) {

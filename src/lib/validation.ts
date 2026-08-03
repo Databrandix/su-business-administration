@@ -236,6 +236,7 @@ export const facultyCreateSchema = z.object({
   teachingArea:          sectionContentSchema.nullable().optional(),
   publications:          sectionContentSchema.nullable().optional(),
   research:              sectionContentSchema.nullable().optional(),
+  fieldOfInterest:       sectionContentSchema.nullable().optional(),
   awards:                sectionContentSchema.nullable().optional(),
   membership:            sectionContentSchema.nullable().optional(),
   previousEmployment:    sectionContentSchema.nullable().optional(),

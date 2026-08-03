@@ -9,6 +9,7 @@ import {
   getFacultySlugs,
   getDepartmentIdentity,
   getUniversityIdentity,
+  getPageHero,
 } from '@/lib/identity';
 import { type SectionContent } from '@/lib/faculty-data';
 
@@ -136,10 +137,11 @@ export default async function FacultyDetailPage({
   // J3 — office address wired from UniversityIdentity and department
   // name from DepartmentIdentity, both via the existing identity
   // helpers (React.cache dedups across the page).
-  const [member, dept, uni] = await Promise.all([
+  const [member, dept, uni, hero] = await Promise.all([
     getFacultyBySlug(slug),
     getDepartmentIdentity(),
     getUniversityIdentity(),
+    getPageHero('faculty-member'),
   ]);
   if (!member) notFound();
 
@@ -148,7 +150,13 @@ export default async function FacultyDetailPage({
     | null;
 
   return (
-    <PageShell title={member.name} overline="Faculty" contentClassName="bg-gray-50 py-12 md:py-20">
+    <PageShell
+      title={member.name}
+      overline="Faculty"
+      image={hero?.heroImageUrl ?? '/assets/faculty-hero.webp'}
+      imagePosition={hero ? `center ${hero.heroImageVerticalPercent}%` : 'center'}
+      contentClassName="bg-gray-50 py-12 md:py-20"
+    >
       <Container>
         {/* Profile header card */}
         <div className="bg-white rounded-xl shadow-md border border-gray-100 mb-10 overflow-hidden max-w-5xl mx-auto">
@@ -195,7 +203,11 @@ export default async function FacultyDetailPage({
                 )}
                 <p className="text-sm text-gray-600 flex items-center justify-center lg:justify-start gap-2 pt-1">
                   <Building2 size={14} className="text-accent shrink-0" />
-                  {dept.name}
+                  {member.isDean ? 'Faculty of Business' : dept.name}
+                </p>
+                <p className="text-sm text-gray-500 flex items-center justify-center lg:justify-start gap-2 pt-1">
+                  <Building2 size={14} className="text-accent shrink-0" />
+                  Sonargaon University (SU)
                 </p>
               </div>
             </div>

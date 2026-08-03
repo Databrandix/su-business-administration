@@ -8,9 +8,9 @@ import { DynamicLucideIcon } from '@/components/ui/DynamicLucideIcon';
 import JoinMechaClubButton from './JoinMechaClubButton';
 
 export const metadata = {
-  title: 'Mecha Club — Department of Mechanical Engineering',
+  title: 'Mecha Club — Department of Business Administration',
   description:
-    'SU Mechanical Engineering Club (Mecha Club) — building industry-ready engineers through field visits, workshops, seminars, project showcases and an active alumni network.',
+    'SU Business Club — building industry-ready professionals through field visits, workshops, seminars, project showcases and an active alumni network.',
 };
 
 // Phase 20 — activities[].iconName resolves via DynamicLucideIcon

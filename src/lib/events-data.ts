@@ -38,16 +38,16 @@ export interface DepartmentEvent {
 export const events: DepartmentEvent[] = [
   {
     slug: 'cricket-tournament-2026',
-    title: 'Mechanical Engineering Department: Inter-Department Cricket Tournament 2026',
+    title: 'Department of Business Administration: Inter-Department Cricket Tournament 2026',
     shortTitle: 'Inter-Department Cricket Tournament 2026',
     category: 'Sports',
     status: 'Current',
     date: null,
     image: '/assets/events/cricket-tournament-2026.webp',
     summary:
-      'The Department of Mechanical Engineering welcomes all participants to this year’s tournament — a celebration of sportsmanship, team building, and departmental pride.',
+      'The Department of Business Administration welcomes all participants to this year’s tournament — a celebration of sportsmanship, team building, and departmental pride.',
     description: [
-      'The Department of Mechanical Engineering warmly welcomes all participants to this year’s SU Inter-Department Cricket Tournament 2026. We are proud of the energy and strength our students bring to the "Mechanical family."',
+      'The Department of Business Administration warmly welcomes all participants to this year’s SU Inter-Department Cricket Tournament 2026. We are proud of the energy and strength our students bring to the "Business family."',
       'We encourage all supporters to stand by our team from the opening match to the final moment — let your cheers fuel our players and let the spirit of fair play shine on the field.',
     ],
     focus: 'Sportsmanship, Team Building, and Departmental Pride.',
@@ -61,9 +61,9 @@ export const events: DepartmentEvent[] = [
     date: '01 Sep, 2025',
     image: '/assets/events/bmtf-industrial-visit.webp',
     summary:
-      'Students and faculty of the ME Department visited BMTF for hands-on exposure to vehicle assembly, machining, and galvanizing operations.',
+      'Students and faculty of the Department of Business Administration visited BMTF for hands-on exposure to vehicle assembly, machining, and galvanizing operations.',
     description: [
-      'On September 1, 2025, students and faculty from the Department of Mechanical Engineering visited Bangladesh Machine Tools Factory (BMTF) to gain hands-on industrial experience.',
+      'On September 1, 2025, students and faculty from the Department of Business Administration visited Bangladesh Machine Tools Factory (BMTF) to gain hands-on industrial experience.',
       'The visit included in-depth explorations of the Vehicle Assembly Unit, Machine Shop, and Galvanizing Shop. Students observed real-world manufacturing processes, automation systems, and industrial safety practices first-hand.',
       'The trip concluded with a courtesy visit to the Vice Chancellor of DUET, Gazipur — inspiring the next generation of innovative engineers.',
     ],
@@ -87,7 +87,7 @@ export const events: DepartmentEvent[] = [
   },
   {
     slug: 'biin-partnership',
-    title: 'Mechanical Engineering & BIIN: Partnership for Emerging Tech Excellence',
+    title: 'Department of Business Administration & BIIN: Partnership for Emerging Tech Excellence',
     shortTitle: 'Strategic Collaboration for Emerging Technologies',
     category: 'Partnership',
     status: 'Current',
@@ -96,7 +96,7 @@ export const events: DepartmentEvent[] = [
     summary:
       'A strategic collaboration with BIIN to enhance student competencies in Robotics, Automobile Technology, AI, and Data Science.',
     description: [
-      'A strategic collaboration has been signed between the Department of Mechanical Engineering and BIIN to enhance student competencies in Robotics, Automobile Technology, AI, and Data Science.',
+      'A strategic collaboration has been signed between the Department of Business Administration and BIIN to enhance student competencies in Robotics, Automobile Technology, AI, and Data Science.',
       'This partnership aims to bridge the gap between academic learning and global industry demands, ensuring our engineering students are equipped with both deep technical expertise and an entrepreneurial mindset.',
     ],
     focus: 'Innovation, Robotics, and Global Industry Standards.',
@@ -137,7 +137,7 @@ export const events: DepartmentEvent[] = [
     summary:
       "The Department celebrated World Mechanical Engineer's Day with a grand Project Exhibition showcasing innovative student solutions and a keynote on the future of Mechanical Engineering.",
     description: [
-      "The Department of Mechanical Engineering celebrated World Mechanical Engineer's Day with a grand Project Exhibition, showcasing the innovative technical solutions developed by our students.",
+      "The Department of Business Administration celebrated World Mechanical Engineer's Day with a grand Project Exhibition, showcasing the innovative technical solutions developed by our students.",
       'The event featured a prestigious lineup of academic leaders, including a keynote session by Professor Dr. M. Muzibur Rahman on the future of Mechanical Engineering.',
       "This exhibition highlights the department's commitment to fostering practical engineering skills and creative problem-solving.",
     ],
@@ -146,11 +146,11 @@ export const events: DepartmentEvent[] = [
       { label: 'Chief Guest', value: 'Professor Shamim Ara Hassan, Vice-Chancellor (In-Charge), SU' },
       {
         label: 'Chairperson',
-        value: 'Professor Md. Mostofa Hossain, Head, Department of Mechanical Engineering, SU',
+        value: 'Professor Md. Mostofa Hossain, Head, Department of Business Administration, SU',
       },
       {
         label: 'Guest of Honour',
-        value: 'Professor Dr. Mohammad Ali, Advisor, Department of Mechanical Engineering',
+        value: 'Professor Dr. Mohammad Ali, Advisor, Department of Business Administration',
       },
       { label: 'Date', value: '24 September, 2023' },
       { label: 'Venue', value: 'Sonargaon University Campus' },

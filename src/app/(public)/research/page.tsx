@@ -4,9 +4,9 @@ import Container from '@/components/ui/Container';
 import { getResearchPapers, getPageHero } from '@/lib/identity';
 
 export const metadata = {
-  title: 'Research — Department of Mechanical Engineering',
+  title: 'Research — Department of Business Administration',
   description:
-    'Published research papers from the Department of Mechanical Engineering, Sonargaon University.',
+    'Published research papers from the Department of Business Administration, Sonargaon University.',
 };
 
 export default async function ResearchPage() {
@@ -28,8 +28,8 @@ export default async function ResearchPage() {
         <div className="mx-auto max-w-3xl text-center mb-10 md:mb-14">
           <p className="text-[15px] md:text-[16px] leading-[1.85] text-gray-700">
             A selection of research publications by faculty and students of the
-            Department of Mechanical Engineering, Sonargaon University, spanning
-            thermodynamics, fluid mechanics, materials science, energy systems,
+            Department of Business Administration, Sonargaon University, spanning
+            finance, marketing, human resource management, entrepreneurship,
             and more.
           </p>
           <p className="mt-4 inline-flex items-center gap-2 text-[13px] font-semibold text-primary bg-primary/5 px-4 py-1.5 rounded-full">

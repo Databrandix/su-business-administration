@@ -11,15 +11,15 @@ export const programs: {
   {
     id: 'undergrad',
     title: 'Undergraduate',
-    subtitle: 'B.Sc in Mechanical Engineering',
+    subtitle: 'BBA in Business Administration',
     duration: '4 Years · 8 Semesters',
-    description: 'Our flagship undergraduate program builds a strong foundation in core mechanical engineering — combining rigorous theory, modern lab practice, and design projects that prepare graduates for industry, research, and global postgraduate study.',
+    description: 'Our flagship undergraduate program builds a strong foundation in core business administration — combining rigorous theory, modern case analysis, and strategic projects that prepare graduates for leadership, management, and global postgraduate study.',
     image: '/assets/program-undergraduate.webp',
     specializations: [
-      'Thermal Engineering',
-      'Design & Manufacturing',
-      'Robotics & Automation',
-      'Energy Systems',
+  'Finance & Banking',
+  'Marketing',
+  'Human Resource Management',
+  'Supply Chain Management',
     ],
     cta: 'View More',
   },
@@ -41,13 +41,13 @@ export const quickLinks: { name: string; href: string; external?: boolean; disab
 ];
 
 export const researchAreas = [
-  { name: 'Thermodynamics & Heat Transfer', icon: 'Flame' },
-  { name: 'Fluid Mechanics & CFD', icon: 'Waves' },
-  { name: 'Robotics & Automation', icon: 'Bot' },
-  { name: 'Manufacturing & Production', icon: 'Wrench' },
-  { name: 'Materials Science & Engineering', icon: 'Layers' },
-  { name: 'Renewable Energy Systems', icon: 'Leaf' },
-  { name: 'Automotive Engineering', icon: 'Car' }
+  { name: 'Finance & Banking', icon: 'Flame' },
+  { name: 'Marketing', icon: 'Waves' },
+  { name: 'Human Resource Management', icon: 'Bot' },
+  { name: 'Supply Chain Management', icon: 'Wrench' },
+  { name: 'Entrepreneurship & Innovation', icon: 'Layers' },
+  { name: 'Business Analytics', icon: 'Leaf' },
+  { name: 'International Business', icon: 'Car' }
 ];
 
 export const campusServices: { name: string; description: string; image: string; href?: string }[] = [

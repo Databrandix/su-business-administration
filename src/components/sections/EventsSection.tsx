@@ -39,7 +39,7 @@ export default function EventsSection({ events }: Props) {
           <SectionTitle
             eyebrow="Campus Engagement"
             title="Departmental Events"
-            subtitle="From hands-on workshops to breakthrough announcements—never miss what's shaping tomorrow's innovations at ME."
+            subtitle="Stay connected with the latest events and announcements from the Department of Business Administration."
           />
           <a href={EVENTS_PATH} className="hidden md:block">
             <Button variant="ghost" className="mb-6 md:mb-8 group">

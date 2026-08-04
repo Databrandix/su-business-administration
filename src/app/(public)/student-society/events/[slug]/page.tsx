@@ -37,7 +37,9 @@ const CATEGORY_STYLES: Record<string, string> = {
   Achievement: 'bg-violet-100 text-violet-700',
   Partnership: 'bg-sky-100 text-sky-700',
   Seminar: 'bg-rose-100 text-rose-700',
+  Workshop: 'bg-teal-100 text-teal-700',
   Exhibition: 'bg-primary/10 text-primary',
+  Cultural: 'bg-fuchsia-100 text-fuchsia-700',
 };
 
 function coerceParagraphs(v: unknown): string[] {
@@ -140,7 +142,7 @@ export default async function EventDetailPage({
               <DetailRow
                 Icon={GraduationCap}
                 label="Faculty"
-                value="Faculty of Science & Engineering"
+                value="Faculty of Business"
               />
             </div>
           </aside>

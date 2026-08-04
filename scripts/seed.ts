@@ -122,14 +122,16 @@ async function seedPrograms() {
 }
 
 async function seedResearchAreas() {
+  // Areas mirror the department's own publication record — the
+  // largest clusters across the 40 papers on /research.
   const areas = [
-    { iconName: 'Landmark',   areaName: 'Finance & Banking',                 displayOrder: 1 },
-    { iconName: 'Megaphone',  areaName: 'Marketing & Consumer Behaviour',    displayOrder: 2 },
-    { iconName: 'Users',      areaName: 'Human Resource Management',         displayOrder: 3 },
-    { iconName: 'Calculator', areaName: 'Accounting & Information Systems',  displayOrder: 4 },
-    { iconName: 'Globe',      areaName: 'International Business',            displayOrder: 5 },
-    { iconName: 'Truck',      areaName: 'Supply Chain & Operations',         displayOrder: 6 },
-    { iconName: 'Lightbulb',  areaName: 'Entrepreneurship & Innovation',     displayOrder: 7 },
+    { iconName: 'Leaf',         areaName: 'Sustainable Business & Green Management', displayOrder: 1 },
+    { iconName: 'Landmark',     areaName: 'Finance & Banking',                       displayOrder: 2 },
+    { iconName: 'Users',        areaName: 'Human Resource Management',               displayOrder: 3 },
+    { iconName: 'Rocket',       areaName: 'Entrepreneurship & Social Enterprise',    displayOrder: 4 },
+    { iconName: 'ShoppingCart', areaName: 'Marketing & Consumer Behaviour',          displayOrder: 5 },
+    { iconName: 'Package',      areaName: 'Supply Chain & Operations Management',    displayOrder: 6 },
+    { iconName: 'BarChart3',    areaName: 'Accounting & Corporate Governance',       displayOrder: 7 },
   ];
 
   let inserted = 0;
@@ -322,33 +324,35 @@ async function backfillDepartmentIdentityAlts() {
 }
 
 async function backfillFeaturedResearchArea() {
-  // Promote "Robotics & Automation" to isFeatured=true and populate
-  // featured-card content from the previously hardcoded block in
-  // MajorResearchSection.tsx. areaName stays unchanged (grid card
+  // Promote the department's largest research cluster to
+  // isFeatured=true and populate the featured-card content rendered
+  // by MajorResearchSection.tsx. areaName stays unchanged (grid card
   // visual identical); featuredHeading carries the longer card title.
+  const FEATURED_AREA = 'Sustainable Business & Green Management';
+
   const existingFeatured = await prisma.researchArea.findFirst({ where: { isFeatured: true } });
   if (existingFeatured) {
     console.log(`✓ Featured research area already set (${existingFeatured.areaName})`);
     return;
   }
-  const target = await prisma.researchArea.findFirst({ where: { areaName: 'Robotics & Automation' } });
+  const target = await prisma.researchArea.findFirst({ where: { areaName: FEATURED_AREA } });
   if (!target) {
-    console.log('⚠ Robotics & Automation row not found; skipping featured backfill');
+    console.log(`⚠ "${FEATURED_AREA}" row not found; skipping featured backfill`);
     return;
   }
   await prisma.researchArea.update({
     where: { id: target.id },
     data: {
       isFeatured: true,
-      featuredHeading: 'Robotics & Industrial Automation',
+      featuredHeading: FEATURED_AREA,
       featuredImageUrl: '/assets/research-featured.webp',
       featuredImagePublicId: null,
       featuredDescription:
-        'This research cell operates at the intersection of mechanical design and intelligent control, building autonomous systems for next-generation manufacturing...',
+        'The department’s largest research cluster — green human resource management, green innovation, environmental performance, and the financing of environment-friendly enterprise, with published work in Q1 journals including Sustainable Development and Journal of Innovation & Knowledge.',
       featuredCtaHref: '/research',
     },
   });
-  console.log('✓ Featured research area set (Robotics & Automation → featured)');
+  console.log(`✓ Featured research area set (${FEATURED_AREA} → featured)`);
 }
 
 async function seedTopLinks() {

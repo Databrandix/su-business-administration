@@ -521,7 +521,9 @@ export const eventCategoryEnum = z.enum([
   'Achievement',
   'Partnership',
   'Seminar',
+  'Workshop',
   'Exhibition',
+  'Cultural',
 ]);
 
 export const eventStatusEnum = z.enum(['Past', 'Current', 'Upcoming']);

@@ -32,17 +32,17 @@ async function seedDepartmentIdentity() {
     update: {},
     create: {
       id: 'singleton',
-      name: 'Department of Mechanical Engineering',
+      name: 'Department of Business Administration',
       primaryColor: '#2B3175',
       accentColor: '#CC1579',
       buttonColor: '#F8BD23',
       logoUrl: '/assets/su-colour-logo.webp',
       logoPublicId: null,
-      breadcrumbLabel: 'ME',
-      programName: 'Bachelor of Business Administration',
-      programShortForm: 'BBA',
+      breadcrumbLabel: 'BA',
+      programName: 'Business Administration',
+      programShortForm: 'BA',
       programSubtitle:
-        'Shaping engineers who design tomorrow’s machines, systems, and innovations.',
+        'Developing future business leaders, entrepreneurs, and strategic thinkers.',
       heroImage1Url: '/assets/hero-1.webp',
       heroImage1PublicId: null,
       heroImage2Url: '/assets/hero-2.webp',
@@ -96,22 +96,24 @@ async function seedUniversityIdentity() {
 
 async function seedPrograms() {
   await prisma.program.upsert({
-    where: { degreeCode: 'BSc-ME' },
+    where: { degreeCode: 'BBA' },
     update: {},
     create: {
-      programName: 'Undergraduate — B.Sc in Mechanical Engineering',
-      degreeCode: 'BSc-ME',
+      overline: 'Undergraduate',
+      programName: 'Bachelor of Business Administration (BBA)',
+      degreeCode: 'BBA',
       duration: '4 Years · 8 Semesters',
       description:
-        'Our flagship undergraduate program builds a strong foundation in core mechanical engineering — combining rigorous theory, modern lab practice, and design projects that prepare graduates for industry, research, and global postgraduate study.',
+        'Our flagship Bachelor of Business Administration (BBA) program builds a strong foundation in business and management by combining academic excellence, practical learning, and industry exposure. The program prepares graduates for leadership roles in business, entrepreneurship, and organizations across the public and private sectors.',
       displayOrder: 1,
       imageUrl: '/assets/program-undergraduate.webp',
       imagePublicId: null,
       specializations: [
-        'Thermal Engineering',
-        'Design & Manufacturing',
-        'Robotics & Automation',
-        'Energy Systems',
+        'Finance & Banking',
+        'Human Resource Management (HRM)',
+        'Accounting & Information Systems',
+        'Marketing',
+        'International Business',
       ],
       cta: 'View More',
     },
@@ -121,13 +123,13 @@ async function seedPrograms() {
 
 async function seedResearchAreas() {
   const areas = [
-    { iconName: 'Flame',  areaName: 'Thermodynamics & Heat Transfer',   displayOrder: 1 },
-    { iconName: 'Waves',  areaName: 'Fluid Mechanics & CFD',            displayOrder: 2 },
-    { iconName: 'Bot',    areaName: 'Robotics & Automation',            displayOrder: 3 },
-    { iconName: 'Wrench', areaName: 'Manufacturing & Production',       displayOrder: 4 },
-    { iconName: 'Layers', areaName: 'Materials Science & Engineering',  displayOrder: 5 },
-    { iconName: 'Leaf',   areaName: 'Renewable Energy Systems',         displayOrder: 6 },
-    { iconName: 'Car',    areaName: 'Automotive Engineering',           displayOrder: 7 },
+    { iconName: 'Landmark',   areaName: 'Finance & Banking',                 displayOrder: 1 },
+    { iconName: 'Megaphone',  areaName: 'Marketing & Consumer Behaviour',    displayOrder: 2 },
+    { iconName: 'Users',      areaName: 'Human Resource Management',         displayOrder: 3 },
+    { iconName: 'Calculator', areaName: 'Accounting & Information Systems',  displayOrder: 4 },
+    { iconName: 'Globe',      areaName: 'International Business',            displayOrder: 5 },
+    { iconName: 'Truck',      areaName: 'Supply Chain & Operations',         displayOrder: 6 },
+    { iconName: 'Lightbulb',  areaName: 'Entrepreneurship & Innovation',     displayOrder: 7 },
   ];
 
   let inserted = 0;
@@ -202,12 +204,12 @@ const DEAN_MESSAGE_PARAGRAPHS = [
 ];
 
 const HEAD_MESSAGE_PARAGRAPHS = [
-  'Mechanical Engineering is the largest department of the university. The Department started its journey in the year of 2013 and has already passed a decade. In the last decade, we have developed our expertise and competency in curriculum and research. Our main goal is to provide quality education in both theory and practical to the undergraduate students, so that they can build their foundation strongly. There are about 50 (Fifty) highly educated, qualified and experienced permanent full-time faculty members from BUET, KUET, RUET, CUET, DUET, IUT, DU, CU, RU, JU and other public universities engaged in the Department. A large number of our graduates are regularly getting enrolments in Post-graduate programs in reputed universities around the world, particularly in the USA, Canada, Australia and the EU with prestigious scholarships, as well as a good number of faculty members are also on study leave in different countries pursuing their higher education.',
+  'Business Administration is one of the largest departments of the university. Our main goal is to provide quality education in both theory and practice to undergraduate students, so that they can build their foundation strongly. The Department is served by highly educated, qualified and experienced full-time faculty members drawn from leading public and private universities. A large number of our graduates regularly secure enrolment in postgraduate programs at reputed universities around the world — particularly in the USA, Canada, Australia and the EU — with prestigious scholarships.',
   'The university is located in the heart of the city, with easy access to Metro-Rail Station, City and Inter-district bus services. It provides free bus services around the city and downtown — Mograpara, Gauchhia, Kadamtali in the east, Abdullahpur in the north and Savar in the west.',
-  '50% to 100% Waiver on tuition fees and scholarship is also available on the basis of semester results. Air-conditioned classrooms with multimedia projectors, lab facilities equipped with all types of equipments and machineries as per courses of the department, as well as Computer Lab with the latest and updated computers and software are also available in the Department.',
-  'It is noteworthy that efficient and experienced professors of BUET have been appointed as advisors to the department. Students have participated in different competitive events and have kept the signatures of many accomplishments.',
-  'ACI Motors Ltd. presents Auto Fest 2024 was held from February 01, 2024 to February 08, 2024, organized by Mechanical Engineering Association, BUET. Sonargaon University Mecha Club (SUMEC) of the Department of Mechanical Engineering participated in this Fest and achieved a token of appreciation as <strong class="text-button-yellow">Valuable Club Partner</strong>. Participation, collaboration and contribution of SUMEC significantly enriched the initiatives of the Fest.',
-  'Therefore, Welcome to the Department of Mechanical Engineering — pursue your undergraduate degree and make yourself an Engineer as well as a good citizen to serve the country.',
+  '50% to 100% Waiver on tuition fees and scholarship is also available on the basis of semester results. Air-conditioned classrooms with multimedia projectors, along with a Computer Lab equipped with the latest computers and business software, are available in the Department.',
+  'Experienced professors and senior industry practitioners have been appointed as advisors to the department. Students regularly participate in case competitions, business fairs and other competitive events, and have earned recognition in many of them.',
+  'Our students take part in national business case competitions, entrepreneurship summits and industry-organised events, where they present strategy, marketing and financial analyses. These experiences connect classroom learning to real organisational decision-making.',
+  'Therefore, Welcome to the Department of Business Administration — pursue your undergraduate degree and make yourself a capable business professional as well as a good citizen to serve the country.',
 ];
 
 // TS source uses hyphenated literal types; Prisma enum uses underscores.
@@ -233,7 +235,7 @@ async function seedFaculty() {
           messageParagraphs: DEAN_MESSAGE_PARAGRAPHS,
           messagePhotoUrl: '/assets/faculty-dean-kamal.webp',
           messageTitleLine1: 'Dean',
-          messageTitleLine2: 'Faculty of Science & Engineering',
+          messageTitleLine2: 'Faculty of Business',
           messageHeroImageUrl: '/assets/mission-vision-hero.webp',
           messageHeroImageVerticalPercent: 3,
         }
@@ -247,7 +249,7 @@ async function seedFaculty() {
             // [slug] page — see J-finding in CP2.1 surface.
             messagePhotoUrl: '/assets/head-mostofa-hossain.webp',
             messageTitleLine1: 'Head of the Department',
-            messageTitleLine2: 'Department of Mechanical Engineering',
+            messageTitleLine2: 'Department of Business Administration',
             messageHeroImageUrl: '/assets/message-from-head-hero.webp',
             messageHeroImageVerticalPercent: 0,
           }
@@ -303,9 +305,9 @@ async function backfillDepartmentIdentityAlts() {
   const row = await prisma.departmentIdentity.findUnique({ where: { id: 'singleton' } });
   if (!row) return;
   const heroAlts = [
-    'Sonargaon University Mechanical Engineering Department',
-    'Sonargaon University Mechanical Engineering students and faculty',
-    'Sonargaon University Mechanical Engineering campus',
+    'Sonargaon University Business Administration Department',
+    'Sonargaon University Business Administration students and faculty',
+    'Sonargaon University Business Administration campus',
   ];
   const updates: Record<string, string> = {};
   if (!row.heroImage1Alt) updates.heroImage1Alt = heroAlts[0];
@@ -563,10 +565,10 @@ async function seedAboutOverview() {
       heroImagePublicId: null,
       heroImageVerticalPercent: 3,
       paragraphs: [
-        'At the heart of innovation and excellence, the Department of Mechanical Engineering is committed to shaping future leaders in the field. Explore the dynamic world of mechanical engineering, where creativity meets technology, and where ideas transform into groundbreaking solutions.',
-        'At the Department of Mechanical Engineering, we strive to shape the future of engineering by providing cutting-edge education and research opportunities. With a focus on interdisciplinary collaboration and real-world applications, our department prepares students to tackle complex challenges and contribute to the advancement of technology and society.',
-        'The main responsibility of the Department of Mechanical Engineering is to design, analyze, test, and manufacture machines and equipment. Mechanical Engineering is a vast and heterogeneous field in respect of the different types of products that the engineers work on, the industry in which they work, and the knowledge they need to become successful.',
-        'The Mechanical Engineers, who are interested in pursuing a career, have the attributes such as: the idea of what Mechanical Engineers work on, the function that Mechanical Engineers fulfill, the type of work environment, and the industries that they serve. Mechanical engineers are involved in a comprehensive variety of products like aircraft, automobile vehicles, industrial equipment and machinery, engines, turbines, pumps, mechanical handling systems, heating and cooling systems, consumer devices, and so on.',
+        'The Department of Business Administration is committed to developing future business leaders through quality education, innovation, and practical learning. With a strong emphasis on academic excellence, ethical values, and industry engagement, the department equips students with the knowledge, leadership, and problem-solving skills needed to succeed in today’s dynamic business environment and contribute meaningfully to society.',
+        'At the Department of Business Administration, we strive to shape the future of business by providing cutting-edge education and research opportunities. With a focus on interdisciplinary collaboration and real-world applications, our department prepares students to tackle complex challenges and contribute to the advancement of enterprise and society.',
+        'The department builds competence across the core business disciplines — accounting, finance, marketing, management, human resources, supply chain, operations, MIS, and international business — so graduates carry both a broad strategic view and specialised depth.',
+        'Graduates of Business Administration pursue careers across corporate enterprises, financial institutions, consulting firms, startups, development organisations, and the public sector — working in roles that span strategy, finance, marketing, operations, and people management.',
       ],
     },
   });
@@ -587,13 +589,18 @@ async function seedAboutMissionVision() {
 
       missionOverline: 'Our Purpose',
       missionHeading:  'Mission',
+      // Newlines are significant — the public page renders this with
+      // `whitespace-pre-line` so each roman-numeral point gets its own line.
       missionBody:
-        'The mission of the Department is to provide knowledge to students in science and technology through world-class education and innovative research, empower innovators, shape the future, and provide a transformative learning experience that nurtures creativity, instills a strong foundation of knowledge, and equips students with the skills to address global challenges through cutting-edge mechanical engineering solutions — so that they are able to contribute impactfully to society, the nation and the world, and to develop the professional potential and skill of faculty, staff and students by maintaining training and education by which they can achieve lifelong ability to construct their professional careers.',
+        'I. To strive constantly providing in-depth subject knowledge to the students so that they can add value to the existing treasures of business arena.\n' +
+        'II. To stimulate lateral thinking and a spirit of enquiry among our students so that they can look from a different perspective through a creative approach.\n' +
+        'III. To provide business education in order to prepare future business leaders who will be capable of facing the present economic challenges resulted from globalization of business and playing instrumental role for accelerating the economic growth of the country.\n' +
+        'IV. To produce professional human capital to fulfill the market needs through sustainable innovative business education and research with the highest ethical values.',
 
       visionOverline: 'Our Future',
       visionHeading:  'Vision',
       visionBody:
-        'Through the active participation of its people, the Department of Mechanical Engineering will be acknowledged as a leader of its discipline, illustrating quality education, research and innovation. With quality education and research, the department will be enabled to create skilled and well-qualified engineers to meet the continually changing technological, regional and national needs.',
+        'Becoming global partner in business education through achieving excellence in teaching, research, innovation and community service to ensure sustainable growth in entrepreneurship, businesses and economy of the country.',
     },
   });
   console.log('✓ AboutMissionVision seeded');
@@ -612,11 +619,11 @@ async function seedAboutMechaClub() {
       heroImageVerticalPercent: 45,
 
       introOverline: 'Where Engineering Meets Community',
-      // Inline HTML preserved — gradient on "Mechanical Engineers"
+      // Inline HTML preserved — gradient on "Business Professionals"
       introHeading:
-        'Building Industry-Ready <span class="text-gradient">Mechanical Engineers</span>',
+        'Building Industry-Ready <span class="text-gradient">Business Professionals</span>',
       introBody1:
-        'The Mechanical Engineering department at Sonargaon University fosters a vibrant student community through its dedicated club and organisational activities. We focus on transforming students into industry-ready professionals through continuous engagement and practical exposure.',
+        'The Business Administration department at Sonargaon University fosters a vibrant student community through its dedicated club and organisational activities. We focus on transforming students into industry-ready professionals through continuous engagement and practical exposure.',
       introBody2:
         'From plant visits to international software training, the SU Mecha Club bridges classroom learning with the real world — equipping every member with the skills, network, and confidence to lead.',
       introImageUrl:      '/assets/mecha-club-1.webp',
@@ -720,7 +727,7 @@ async function seedLabFacilityLanding() {
       heroImagePublicId: null,
       heroImageVerticalPercent: 25,
       introBody:
-        'The Department of Mechanical Engineering provides international-standard education through a combination of theory and hands-on practical sessions. Our specialised laboratories are equipped with modern machinery and tools to prepare students for the global engineering market.',
+        'The Department of Business Administration provides international-standard education through a combination of theory and hands-on practical sessions. Our computer and business labs are equipped with modern hardware and industry software to prepare students for the global business market.',
     },
   });
   console.log('✓ LabFacilityLanding seeded');
@@ -768,7 +775,7 @@ async function seedLaboratoryFacilityLanding() {
       heroImagePublicId: null,
       heroImageVerticalPercent: 25,
       introBody:
-        'The Department of Mechanical Engineering at Sonargaon University is committed to excellence in hands-on technical education. Our laboratories serve as the hub for innovation, where students apply complex thermodynamic, fluidic, and structural theories to real-world engineering challenges.',
+        'The Department of Business Administration at Sonargaon University is committed to excellence in applied, practice-oriented education. Our labs serve as the hub for analysis and innovation, where students apply financial, marketing, and operations theory to real-world business problems.',
       featuresOverline: 'What Sets Us Apart',
       featuresHeading:  'Why Our Labs Matter',
       // Source: features const in laboratory-facility/page.tsx.
@@ -1202,10 +1209,10 @@ async function seedSyllabus() {
   // empty state when level filter = Postgraduate).
   await prisma.syllabus.create({
     data: {
-      slug:          'bsc-mechanical-engineering',
-      title:         'B.Sc. in Mechanical Engineering',
-      shortTitle:    'B. Sc. in Mechanical Engineering',
-      department:    'Mechanical Engineering',
+      slug:          'bba-business-administration',
+      title:         'Bachelor of Business Administration',
+      shortTitle:    'Bachelor of Business Administration',
+      department:    'Business Administration',
       level:         'Undergraduate',
       coverUrl:      '/assets/syllabus-me-cover.webp',
       coverPublicId: null,
@@ -1213,7 +1220,7 @@ async function seedSyllabus() {
       pdfPublicId:   null,
       pdfFileName:   'syllabus-me.pdf',
       summary:
-        'Detailed course-by-course syllabus covering the four-year B.Sc. programme — Thermal Engineering, Design & Manufacturing, Automotive Engineering, Robotics & Automation, Materials Science, and Renewable Energy Systems.',
+        'Detailed course-by-course syllabus covering the four-year BBA programme — Accounting, Finance & Banking, Marketing, Management, Human Resource Management, and Management Information Systems.',
       displayOrder:  0,
     },
   });
@@ -1325,7 +1332,7 @@ async function seedAdmissionRequirements() {
     'Minimum GPA of 2.0 in SSC and HSC examinations individually for Fashion Design and Technology.',
     'Equivalent performance under other educational systems (e.g. American High School Diploma, IB, etc.) is also accepted.',
     'A combined SAT score of 1100 is also accepted in lieu of the Admission Test for High School Graduates in any system.',
-    'For admission to engineering programs, students must have studied Physics, Chemistry, and Mathematics in HSC / A-Level.',
+    'Applicants from any stream — Business Studies, Science, or Humanities — are eligible to apply for the BBA program.',
     'The University also accepts non-degree admissions, usually for exchange students.',
     'Transfer of credits from comparable educational institutions may be considered after admission.',
   ];
@@ -1336,8 +1343,8 @@ async function seedAdmissionRequirements() {
   ];
 
   const diplomaRequirements: string[] = [
-    'Three or four years Diploma in Engineering from Bangladesh Technical Education Board (BTEB) with a CGPA of 2.5 out of 4.00, OR',
-    'A Diploma recognised by BTEB with a CGPA of 2.5 out of 4.00 in any engineering discipline from any recognised institute.',
+    'Three or four years Diploma from Bangladesh Technical Education Board (BTEB) with a CGPA of 2.5 out of 4.00, OR',
+    'A Diploma recognised by BTEB with a CGPA of 2.5 out of 4.00 in any business or related discipline from any recognised institute.',
   ];
 
   const combinedGpaBody =
@@ -1465,7 +1472,7 @@ async function seedProgramFeeStructures() {
 
   const data = {
     programId:     program.id,
-    introOverline: 'B.Sc. in Mechanical Engineering (ME)',
+    introOverline: 'Bachelor of Business Administration (BBA)',
     introHeading:  'Tuition Fee Structure',
     introBody:
       'Cost per credit and the total program cost vary based on your academic background (SSC + HSC or Diploma) and the shift you choose. Use the breakdown below to find the fees that apply to you.',
@@ -1486,10 +1493,10 @@ async function seedProgramFeeStructures() {
 async function seedProspectusEntries() {
   const rows = [
     {
-      slug: 'bsc-mechanical-engineering',
-      title: 'B.Sc. in Mechanical Engineering',
-      shortTitle: 'B. Sc. in Mechanical Engineering',
-      department: 'Mechanical Engineering',
+      slug: 'bba-business-administration',
+      title: 'Bachelor of Business Administration',
+      shortTitle: 'Bachelor of Business Administration',
+      department: 'Business Administration',
       level: 'Undergraduate',
       coverUrl: '/assets/prospectus-me-cover.webp',
       coverPublicId: null,
@@ -1597,7 +1604,7 @@ async function seedWaiverScholarshipLanding() {
 
   const data = {
     intro:
-      'Sonargaon University offers a range of tuition waivers and merit scholarships to make quality engineering education accessible. Eligibility depends on academic performance, demographic criteria, and family / institutional context.',
+      'Sonargaon University offers a range of tuition waivers and merit scholarships to make quality business education accessible. Eligibility depends on academic performance, demographic criteria, and family / institutional context.',
     part1Kicker:        'Part 01',
     part1Heading:       'Tuition Fee Waivers',
     summaryHeading:     'Summary Table',

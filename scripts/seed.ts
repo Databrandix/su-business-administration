@@ -112,7 +112,8 @@ async function seedPrograms() {
         'The Department of Business Administration offers a four-year undergraduate program titled Bachelor of Business Administration (BBA). The program will make the students capable in identifying, formulating and solving business problems that meet specified performance, cost, time, safety and other quality needs and objectives with professional and ethical responsibility.',
         'This program also emphasizes on industry and research based projects, which would enhance their skills to become successful professionals for a holistic development.',
       ],
-      displayOrder: 1,
+      // 0 so the graduate rows below can take 1..7 without a clash.
+      displayOrder: 0,
       imageUrl: '/assets/program-undergraduate.webp',
       imagePublicId: null,
       specializations: [
@@ -125,7 +126,127 @@ async function seedPrograms() {
       cta: 'View More',
     },
   });
-  console.log('✓ Programs seeded');
+
+  // Graduate tier — one row per master's degree so each gets the same
+  // zigzag treatment as the BBA card. ProgramsSection prints the
+  // "Graduate" overline once, at the first row of the tier.
+  // All share the undergraduate art until real photos are uploaded
+  // from /admin/programs.
+  const graduatePrograms = [
+    {
+      degreeCode: 'MBA',
+      programName: 'Master of Business Administration (MBA)',
+      duration: '2 Years · 4 Semesters',
+      description:
+        'The MBA builds broad managerial capability across finance, marketing, operations, and human resources. Designed for graduates from any discipline, it develops the analytical judgement and leadership skills needed to move into management roles across the public and private sectors.',
+      specializations: [
+        'Finance & Banking',
+        'Human Resource Management (HRM)',
+        'Marketing',
+        'Accounting & Information Systems',
+      ],
+    },
+    {
+      degreeCode: 'MBA-REG',
+      programName: 'Regular Master of Business Administration',
+      duration: '2 Years · 4 Semesters',
+      description:
+        'The regular MBA track follows a full-time daytime schedule built for recent graduates continuing directly into postgraduate study. Coursework pairs core management theory with case analysis, group projects, and a research dissertation in the final semester.',
+      specializations: [
+        'Core Management Foundation',
+        'Case-Based Learning',
+        'Research Dissertation',
+        'Full-Time Day Schedule',
+      ],
+    },
+    {
+      degreeCode: 'EMBA',
+      programName: 'Executive Master of Business Administration (EMBA)',
+      duration: '1.5–2 Years · Evening & Weekend',
+      description:
+        'The EMBA is built for working professionals who need postgraduate management education without stepping away from their careers. Classes run evenings and weekends, and the curriculum draws directly on the organisational problems participants bring from their own workplaces.',
+      specializations: [
+        'Strategic Leadership',
+        'Financial Decision Making',
+        'Organisational Behaviour',
+        'Evening & Weekend Classes',
+      ],
+    },
+    {
+      degreeCode: 'MBM',
+      programName: 'Masters in Bank Management (MBM)',
+      duration: '2 Years · 4 Semesters',
+      description:
+        'The MBM prepares specialists for careers in banking and financial services. The programme covers credit appraisal, risk management, treasury operations, and the regulatory framework governing both conventional and Islamic banking in Bangladesh.',
+      specializations: [
+        'Credit & Risk Management',
+        'Treasury Operations',
+        'Islamic Banking',
+        'Banking Regulation & Compliance',
+      ],
+    },
+    {
+      degreeCode: 'MBA-SCM',
+      programName: 'MBA in Supply Chain Management',
+      duration: '2 Years · 4 Semesters',
+      description:
+        'This programme develops expertise in the movement of goods, information, and finance across a supply network. Students study procurement, logistics, inventory strategy, and the sustainability practices reshaping how global supply chains are designed and audited.',
+      specializations: [
+        'Procurement & Sourcing',
+        'Logistics & Distribution',
+        'Inventory & Demand Planning',
+        'Sustainable Supply Chains',
+      ],
+    },
+    {
+      degreeCode: 'MBA-AM',
+      programName: 'MBA in Apparel Merchandising',
+      duration: '2 Years · 4 Semesters',
+      description:
+        'Built around the readymade garment sector that anchors Bangladesh’s export economy, this programme covers order management, buyer relations, costing, and compliance — the working knowledge merchandisers need on the factory floor and at the negotiating table.',
+      specializations: [
+        'Order & Buyer Management',
+        'Costing & Pricing',
+        'Compliance & Quality Assurance',
+        'Export Documentation',
+      ],
+    },
+    {
+      degreeCode: 'MBA-TFM',
+      programName: 'MBA in Textile & Fashion Marketing',
+      duration: '2 Years · 4 Semesters',
+      description:
+        'This programme sits at the meeting point of textiles, fashion, and brand strategy. Students study consumer behaviour in fashion markets, retail and merchandising strategy, and the branding decisions that determine how textile products reach and hold their market.',
+      specializations: [
+        'Fashion Brand Strategy',
+        'Retail & Visual Merchandising',
+        'Consumer Behaviour',
+        'Textile Product Marketing',
+      ],
+    },
+  ];
+
+  let graduateOrder = 1;
+  for (const g of graduatePrograms) {
+    await prisma.program.upsert({
+      where: { degreeCode: g.degreeCode },
+      update: {},
+      create: {
+        overline: 'Graduate',
+        programName: g.programName,
+        degreeCode: g.degreeCode,
+        duration: g.duration,
+        description: g.description,
+        displayOrder: graduateOrder,
+        imageUrl: '/assets/program-undergraduate.webp',
+        imagePublicId: null,
+        specializations: g.specializations,
+        cta: 'View More',
+      },
+    });
+    graduateOrder += 1;
+  }
+  console.log(`✓ Programs seeded (1 undergraduate + ${graduatePrograms.length} graduate)`);
 }
 
 async function seedResearchAreas() {

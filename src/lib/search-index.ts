@@ -44,6 +44,7 @@ const staticPages: SearchItem[] = [
   { title: 'Faculty Members', type: 'Page', href: '/faculty-member', description: 'List of all faculty members' },
 
   // Admission
+  { title: 'Programs', type: 'Page', href: '/programs', description: 'All undergraduate and graduate programs offered' },
   { title: 'Admission Requirements', type: 'Page', href: '/admission/requirements', description: 'Eligibility and requirements for admission' },
   { title: 'Tuition Fees', type: 'Page', href: '/admission/tuition-fees', description: 'Program tuition fees and payment schedule' },
   { title: 'Transfer Credits', type: 'Page', href: '/admission/transfer-credits', description: 'Credit transfer policy and procedure' },

@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { motion } from 'motion/react';
-import { Clock, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Clock, CheckCircle2, ArrowRight, ChevronDown } from 'lucide-react';
 import Container from '../ui/Container';
 
 const DEFAULT_PROGRAM_IMAGE = '/assets/program-undergraduate.webp';
@@ -34,31 +34,53 @@ function ctaHrefFor(program: ProgramRow): string {
   return DEFAULT_CTA_HREF;
 }
 
+
 type ProgramsSectionProps = {
   programs: readonly ProgramRow[];
+  /**
+   * Renders the animated chevron that leads to the full listing.
+   * On the homepage only one program per tier is passed, so the
+   * chevron is how visitors reach the rest; /programs already shows
+   * everything and passes false.
+   */
+  showAllLink?: boolean;
+  allLinkHref?: string;
+  /**
+   * The "Programmes Offered" block. Off on /programs, where the page
+   * hero already announces the section and repeating it reads as a
+   * duplicate title.
+   */
+  showHeading?: boolean;
 };
 
-export default function ProgramsSection({ programs }: ProgramsSectionProps) {
+export default function ProgramsSection({
+  programs,
+  showAllLink = false,
+  allLinkHref = '/programs',
+  showHeading = true,
+}: ProgramsSectionProps) {
   return (
     <section className="bg-[#F2F2F2] py-12 md:py-20">
       <Container>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-10 md:mb-14"
-        >
-          <div className="flex items-center justify-center gap-3 mb-2">
-            <span className="w-10 h-[1.5px] bg-accent/40" />
-            <span className="text-accent font-bold tracking-[0.2em] uppercase text-[10px]">
-              Academic Programs
-            </span>
-          </div>
-          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary">
-            Programmes Offered
-          </h2>
-          <div className="mt-3 mx-auto h-1 w-16 bg-accent rounded-full" />
-        </motion.div>
+        {showHeading && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-10 md:mb-14"
+          >
+            <div className="flex items-center justify-center gap-3 mb-2">
+              <span className="w-10 h-[1.5px] bg-accent/40" />
+              <span className="text-accent font-bold tracking-[0.2em] uppercase text-[10px]">
+                Academic Programs
+              </span>
+            </div>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary">
+              Programmes Offered
+            </h2>
+            <div className="mt-3 mx-auto h-1 w-16 bg-accent rounded-full" />
+          </motion.div>
+        )}
 
         <div className="space-y-12 md:space-y-16">
           {programs.map((program, idx) => {
@@ -68,13 +90,23 @@ export default function ProgramsSection({ programs }: ProgramsSectionProps) {
             // Alternate sides: even rows put the image left, odd rows
             // flip it to the right. Mobile always stacks image-first.
             const imageRight = idx % 2 === 1;
+            // The overline heads a tier, not a row — print it only when
+            // the tier changes, so seven consecutive graduate degrees
+            // sit under one "Graduate" heading instead of seven.
+            const isTierStart =
+              idx === 0 || programs[idx - 1].overline !== program.overline;
 
             return (
-              <div key={program.id}>
+              <div
+                key={program.id}
+                // Extra breathing room where a new tier begins, since
+                // its heading has to separate itself from the row above.
+                className={isTierStart && idx > 0 ? 'pt-6 md:pt-10' : undefined}
+              >
                 {/* Overline sits above the whole row, so it stays on the
                     left even when the image flips to the right. */}
-                {program.overline && (
-                  <p className="mb-4 border-l-[3px] border-accent pl-3 text-[22px] md:text-[26px] font-display font-bold text-primary">
+                {program.overline && isTierStart && (
+                  <p className="mb-4 border-l-[3px] border-accent pl-3 text-2xl md:text-3xl lg:text-[34px] font-display font-bold text-primary">
                     {program.overline}
                   </p>
                 )}
@@ -107,7 +139,7 @@ export default function ProgramsSection({ programs }: ProgramsSectionProps) {
 
                 {/* Content — alternates right / left */}
                 <div className={imageRight ? 'order-2 lg:order-1' : 'order-2'}>
-                  <h3 className="text-2xl md:text-3xl lg:text-[34px] font-display font-bold text-primary leading-tight mb-4">
+                  <h3 className="text-[22px] md:text-[26px] font-display font-bold text-primary leading-tight mb-4">
                     {heading}
                   </h3>
 
@@ -151,6 +183,37 @@ export default function ProgramsSection({ programs }: ProgramsSectionProps) {
           })}
 
         </div>
+
+        {showAllLink && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="mt-12 md:mt-16 flex flex-col items-center gap-3"
+          >
+            <a
+              href={allLinkHref}
+              aria-label="View all programs"
+              className="group flex h-14 w-14 items-center justify-center rounded-full border-2 border-primary/15 bg-white text-primary shadow-md transition-all hover:border-accent hover:bg-accent hover:text-white hover:shadow-premium focus:outline-none focus:ring-2 focus:ring-accent/40"
+            >
+              {/* The chevron drifts down and back on a loop — a standing
+                  hint that there is more below, not a one-off entrance. */}
+              <motion.span
+                animate={{ y: [0, 5, 0] }}
+                transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+                className="flex"
+              >
+                <ChevronDown size={26} strokeWidth={2.5} />
+              </motion.span>
+            </a>
+            <a
+              href={allLinkHref}
+              className="text-[13px] font-bold uppercase tracking-[0.15em] text-primary/70 transition-colors hover:text-accent"
+            >
+              View All Programs
+            </a>
+          </motion.div>
+        )}
       </Container>
     </section>
   );

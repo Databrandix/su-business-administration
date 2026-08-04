@@ -10,6 +10,7 @@ const staticRoutes: { path: string; priority: number; changeFrequency: 'weekly' 
   { path: '/about/deans-message', priority: 0.7, changeFrequency: 'yearly' },
   { path: '/about/mission-vision', priority: 0.7, changeFrequency: 'yearly' },
   { path: '/about/business-club', priority: 0.7, changeFrequency: 'monthly' },
+  { path: '/programs', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/admission/requirements', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/admission/tuition-fees', priority: 0.9, changeFrequency: 'monthly' },
   { path: '/admission/transfer-credits', priority: 0.7, changeFrequency: 'yearly' },

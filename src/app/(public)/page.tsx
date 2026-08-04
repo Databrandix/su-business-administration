@@ -2,8 +2,9 @@ import dynamic from 'next/dynamic';
 import HeroSection from '@/components/sections/HeroSection';
 import {
   getDepartmentIdentity,
-  getProgramsWithCta,
-  getResearchAreas,
+  getProgramsHomeTop,
+  getResearchAreas,
+
   getNewsHomeTop,
   getEventsHomeTop,
   getNoticesHomeTop,
@@ -43,8 +44,9 @@ const ServicesSection = dynamic(() => import('@/components/sections/ServicesSect
 export default async function HomePage() {
   const [dept, programs, researchAreas, newsTop, eventsTop, noticesTop] = await Promise.all([
     getDepartmentIdentity(),
-    getProgramsWithCta(),
-    getResearchAreas(),
+    getProgramsHomeTop(),
+    getResearchAreas(),
+
     getNewsHomeTop(),
     getEventsHomeTop(),
     getNoticesHomeTop(),
@@ -65,9 +67,10 @@ export default async function HomePage() {
         programSubtitle={dept.programSubtitle}
       />
       <OverviewSection />
-      <ProgramsSection programs={programs} />
+      <ProgramsSection programs={programs} showAllLink />
       <QuickLinksSection />
-      <NoticesSection notices={noticesTop} />
+      <NoticesSection notices={noticesTop} />
+
       <MajorResearchSection areas={researchAreas} />
       <EventsSection events={eventsTop} />
       <NewsSection news={newsTop} />

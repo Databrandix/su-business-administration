@@ -94,6 +94,21 @@ export const getProgramsWithCta = cache(async () => {
   });
 });
 
+// Homepage ProgramsSection — one flagship row per tier, so the section
+// stays short and the chevron below it carries visitors to /programs
+// for the full list. "Flagship" = the lowest displayOrder within each
+// overline, which is what the admin drag-to-reorder already controls.
+export const getProgramsHomeTop = cache(async () => {
+  const all = await getProgramsWithCta();
+  const seen = new Set<string>();
+  return all.filter((p) => {
+    const tier = p.overline || '';
+    if (seen.has(tier)) return false;
+    seen.add(tier);
+    return true;
+  });
+});
+
 // /programs/<slug> — full program record plus its optional fee
 // structure, so the detail page can render the stat cards without a
 // second round-trip.

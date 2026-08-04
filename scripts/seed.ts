@@ -440,7 +440,7 @@ async function seedMainNav() {
         { name: 'FAQ',          href: '/student-society/faq',          displayOrder: 5 },
         { name: 'Syllabus',     href: '/student-society/syllabus',     displayOrder: 6 },
         { name: 'Club list',    href: '/student-society/club-list',    displayOrder: 7 },
-        { name: 'Mecha Club',   href: '/about/mecha-club',             displayOrder: 8 },
+        { name: 'Business Club', href: '/about/business-club',             displayOrder: 8 },
       ],
     },
     {
@@ -606,26 +606,26 @@ async function seedAboutMissionVision() {
   console.log('✓ AboutMissionVision seeded');
 }
 
-async function seedAboutMechaClub() {
-  await prisma.aboutMechaClub.upsert({
+async function seedAboutBusinessClub() {
+  await prisma.aboutBusinessClub.upsert({
     where: { id: 'singleton' },
     update: {},
     create: {
       id: 'singleton',
-      heroTitle:         'SU Mecha Club',
+      heroTitle:         'SU Business Club',
       heroOverline:      'About',
       heroImageUrl:      '/assets/mecha-hero.webp',
       heroImagePublicId: null,
       heroImageVerticalPercent: 45,
 
-      introOverline: 'Where Engineering Meets Community',
+      introOverline: 'Where Business Meets Community',
       // Inline HTML preserved — gradient on "Business Professionals"
       introHeading:
         'Building Industry-Ready <span class="text-gradient">Business Professionals</span>',
       introBody1:
         'The Business Administration department at Sonargaon University fosters a vibrant student community through its dedicated club and organisational activities. We focus on transforming students into industry-ready professionals through continuous engagement and practical exposure.',
       introBody2:
-        'From plant visits to international software training, the SU Mecha Club bridges classroom learning with the real world — equipping every member with the skills, network, and confidence to lead.',
+        'From corporate visits to case-competition training, the SU Business Club bridges classroom learning with the real world — equipping every member with the skills, network, and confidence to lead.',
       introImageUrl:      '/assets/mecha-club-1.webp',
       introImagePublicId: null,
 
@@ -640,13 +640,13 @@ async function seedAboutMechaClub() {
       activitiesHeading:  'Core Activities & Initiatives',
       activities: [
         {
-          iconName: 'Factory',
+          iconName: 'Building2',
           imageUrl: '/assets/mecha-field-visit.webp',
           imagePublicId: null,
-          category: 'Industrial Exposure',
-          title: 'Field Visits to Leading Plants',
+          category: 'Industry Exposure',
+          title: 'Corporate & Factory Visits',
           description:
-            'Regularly organised industrial tours to power plants, textile machinery units and large-scale manufacturing facilities — giving students a firsthand look at real mechanical operations and management.',
+            'Regularly organised visits to banks, manufacturing companies and corporate offices — giving students a firsthand look at how real organisations run their operations, finance, and people management.',
         },
         {
           iconName: 'Laptop',
@@ -655,7 +655,7 @@ async function seedAboutMechaClub() {
           category: 'Skill Development',
           title: 'Hands-on Software Workshops',
           description:
-            'Specialized training sessions on industry-standard engineering software including AutoCAD and SolidWorks, ensuring students are proficient in digital design before they graduate.',
+            'Specialized training sessions on industry-standard business tools including Excel, Power BI, SPSS and accounting software, ensuring students are analytics-ready before they graduate.',
         },
         {
           iconName: 'Mic',
@@ -664,16 +664,16 @@ async function seedAboutMechaClub() {
           category: 'Career Guidance',
           title: 'Seminars with Industry Experts',
           description:
-            'Frequent seminars featuring industry leaders and corporate experts that provide insights into local and international job markets — manufacturing, energy, and the public sector.',
+            'Frequent seminars featuring business leaders and corporate experts that provide insights into local and international job markets — banking, FMCG, consulting, and the public sector.',
         },
         {
-          iconName: 'Lightbulb',
+          iconName: 'Trophy',
           imageUrl: '/assets/mecha-project.webp',
           imagePublicId: null,
-          category: 'Innovation',
-          title: 'Project Showcases & Tech Fairs',
+          category: 'Competition',
+          title: 'Business Case Competitions',
           description:
-            'Students display engineering prototypes and innovative solutions during university-wide tech fairs and departmental exhibitions, sharpening their presentation and engineering skills.',
+            'Students form teams to analyse real business problems and pitch strategies before panels of judges at intra-university and national case competitions, sharpening analytical and presentation skills.',
         },
         {
           iconName: 'Sparkles',
@@ -682,7 +682,7 @@ async function seedAboutMechaClub() {
           category: 'Community',
           title: 'Co-curricular Engagement',
           description:
-            'Beyond technical skills — indoor games, cultural programs and study tours that foster a well-rounded university experience and strong bonding between batches.',
+            'Beyond professional skills — indoor games, cultural programs and study tours that foster a well-rounded university experience and strong bonding between batches.',
         },
         {
           iconName: 'Award',
@@ -691,22 +691,22 @@ async function seedAboutMechaClub() {
           category: 'Recognition',
           title: 'Awards & Industry Recognition',
           description:
-            'SUMEC was honoured as a Valuable Club Partner at ACI Motors-presented Auto Fest 2024 (organised by ME Association, BUET) — one of many recognitions earned through active participation, collaboration, and engineering excellence.',
+            'Club teams have been recognised at national business case competitions and entrepreneurship summits — recognitions earned through active participation, collaboration, and academic excellence.',
         },
       ],
 
       networkOverline:          'Beyond Graduation',
       networkHeading:           'Building a Professional Network',
       networkBody:
-        'The Mecha Club community serves as a bridge between current students and the SU Alumni — creating an active professional network that opens doors to internships, job placements, and lifelong mentorship across the engineering industry.',
+        'The Business Club community serves as a bridge between current students and the SU Alumni — creating an active professional network that opens doors to internships, job placements, and lifelong mentorship across the engineering industry.',
       networkPrimaryCtaLabel:   'Join the Club',
-      networkPrimaryCtaHref:    'https://www.facebook.com/su.mechanical.engineering',
+      networkPrimaryCtaHref:    'https://www.facebook.com/SonargaonUniversity',
       networkSecondaryCtaLabel: 'Alumni Portal',
       networkSecondaryCtaHref:
         'http://sue.su.edu.bd:5081/sonargaon_erp/student/convocation_registration/alumni',
     },
   });
-  console.log('✓ AboutMechaClub seeded');
+  console.log('✓ AboutBusinessClub seeded');
 }
 
 // ════════════════════════════════════════════════════════════════
@@ -1973,7 +1973,7 @@ async function main() {
   console.log('\nPhase 4 about pages…');
   await seedAboutOverview();
   await seedAboutMissionVision();
-  await seedAboutMechaClub();
+  await seedAboutBusinessClub();
 
   console.log('\nPhase 5 lab systems…');
   await seedLabFacilityLanding();

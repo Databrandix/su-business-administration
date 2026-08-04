@@ -193,8 +193,8 @@ export const getAboutMissionVision = cache(async () => {
   return prisma.aboutMissionVision.findUnique({ where: { id: 'singleton' } });
 });
 
-export const getAboutMechaClub = cache(async () => {
-  return prisma.aboutMechaClub.findUnique({ where: { id: 'singleton' } });
+export const getAboutBusinessClub = cache(async () => {
+  return prisma.aboutBusinessClub.findUnique({ where: { id: 'singleton' } });
 });
 
 // ─────────────────────────────────────────────────────────────────

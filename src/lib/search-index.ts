@@ -40,7 +40,7 @@ const staticPages: SearchItem[] = [
   { title: 'Mission & Vision', type: 'Page', href: '/about/mission-vision', description: "Department's mission and long-term vision" },
   { title: 'Laboratory Facility', type: 'Page', href: '/about/laboratory-facility', description: 'Departmental labs and equipment' },
   { title: 'Lab Facility', type: 'Page', href: '/about/lab-facility', description: 'List of all departmental labs' },
-  { title: 'Business Club', type: 'Page', href: '/about/mecha-club', description: 'Sonargaon University Business Club' },
+  { title: 'Business Club', type: 'Page', href: '/about/business-club', description: 'Sonargaon University Business Club' },
 
   // Faculty
   { title: 'Faculty Members', type: 'Page', href: '/faculty-member', description: 'List of all faculty members' },

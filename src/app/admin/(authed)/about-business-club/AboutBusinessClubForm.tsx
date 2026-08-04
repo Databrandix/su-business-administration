@@ -2,15 +2,15 @@
 
 import { useActionState, useEffect } from 'react';
 import { toast } from 'sonner';
-import type { AboutMechaClub } from '@prisma/client';
+import type { AboutBusinessClub } from '@prisma/client';
 import ImageUploader from '@/components/admin/ImageUploader';
 import HeroImagePositionSlider from '@/components/admin/HeroImagePositionSlider';
 import StatsEditor from '@/components/admin/StatsEditor';
 import ActivitiesEditor from '@/components/admin/ActivitiesEditor';
 import {
-  updateAboutMechaClubAction,
+  updateAboutBusinessClubAction,
   type ActionResult,
-} from '@/lib/admin-actions/about-mecha-club';
+} from '@/lib/admin-actions/about-business-club';
 
 type State = ActionResult | { ok: null };
 
@@ -18,14 +18,14 @@ type State = ActionResult | { ok: null };
 // shared IconInputField inside ActivitiesEditor; the legacy curated
 // hint list is gone.
 
-export default function AboutMechaClubForm({ initial }: { initial: AboutMechaClub | null }) {
+export default function AboutBusinessClubForm({ initial }: { initial: AboutBusinessClub | null }) {
   const [state, formAction, pending] = useActionState<State, FormData>(
-    updateAboutMechaClubAction,
+    updateAboutBusinessClubAction,
     { ok: null },
   );
 
   useEffect(() => {
-    if (state.ok === true) toast.success('About Mecha Club saved');
+    if (state.ok === true) toast.success('About Business Club saved');
     if (state.ok === false) toast.error(state.error);
   }, [state]);
 

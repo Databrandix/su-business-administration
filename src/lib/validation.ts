@@ -454,7 +454,7 @@ export const laboratoryLabCreateSchema = z.object({
 
 export const laboratoryLabUpdateSchema = laboratoryLabCreateSchema.partial();
 
-export const aboutMechaClubUpdateSchema = z.object({
+export const aboutBusinessClubUpdateSchema = z.object({
   heroTitle:                z.string().min(1).max(300),
   heroOverline:             optionalNullableString,
   heroImageUrl:             z.string().min(1),
@@ -1033,7 +1033,7 @@ export const contactSubmissionStatusUpdateSchema = z.object({
 // ─────────────────────────────────────────────────────────────────
 
 // Each advantage row in the NewsletterPage.advantages Json array.
-// Mirrors the AboutMechaClub.activities shape (Json structured editor)
+// Mirrors the AboutBusinessClub.activities shape (Json structured editor)
 // — iconName resolves through DynamicLucideIcon at render time.
 const newsletterAdvantagesArraySchema = z.array(
   z.object({
@@ -1068,12 +1068,12 @@ export const newsletterSubscribeSchema = z.object({
 });
 
 // ─────────────────────────────────────────────────────────────────
-//  Mecha Club join application — public submit + admin status edit
+//  Business Club join application — public submit + admin status edit
 // ─────────────────────────────────────────────────────────────────
 
 const mechaClubSemesterEnum = z.enum(['1', '2', '3', '4', '5', '6', '7', '8']);
 
-export const mechaClubApplicationCreateSchema = z.object({
+export const businessClubApplicationCreateSchema = z.object({
   fullName:   z.string().trim().min(1).max(200),
   studentId:  z.string().trim().min(1).max(50),
   email:      z.string().trim().email().max(320),
@@ -1082,14 +1082,14 @@ export const mechaClubApplicationCreateSchema = z.object({
   motivation: z.string().trim().min(1).max(2000),
 });
 
-export const mechaClubApplicationStatusEnum = z.enum([
+export const businessClubApplicationStatusEnum = z.enum([
   'pending',
   'approved',
   'rejected',
 ]);
 
-export const mechaClubApplicationStatusUpdateSchema = z.object({
-  status: mechaClubApplicationStatusEnum,
+export const businessClubApplicationStatusUpdateSchema = z.object({
+  status: businessClubApplicationStatusEnum,
 });
 
 // Generic page-hero update. pageKey + publicPath + pageLabel are

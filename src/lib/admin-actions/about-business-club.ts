@@ -5,7 +5,7 @@ import type { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/auth-server';
 import { sanitizeHtml } from '@/lib/sanitize-html';
-import { aboutMechaClubUpdateSchema } from '@/lib/validation';
+import { aboutBusinessClubUpdateSchema } from '@/lib/validation';
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -32,7 +32,7 @@ function parseJsonArray(fd: FormData, key: string): unknown {
   }
 }
 
-export async function updateAboutMechaClubAction(
+export async function updateAboutBusinessClubAction(
   _prev: ActionResult | { ok: null },
   formData: FormData,
 ): Promise<ActionResult> {
@@ -64,7 +64,7 @@ export async function updateAboutMechaClubAction(
     networkSecondaryCtaHref:  emptyToNull(formData.get('networkSecondaryCtaHref')),
   };
 
-  const parsed = aboutMechaClubUpdateSchema.safeParse(raw);
+  const parsed = aboutBusinessClubUpdateSchema.safeParse(raw);
   if (!parsed.success) {
     return {
       ok: false,
@@ -88,7 +88,7 @@ export async function updateAboutMechaClubAction(
   };
 
   try {
-    await prisma.aboutMechaClub.upsert({
+    await prisma.aboutBusinessClub.upsert({
       where: { id: 'singleton' },
       create: { id: 'singleton', ...data },
       update: data,
@@ -97,8 +97,8 @@ export async function updateAboutMechaClubAction(
     return { ok: false, error: e instanceof Error ? e.message : 'Database error' };
   }
 
-  revalidatePath('/admin/about-mecha-club');
+  revalidatePath('/admin/about-business-club');
   revalidatePath('/admin');
-  revalidatePath('/about/mecha-club');
+  revalidatePath('/about/business-club');
   return { ok: true };
 }

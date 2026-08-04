@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db';
 import { getSession } from '@/lib/auth-server';
-import { mechaClubApplicationStatusUpdateSchema } from '@/lib/validation';
+import { businessClubApplicationStatusUpdateSchema } from '@/lib/validation';
 
 export type ActionResult = { ok: true } | { ok: false; error: string };
 
@@ -15,18 +15,18 @@ async function requireAuth(): Promise<ActionResult | null> {
 }
 
 function revalidateSurfaces() {
-  revalidatePath('/admin/mecha-club-applications');
+  revalidatePath('/admin/business-club-applications');
   revalidatePath('/admin');
 }
 
-export async function updateMechaClubApplicationStatusAction(
+export async function updateBusinessClubApplicationStatusAction(
   id: string,
   rawStatus: string,
 ): Promise<ActionResult> {
   const denied = await requireAuth();
   if (denied) return denied;
 
-  const parsed = mechaClubApplicationStatusUpdateSchema.safeParse({ status: rawStatus });
+  const parsed = businessClubApplicationStatusUpdateSchema.safeParse({ status: rawStatus });
   if (!parsed.success) {
     return {
       ok: false,
@@ -35,7 +35,7 @@ export async function updateMechaClubApplicationStatusAction(
   }
 
   try {
-    await prisma.mechaClubApplication.update({
+    await prisma.businessClubApplication.update({
       where: { id },
       data: { status: parsed.data.status },
     });
@@ -53,14 +53,14 @@ export async function updateMechaClubApplicationStatusAction(
   return { ok: true };
 }
 
-export async function deleteMechaClubApplicationAction(
+export async function deleteBusinessClubApplicationAction(
   id: string,
 ): Promise<ActionResult> {
   const denied = await requireAuth();
   if (denied) return denied;
 
   try {
-    await prisma.mechaClubApplication.delete({ where: { id } });
+    await prisma.businessClubApplication.delete({ where: { id } });
   } catch (e: unknown) {
     if (
       e instanceof Prisma.PrismaClientKnownRequestError &&

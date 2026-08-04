@@ -83,8 +83,15 @@ export const programCreateSchema = z.object({
   overline:        z.string().max(50).default(''),
   programName:     z.string().min(1).max(300),
   degreeCode:      z.string().min(1).max(50),
+  // Optional — set it to publish /programs/<slug>. Same lowercase
+  // rule as every other slug in the schema (slugRegex below is
+  // declared later in the file, so the pattern is inline here).
+  slug:            z.string().min(1).max(160)
+                     .regex(/^[a-z0-9-]+$/, 'Slug must be lowercase letters, numbers, and hyphens only')
+                     .nullable().optional(),
   duration:        z.string().min(1).max(100),
   description:     z.string().min(1),
+  overviewParagraphs: z.array(z.string().min(1)).default([]),
   displayOrder:    z.number().int().min(0).optional(), // auto-append if omitted
   imageUrl:        optionalNullableString,
   imagePublicId:   optionalNullableString,
@@ -226,6 +233,7 @@ export const facultyCreateSchema = z.object({
   email:          z.string().email().nullable().optional().or(z.literal('')),
   phone:          z.string().nullable().optional(),
   suId:           z.string().nullable().optional(),
+  roomNo:         z.string().nullable().optional(),
   // Optional per-faculty office address override; null/empty →
   // public page falls back to UniversityIdentity.address.
   officeAddress:  z.string().nullable().optional(),
@@ -809,6 +817,8 @@ export const admissionRequirementsUpdateSchema = z.object({
   intro:                     z.string().min(1),
   undergraduateRequirements: paragraphsArraySchema,
   additionalNotes:           paragraphsArraySchema,
+  graduateRequirements:      paragraphsArraySchema,
+  graduateNotes:             paragraphsArraySchema,
   diplomaRequirements:       paragraphsArraySchema,
   combinedGpaBody:           z.string().min(1),
   diplomaQuickCriteria:      z.array(quickCriterionSchema).default([]),

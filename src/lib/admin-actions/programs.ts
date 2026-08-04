@@ -43,8 +43,10 @@ export async function createProgramAction(
     overline:        getStr(formData, 'overline'),
     programName:     getStr(formData, 'programName'),
     degreeCode:      getStr(formData, 'degreeCode'),
+    slug:            emptyToNull(formData.get('slug')),
     duration:        getStr(formData, 'duration'),
     description:     getStr(formData, 'description'),
+    overviewParagraphs: splitLines(getStr(formData, 'overviewParagraphs')),
     specializations: splitLines(getStr(formData, 'specializations')),
     cta:             emptyToNull(formData.get('cta')),
     ctaHref:         emptyToNull(formData.get('ctaHref')),
@@ -75,8 +77,10 @@ export async function createProgramAction(
         overline:        parsed.data.overline,
         programName:     parsed.data.programName,
         degreeCode:      parsed.data.degreeCode,
+        slug:            parsed.data.slug ?? null,
         duration:        parsed.data.duration,
         description:     parsed.data.description,
+        overviewParagraphs: parsed.data.overviewParagraphs,
         displayOrder,
         imageUrl:        parsed.data.imageUrl ?? null,
         imagePublicId:   parsed.data.imagePublicId ?? null,
@@ -87,7 +91,11 @@ export async function createProgramAction(
     });
   } catch (e: unknown) {
     if ((e as { code?: string })?.code === 'P2002') {
-      return { ok: false, error: `degreeCode "${parsed.data.degreeCode}" is already in use` };
+      // Both degreeCode and slug are unique — name the one that clashed.
+      const target = (e as { meta?: { target?: string[] } })?.meta?.target ?? [];
+      const field = target.includes('slug') ? 'slug' : 'degreeCode';
+      const value = field === 'slug' ? parsed.data.slug : parsed.data.degreeCode;
+      return { ok: false, error: `${field} "${value}" is already in use` };
     }
     return { ok: false, error: e instanceof Error ? e.message : 'Database error' };
   }
@@ -113,8 +121,10 @@ export async function updateProgramAction(
     overline:        getStr(formData, 'overline'),
     programName:     getStr(formData, 'programName'),
     degreeCode:      getStr(formData, 'degreeCode'),
+    slug:            emptyToNull(formData.get('slug')),
     duration:        getStr(formData, 'duration'),
     description:     getStr(formData, 'description'),
+    overviewParagraphs: splitLines(getStr(formData, 'overviewParagraphs')),
     specializations: splitLines(getStr(formData, 'specializations')),
     cta:             emptyToNull(formData.get('cta')),
     ctaHref:         emptyToNull(formData.get('ctaHref')),
@@ -140,7 +150,10 @@ export async function updateProgramAction(
   } catch (e: unknown) {
     const code = (e as { code?: string })?.code;
     if (code === 'P2025') return { ok: false, error: 'Program not found' };
-    if (code === 'P2002') return { ok: false, error: 'degreeCode already in use' };
+    if (code === 'P2002') {
+      const target = (e as { meta?: { target?: string[] } })?.meta?.target ?? [];
+      return { ok: false, error: `${target.includes('slug') ? 'slug' : 'degreeCode'} already in use` };
+    }
     return { ok: false, error: e instanceof Error ? e.message : 'Database error' };
   }
 
@@ -148,6 +161,7 @@ export async function updateProgramAction(
   revalidatePath(`/admin/programs/${id}`);
   revalidatePath('/admin');
   revalidatePath('/');
+  if (parsed.data.slug) revalidatePath(`/programs/${parsed.data.slug}`);
   return { ok: true };
 }
 

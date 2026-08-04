@@ -43,7 +43,16 @@ export default function ProgramForm({ initial }: { initial: Program | null }) {
                      defaultValue={initial?.duration ?? ''}
                      placeholder="4 Years · 8 Semesters" />
         </div>
-        <TextAreaField label="Description" name="description" required rows={4}
+        <TextField label="Page slug (optional)" name="slug" monospace
+                   defaultValue={initial?.slug ?? ''}
+                   placeholder="bba" />
+        <p className="text-xs text-gray-500 -mt-2">
+          Publishes a dedicated program page at{' '}
+          <code className="font-mono">/programs/&lt;slug&gt;</code>, which the
+          homepage CTA then links to. Lowercase letters, numbers, and hyphens
+          only. Leave blank for no detail page.
+        </p>
+        <TextAreaField label="Description (homepage card)" name="description" required rows={4}
                        defaultValue={initial?.description ?? ''} />
         <TextAreaField label="Specializations (one per line, optional)"
                        name="specializations" rows={4}
@@ -54,11 +63,25 @@ export default function ProgramForm({ initial }: { initial: Program | null }) {
                      placeholder="e.g. View More" />
           <TextField label="CTA href (optional)" name="ctaHref"
                      defaultValue={initial?.ctaHref ?? ''}
-                     placeholder="/admission/requirements" />
+                     placeholder="/programs/bba" />
         </div>
         <p className="text-xs text-gray-500 -mt-2">
-          CTA href: leave blank to fall back to <code className="font-mono">/admission/requirements</code>.
+          CTA href overrides the program page link — set it only to point
+          somewhere else (e.g. an external brochure). Blank uses{' '}
+          <code className="font-mono">/programs/&lt;slug&gt;</code>, or{' '}
+          <code className="font-mono">/admission/requirements</code> when there
+          is no slug.
         </p>
+      </Card>
+
+      <Card title="Program page — overview paragraphs">
+        <p className="text-xs text-gray-500 -mt-2">
+          Long-form body for <code className="font-mono">/programs/&lt;slug&gt;</code>.
+          One paragraph per line; blank falls back to the card description above.
+        </p>
+        <TextAreaField label="Overview paragraphs (one per line)"
+                       name="overviewParagraphs" rows={8}
+                       defaultValue={toStringArray(initial?.overviewParagraphs).join('\n')} />
       </Card>
 
       <Card title="Image (optional)">
@@ -97,11 +120,18 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
   );
 }
 
+// overviewParagraphs is Json — narrow it to the string[] the textarea
+// needs instead of trusting the column shape.
+function toStringArray(v: unknown): string[] {
+  if (!Array.isArray(v)) return [];
+  return v.filter((s): s is string => typeof s === 'string' && s.length > 0);
+}
+
 function TextField({
-  label, name, defaultValue, required, type = 'text', placeholder,
+  label, name, defaultValue, required, type = 'text', placeholder, monospace,
 }: {
   label: string; name: string; defaultValue?: string;
-  required?: boolean; type?: string; placeholder?: string;
+  required?: boolean; type?: string; placeholder?: string; monospace?: boolean;
 }) {
   return (
     <div>
@@ -110,7 +140,7 @@ function TextField({
       </label>
       <input id={name} name={name} type={type}
              defaultValue={defaultValue} required={required} placeholder={placeholder}
-             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent" />
+             className={`w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent ${monospace ? 'font-mono' : ''}`} />
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import {
   AlertCircle,
+  Award,
   CheckCircle2,
   GraduationCap,
   Wrench,
@@ -12,11 +13,11 @@ import { sanitizeHtml } from '@/lib/sanitize-html';
 export const metadata = {
   title: 'Admission Requirements — Department of Business Administration',
   description:
-    'Admission requirements at Sonargaon University — Undergraduate and Diploma (Engineering) entry criteria.',
+    'Admission requirements at Sonargaon University — Undergraduate, Graduate, and Diploma (Engineering) entry criteria.',
 };
 
 // Phase 8b — DB-driven singleton. Fixed section labels ("Undergraduate
-// Programs", "For Diploma (Engineering) Students", "Eligibility",
+// Programs", "Graduate Programs", "For Diploma (Engineering) Students", "Eligibility",
 // "Combined GPA Criteria", "Quick Reference", "Minimum Requirements")
 // stay hardcoded as part of the page chrome — they're page layout,
 // not editorial content.
@@ -44,6 +45,8 @@ export default async function AdmissionRequirementsPage() {
   ]);
   const ugReqs = coerceStringArray(reqs?.undergraduateRequirements);
   const notes  = coerceStringArray(reqs?.additionalNotes);
+  const gradReqs  = coerceStringArray(reqs?.graduateRequirements);
+  const gradNotes = coerceStringArray(reqs?.graduateNotes);
   const dipReqs = coerceStringArray(reqs?.diplomaRequirements);
   const quickCrit = coerceQuickCriteria(reqs?.diplomaQuickCriteria);
 
@@ -100,6 +103,43 @@ export default async function AdmissionRequirementsPage() {
                 {notes.length > 0 && (
                   <div className="mt-8 space-y-4">
                     {notes.map((note, i) => (
+                      <div
+                        key={i}
+                        className="flex items-start gap-3 p-5 bg-accent/5 border-l-4 border-accent rounded-r-lg"
+                      >
+                        <AlertCircle size={20} className="text-accent shrink-0 mt-0.5" />
+                        <p className="text-[14px] text-gray-700 leading-relaxed">{note}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
+
+            {/* ───── Graduate Programs ───── */}
+            {gradReqs.length > 0 && (
+              <section className="mb-16 md:mb-20">
+                <SectionHeader Icon={Award} title="Graduate Programs" />
+
+                <div className="space-y-4">
+                  {gradReqs.map((req, i) => (
+                    <article
+                      key={i}
+                      className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-start gap-5 p-5 md:p-6">
+                        <div className="flex-shrink-0 w-11 h-11 rounded-full bg-gradient-to-br from-primary to-accent text-white flex items-center justify-center font-display font-bold shadow-md">
+                          {String(i + 1).padStart(2, '0')}
+                        </div>
+                        <p className="text-[15px] text-gray-800 leading-[1.7] pt-1.5">{req}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+
+                {gradNotes.length > 0 && (
+                  <div className="mt-8 space-y-4">
+                    {gradNotes.map((note, i) => (
                       <div
                         key={i}
                         className="flex items-start gap-3 p-5 bg-accent/5 border-l-4 border-accent rounded-r-lg"

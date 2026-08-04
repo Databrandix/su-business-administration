@@ -30,6 +30,8 @@ export default function AdmissionRequirementsForm({ initial }: { initial: Admiss
 
   const undergrad  = toStringArray(initial?.undergraduateRequirements);
   const notes      = toStringArray(initial?.additionalNotes);
+  const graduate   = toStringArray(initial?.graduateRequirements);
+  const gradNotes  = toStringArray(initial?.graduateNotes);
   const diploma    = toStringArray(initial?.diplomaRequirements);
   const quickCrit  = Array.isArray(initial?.diplomaQuickCriteria) ? initial.diplomaQuickCriteria : [];
 
@@ -53,6 +55,24 @@ export default function AdmissionRequirementsForm({ initial }: { initial: Admiss
           Renders as the highlighted alert boxes below the UG list.
         </p>
         <ParagraphsEditor name="additionalNotes" initialValue={notes}
+                          helpText={<p className="text-xs text-gray-500">Each row = one alert callout.</p>} />
+      </Card>
+
+      <Card title="Graduate eligibility — numbered bullets">
+        <p className="text-xs text-gray-500 -mt-2">
+          Renders as the numbered list under &ldquo;Graduate Programs&rdquo;,
+          between the undergraduate and diploma sections. Leave empty to
+          hide the whole Graduate section.
+        </p>
+        <ParagraphsEditor name="graduateRequirements" initialValue={graduate}
+                          helpText={<p className="text-xs text-gray-500">Each row = one eligibility bullet.</p>} />
+      </Card>
+
+      <Card title="Graduate notes — alert callouts">
+        <p className="text-xs text-gray-500 -mt-2">
+          Renders as the highlighted alert boxes below the graduate list.
+        </p>
+        <ParagraphsEditor name="graduateNotes" initialValue={gradNotes}
                           helpText={<p className="text-xs text-gray-500">Each row = one alert callout.</p>} />
       </Card>
 

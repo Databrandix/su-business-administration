@@ -13,6 +13,7 @@ type ProgramRow = {
   overline: string;
   programName: string;
   degreeCode: string;
+  slug: string | null;
   duration: string;
   description: string;
   imageUrl: string | null;
@@ -21,7 +22,17 @@ type ProgramRow = {
   ctaHref: string | null;
 };
 
+// Last resort only — a program with neither a detail page nor an
+// explicit ctaHref still needs somewhere useful to send the visitor.
 const DEFAULT_CTA_HREF = '/admission/requirements';
+
+// The program's own page wins; an explicit ctaHref can still override
+// it (e.g. to point at an external brochure).
+function ctaHrefFor(program: ProgramRow): string {
+  if (program.ctaHref) return program.ctaHref;
+  if (program.slug) return `/programs/${program.slug}`;
+  return DEFAULT_CTA_HREF;
+}
 
 type ProgramsSectionProps = {
   programs: readonly ProgramRow[];
@@ -124,7 +135,7 @@ export default function ProgramsSection({ programs }: ProgramsSectionProps) {
                   )}
 
                   <a
-                    href={program.ctaHref ?? DEFAULT_CTA_HREF}
+                    href={ctaHrefFor(program)}
                     className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-primary to-accent px-8 py-3 text-base font-bold text-white shadow-md transition-all hover:shadow-premium"
                   >
                     {ctaText}

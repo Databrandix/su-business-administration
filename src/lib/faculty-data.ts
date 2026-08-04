@@ -30,6 +30,8 @@ export interface Faculty {
   photo?: string;
   email?: string;
   suId?: string;
+  /** Campus office room number (e.g. "314"). */
+  roomNo?: string;
   phone?: string;
 
   // Detail sections — optional, fill in as content arrives.

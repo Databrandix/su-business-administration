@@ -157,11 +157,18 @@ export default function FacultyForm({ initial, currentDean, currentHead }: Props
             defaultValue={initial?.phone ?? ''}
           />
         </div>
-        <TextField
-          label="SU ID" name="suId"
-          defaultValue={initial?.suId ?? ''}
-          placeholder="e.g. SU1603141114"
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextField
+            label="SU ID" name="suId"
+            defaultValue={initial?.suId ?? ''}
+            placeholder="e.g. SU1603141114"
+          />
+          <TextField
+            label="Room no." name="roomNo"
+            defaultValue={initial?.roomNo ?? ''}
+            placeholder="e.g. 314"
+          />
+        </div>
         <div>
           <label htmlFor="officeAddress" className="block text-sm font-medium text-gray-700 mb-1">
             Office address

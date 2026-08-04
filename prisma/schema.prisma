@@ -162,8 +162,17 @@ model Program {
   overline        String   @default("")
   programName     String
   degreeCode      String   @unique
+  // URL segment for the dedicated program page (/programs/<slug>).
+  // Nullable so a program without a detail page falls back to the
+  // homepage card's ctaHref; unique because it addresses a route.
+  slug            String?  @unique
   duration        String
+  // Short card copy on the homepage ProgramsSection.
   description     String   @db.Text
+  // Long-form body for /programs/<slug> — Json string[] of paragraphs,
+  // same shape as AboutOverview.paragraphs. Empty array hides the
+  // section so a program can ship with a card but no detail prose.
+  overviewParagraphs Json  @default("[]")
   displayOrder    Int
 
   imageUrl        String?
@@ -234,6 +243,9 @@ model Faculty {
   email           String?
   phone           String?
   suId            String?
+  // Office room number on the SU campus (e.g. "314"). Nullable —
+  // rows without one simply omit the line on the public profile.
+  roomNo          String?
   // Per-faculty office address. Nullable: when null the public
   // faculty page falls back to UniversityIdentity.address (the
   // shared institutional address). Lets a member with a different
@@ -953,6 +965,12 @@ model AdmissionRequirements {
 
   undergraduateRequirements  Json     // string[]
   additionalNotes            Json     // string[]
+
+  // Graduate tier — renders between Undergraduate and Diploma. Empty
+  // arrays hide the whole section, so the page degrades cleanly for a
+  // department that offers no postgraduate programs.
+  graduateRequirements       Json     @default("[]")  // string[]
+  graduateNotes              Json     @default("[]")  // string[]
 
   diplomaRequirements        Json     // string[]
   combinedGpaBody            String   @db.Text   // HTML-allowed (inline <strong>)

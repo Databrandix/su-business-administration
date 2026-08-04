@@ -46,6 +46,8 @@ export async function updateAdmissionRequirementsAction(
     intro:                     getStr(formData, 'intro'),
     undergraduateRequirements: getParagraphs(formData, 'undergraduateRequirements'),
     additionalNotes:           getParagraphs(formData, 'additionalNotes'),
+    graduateRequirements:      getParagraphs(formData, 'graduateRequirements'),
+    graduateNotes:             getParagraphs(formData, 'graduateNotes'),
     diplomaRequirements:       getParagraphs(formData, 'diplomaRequirements'),
     combinedGpaBody:           getStr(formData, 'combinedGpaBody'),
     diplomaQuickCriteria:      parseJsonArray(formData, 'diplomaQuickCriteria'),
@@ -60,6 +62,8 @@ export async function updateAdmissionRequirementsAction(
     intro:                     parsed.data.intro,
     undergraduateRequirements: parsed.data.undergraduateRequirements as unknown as Prisma.InputJsonValue,
     additionalNotes:           parsed.data.additionalNotes           as unknown as Prisma.InputJsonValue,
+    graduateRequirements:      parsed.data.graduateRequirements      as unknown as Prisma.InputJsonValue,
+    graduateNotes:             parsed.data.graduateNotes             as unknown as Prisma.InputJsonValue,
     diplomaRequirements:       parsed.data.diplomaRequirements       as unknown as Prisma.InputJsonValue,
     // Phase 19 CP19.5 — sanitize HTML-allowed `combinedGpaBody`.
     combinedGpaBody:           sanitizeHtml(parsed.data.combinedGpaBody),

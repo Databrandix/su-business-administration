@@ -38,10 +38,11 @@ const staticRoutes: { path: string; priority: number; changeFrequency: 'weekly' 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const now = new Date();
 
-  const [facultyRows, eventRows, newsRows] = await Promise.all([
+  const [facultyRows, eventRows, newsRows, programRows] = await Promise.all([
     prisma.faculty.findMany({ select: { slug: true } }),
     prisma.event.findMany({ select: { slug: true } }),
     prisma.news.findMany({ select: { slug: true } }),
+    prisma.program.findMany({ where: { slug: { not: null } }, select: { slug: true } }),
   ]);
 
   const statics: MetadataRoute.Sitemap = staticRoutes.map(({ path, priority, changeFrequency }) => ({
@@ -72,5 +73,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.5,
   }));
 
-  return [...statics, ...facultyPages, ...eventPages, ...newsPages];
+  // Program pages carry the academic offer itself, so they rank just
+  // below the admission funnel in priority.
+  const programPages: MetadataRoute.Sitemap = programRows.map((p) => ({
+    url: `${BASE_URL}/programs/${p.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly',
+    priority: 0.9,
+  }));
+
+  return [...statics, ...programPages, ...facultyPages, ...eventPages, ...newsPages];
 }

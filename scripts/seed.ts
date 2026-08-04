@@ -102,9 +102,16 @@ async function seedPrograms() {
       overline: 'Undergraduate',
       programName: 'Bachelor of Business Administration (BBA)',
       degreeCode: 'BBA',
+      slug: 'bba',
       duration: '4 Years · 8 Semesters',
       description:
         'Our flagship Bachelor of Business Administration (BBA) program builds a strong foundation in business and management by combining academic excellence, practical learning, and industry exposure. The program prepares graduates for leadership roles in business, entrepreneurship, and organizations across the public and private sectors.',
+      // Long-form body for /programs/bba (the homepage card uses
+      // `description` above).
+      overviewParagraphs: [
+        'The Department of Business Administration offers a four-year undergraduate program titled Bachelor of Business Administration (BBA). The program will make the students capable in identifying, formulating and solving business problems that meet specified performance, cost, time, safety and other quality needs and objectives with professional and ethical responsibility.',
+        'This program also emphasizes on industry and research based projects, which would enhance their skills to become successful professionals for a holistic development.',
+      ],
       displayOrder: 1,
       imageUrl: '/assets/program-undergraduate.webp',
       imagePublicId: null,
@@ -273,6 +280,7 @@ async function seedFaculty() {
         email:          f.email ?? null,
         phone:          f.phone ?? null,
         suId:           f.suId ?? null,
+        roomNo:         f.roomNo ?? null,
         // Json columns — source values are typed as the loose union
         // (string | string[] | { heading; items }[]) which TS can't
         // narrow to Prisma's InputJsonValue without a cast. The cast
@@ -1172,6 +1180,16 @@ async function seedAdmissionRequirements() {
     'Any confusion relating to a degree or diploma obtained from home or abroad — for admission to undergraduate / graduate programs or for other purposes — shall be referred to and resolved by the Degree Equivalence Committee of SU.',
   ];
 
+  const graduateRequirements: string[] = [
+    'A relevant undergraduate degree from a recognized university with a GPA of 2.5 or above on a scale of 4.0.',
+    'Or a relevant Bachelor degree with at least second division/class in all previous exams.',
+  ];
+
+  const graduateNotes: string[] = [
+    'Some students may be required to complete some additional preparatory courses at SU before they start their Master’s programs.',
+    'Different departments may have some additional requirements.',
+  ];
+
   const diplomaRequirements: string[] = [
     'Three or four years Diploma from Bangladesh Technical Education Board (BTEB) with a CGPA of 2.5 out of 4.00, OR',
     'A Diploma recognised by BTEB with a CGPA of 2.5 out of 4.00 in any business or related discipline from any recognised institute.',
@@ -1189,6 +1207,8 @@ async function seedAdmissionRequirements() {
     intro,
     undergraduateRequirements: undergraduateRequirements as unknown as Prisma.InputJsonValue,
     additionalNotes:           additionalNotes           as unknown as Prisma.InputJsonValue,
+    graduateRequirements:      graduateRequirements      as unknown as Prisma.InputJsonValue,
+    graduateNotes:             graduateNotes             as unknown as Prisma.InputJsonValue,
     diplomaRequirements:       diplomaRequirements       as unknown as Prisma.InputJsonValue,
     combinedGpaBody,
     diplomaQuickCriteria:      diplomaQuickCriteria      as unknown as Prisma.InputJsonValue,

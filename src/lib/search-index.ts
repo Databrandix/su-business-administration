@@ -97,7 +97,7 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
       select: { slug: true, name: true, designation: true, secondaryTitle: true },
     }),
     prisma.program.findMany({
-      select: { programName: true, degreeCode: true, description: true },
+      select: { programName: true, degreeCode: true, slug: true, description: true },
     }),
     prisma.researchArea.findMany({
       select: { areaName: true, description: true },
@@ -181,11 +181,12 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
     type: 'Faculty',
   }));
 
-  // Programs (Phase 1 — DB).
+  // Programs (Phase 1 — DB). Programs with a detail page link there;
+  // the rest still fall back to the admission funnel.
   const programItems: SearchItem[] = programRows.map((p) => ({
     title: `${p.programName} (${p.degreeCode})`,
     description: p.description ?? undefined,
-    href: '/admission/requirements',
+    href: p.slug ? `/programs/${p.slug}` : '/admission/requirements',
     type: 'Program',
   }));
 

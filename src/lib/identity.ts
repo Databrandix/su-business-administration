@@ -83,6 +83,7 @@ export const getProgramsWithCta = cache(async () => {
       overline: true,
       programName: true,
       degreeCode: true,
+      slug: true,
       duration: true,
       description: true,
       imageUrl: true,
@@ -91,6 +92,24 @@ export const getProgramsWithCta = cache(async () => {
       ctaHref: true,
     },
   });
+});
+
+// /programs/<slug> — full program record plus its optional fee
+// structure, so the detail page can render the stat cards without a
+// second round-trip.
+export const getProgramBySlug = cache(async (slug: string) => {
+  return prisma.program.findUnique({
+    where: { slug },
+    include: { feeStructure: true },
+  });
+});
+
+export const getProgramSlugs = cache(async () => {
+  const rows = await prisma.program.findMany({
+    where: { slug: { not: null } },
+    select: { slug: true },
+  });
+  return rows.map((r) => r.slug!).filter(Boolean);
 });
 
 // ─────────────────────────────────────────────────────────────────

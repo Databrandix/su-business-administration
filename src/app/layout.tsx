@@ -24,7 +24,7 @@ const hindSiliguri = Hind_Siliguri({
   display: 'swap',
 });
 
-const SITE_URL = 'https://mechanical-engineering-olive.vercel.app';
+const SITE_URL = 'https://su-business-administration.vercel.app';
 const SITE_NAME = 'Sonargaon University — Department of Business Administration';
 const SITE_DESCRIPTION =
   'Department of Business Administration, Faculty of Business, Sonargaon University — programs, faculty, research, admissions, and campus services.';

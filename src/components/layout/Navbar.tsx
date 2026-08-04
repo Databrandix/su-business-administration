@@ -53,6 +53,18 @@ type MainNavItemRow = {
   href: string;
   isExternal: boolean;
   isDisabled: boolean;
+  // Optional third level. Present only on items fetched via getMainNav;
+  // absent (or empty) means the item is a plain link.
+  children?: NavChildRow[];
+};
+
+// Third-level entry — cannot itself have children.
+type NavChildRow = {
+  id: string;
+  name: string;
+  href: string;
+  isExternal: boolean;
+  isDisabled: boolean;
 };
 
 type MainNavGroupRow = {
@@ -383,17 +395,37 @@ export default function Navbar({
                 {group.items.length > 0 && isOpen && (
                   <div className="pb-2 pl-3 flex flex-col gap-1">
                     {group.items.map((child) => (
-                      <a
-                        key={child.id}
-                        href={child.isDisabled ? '#' : child.href}
-                        {...(child.isExternal && !child.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
-                        className={`py-1.5 text-[13px] font-medium transition-colors ${
-                          child.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:text-accent'
-                        }`}
-                        aria-disabled={child.isDisabled || undefined}
-                      >
-                        {child.name}
-                      </a>
+                      <div key={child.id} className="flex flex-col">
+                        <a
+                          href={child.isDisabled ? '#' : child.href}
+                          {...(child.isExternal && !child.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
+                          className={`py-1.5 text-[13px] font-medium transition-colors ${
+                            child.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:text-accent'
+                          }`}
+                          aria-disabled={child.isDisabled || undefined}
+                        >
+                          {child.name}
+                        </a>
+                        {/* Third level — no hover on touch, so children are
+                            simply indented under their parent. */}
+                        {(child.children?.length ?? 0) > 0 && (
+                          <div className="pl-4 flex flex-col gap-1 border-l border-gray-200 ml-1">
+                            {child.children!.map((sub) => (
+                              <a
+                                key={sub.id}
+                                href={sub.isDisabled ? '#' : sub.href}
+                                {...(sub.isExternal && !sub.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
+                                className={`py-1.5 text-[12.5px] transition-colors ${
+                                  sub.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:text-accent'
+                                }`}
+                                aria-disabled={sub.isDisabled || undefined}
+                              >
+                                {sub.name}
+                              </a>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     ))}
                   </div>
                 )}
@@ -508,27 +540,57 @@ function NavGroup({
             </div>
           )}
           <div className="py-2">
-            {group.items.map((child) => (
-              <a
-                key={child.id}
-                href={child.isDisabled ? '#' : child.href}
-                {...(child.isExternal && !child.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
-                className={`group/item block px-5 py-2.5 text-sm font-medium transition-colors ${
-                  child.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-accent/5 hover:text-accent'
-                }`}
-                aria-disabled={child.isDisabled || undefined}
-              >
-                <span className="inline-flex items-center gap-2">
-                  {child.name}
-                  {!child.isDisabled && (
-                    <ChevronRight
-                      size={14}
-                      className="opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-200"
-                    />
+            {group.items.map((child) => {
+              const kids = child.children ?? [];
+              const hasKids = kids.length > 0 && !child.isDisabled;
+
+              return (
+                <div key={child.id} className="group/item relative">
+                  <a
+                    href={child.isDisabled ? '#' : child.href}
+                    {...(child.isExternal && !child.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
+                    className={`block px-5 py-2.5 text-sm font-medium transition-colors ${
+                      child.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-accent/5 hover:text-accent'
+                    }`}
+                    aria-disabled={child.isDisabled || undefined}
+                    aria-haspopup={hasKids || undefined}
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      {child.name}
+                      {!child.isDisabled && (
+                        <ChevronRight
+                          size={14}
+                          className={
+                            hasKids
+                              ? 'opacity-60 group-hover/item:opacity-100 transition-opacity duration-200'
+                              : 'opacity-0 -translate-x-1 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-200'
+                          }
+                        />
+                      )}
+                    </span>
+                  </a>
+
+                  {/* Third level — flyout to the right of the parent row. */}
+                  {hasKids && (
+                    <div className="invisible absolute left-full top-0 z-50 -mt-2 ml-1 min-w-[260px] translate-x-2 rounded-lg border border-gray-100 bg-white py-2 opacity-0 shadow-premium transition-all duration-200 group-hover/item:visible group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-within/item:visible group-focus-within/item:translate-x-0 group-focus-within/item:opacity-100">
+                      {kids.map((sub) => (
+                        <a
+                          key={sub.id}
+                          href={sub.isDisabled ? '#' : sub.href}
+                          {...(sub.isExternal && !sub.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
+                          className={`block px-5 py-2.5 text-sm font-medium transition-colors ${
+                            sub.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-accent/5 hover:text-accent'
+                          }`}
+                          aria-disabled={sub.isDisabled || undefined}
+                        >
+                          {sub.name}
+                        </a>
+                      ))}
+                    </div>
                   )}
-                </span>
-              </a>
-            ))}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

@@ -353,9 +353,18 @@ model MainNavItem {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
+  // Optional third nav level. parentId=null → the item sits directly in
+  // the group dropdown (the common case). parentId set → the item is a
+  // child rendered in a flyout when its parent is hovered. Only one
+  // extra level is supported; children of children are not rendered.
+  parentId     String?
+  parent       MainNavItem?  @relation("NavItemChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  children     MainNavItem[] @relation("NavItemChildren")
+
   group        MainNavGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@index([groupId, displayOrder])
+  @@index([parentId, displayOrder])
   @@map("main_nav_item")
 }
 

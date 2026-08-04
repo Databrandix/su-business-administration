@@ -124,8 +124,17 @@ export const getMainNav = cache(async () => {
       hasDropdown: true,
       title: true,
       items: {
+        // Only top-level items here — children are nested below, so
+        // without this filter they'd also render as siblings.
+        where: { parentId: null },
         orderBy: { displayOrder: 'asc' },
-        select: { id: true, name: true, href: true, isExternal: true, isDisabled: true },
+        select: {
+          id: true, name: true, href: true, isExternal: true, isDisabled: true,
+          children: {
+            orderBy: { displayOrder: 'asc' },
+            select: { id: true, name: true, href: true, isExternal: true, isDisabled: true },
+          },
+        },
       },
     },
   });

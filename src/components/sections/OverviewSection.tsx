@@ -54,7 +54,7 @@ export default function OverviewSection() {
               src="/assets/overview-bba.webp"
               alt="Sonargaon University Business Administration students"
               width={1264}
-              height={841}
+              height={843}
               sizes="(min-width: 1024px) 540px, 100vw"
               className="h-auto w-full lg:absolute lg:inset-0 lg:h-full lg:w-full lg:object-contain"
             />

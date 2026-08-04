@@ -665,6 +665,12 @@ export const researchPaperCreateSchema = z.object({
   date:            optionalNullableString,
   publicationYear: z.number().int().min(1900).max(2100).nullable().optional(),
   link:            urlOrEmpty.optional(),
+  // Journal metadata — all optional; non-indexed papers leave them blank.
+  publisher:       optionalNullableString,
+  indexing:        optionalNullableString,
+  quartile:        optionalNullableString,
+  metrics:         optionalNullableString,
+  authorPosition:  optionalNullableString,
 });
 
 export const researchPaperUpdateSchema = researchPaperCreateSchema;

@@ -764,6 +764,20 @@ model ResearchPaper {
   publicationYear Int?
   link            String?   @db.Text
   displayOrder    Int
+
+  // Journal metadata. All optional — older rows and non-indexed
+  // publications legitimately leave these blank.
+  publisher       String?   @db.Text
+  // indexing — free-form, e.g. "SCOPUS & WoS SSCI" or "Non-Indexed".
+  indexing        String?
+  // quartile — "Q1".."Q4" when the journal is ranked.
+  quartile        String?
+  // metrics — CiteScore / Impact Factor, kept as text because the
+  // source mixes both (e.g. "CiteScore: 14.5 · IF: 8.2").
+  metrics         String?
+  // authorPosition — "1st", "Sole author", "2nd & corresponding", …
+  authorPosition  String?
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

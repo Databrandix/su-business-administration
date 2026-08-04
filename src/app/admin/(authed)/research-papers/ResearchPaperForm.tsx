@@ -47,6 +47,28 @@ export default function ResearchPaperForm({ initial }: { initial: ResearchPaper 
         </p>
       </Card>
 
+      <Card title="Journal metadata">
+        <TextField label="Publisher (optional)" name="publisher"
+                   defaultValue={initial?.publisher ?? ''}
+                   placeholder="Wiley / Springer Nature / Elsevier" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextField label="Indexing (optional)" name="indexing"
+                     defaultValue={initial?.indexing ?? ''}
+                     placeholder="SCOPUS &amp; WoS SSCI / Non-Indexed" />
+          <TextField label="Journal quartile (optional)" name="quartile"
+                     defaultValue={initial?.quartile ?? ''}
+                     placeholder="Q1 / Q2 / Q3 / Q4" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextField label="CiteScore / Impact Factor (optional)" name="metrics"
+                     defaultValue={initial?.metrics ?? ''}
+                     placeholder="CiteScore: 14.5 · IF: 8.2" />
+          <TextField label="Author position (optional)" name="authorPosition"
+                     defaultValue={initial?.authorPosition ?? ''}
+                     placeholder="1st / Sole author / 2nd &amp; corresponding" />
+        </div>
+      </Card>
+
       {state.ok === false && (
         <div role="alert" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
           {state.error}

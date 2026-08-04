@@ -80,10 +80,43 @@ export default async function ResearchPage() {
                     <span className="text-gray-700 font-medium">{paper.authors}</span>
                   </div>
 
-                  <div className="flex items-start gap-2 text-[12.5px] leading-[1.6]">
-                    <MapPin size={13} className="shrink-0 mt-1 text-gray-400" />
-                    <span className="text-gray-500">{paper.area}</span>
-                  </div>
+                  {paper.publisher && (
+                    <div className="flex items-start gap-2 text-[12.5px] leading-[1.6]">
+                      <MapPin size={13} className="shrink-0 mt-1 text-gray-400" />
+                      <span className="text-gray-500">{paper.publisher}</span>
+                    </div>
+                  )}
+
+                  {/* Journal metadata pills — each renders only when set,
+                      so non-indexed papers stay visually uncluttered. */}
+                  {(paper.indexing || paper.quartile || paper.metrics || paper.authorPosition) && (
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {paper.quartile && (
+                        <span className="inline-flex items-center rounded-full bg-accent/10 px-2.5 py-1 text-[11.5px] font-bold text-accent">
+                          {paper.quartile}
+                        </span>
+                      )}
+                      {paper.indexing && (
+                        <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-1 text-[11.5px] font-semibold text-primary">
+                          {paper.indexing}
+                        </span>
+                      )}
+                      {paper.metrics && (
+                        <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-[11.5px] font-medium text-gray-600">
+                          {paper.metrics}
+                        </span>
+                      )}
+                      {paper.authorPosition && (
+                        <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-[11.5px] font-medium text-gray-600">
+                          {/* Source values are inconsistent — "1st", "3rd author",
+                              "Sole author" — so only append the word when absent. */}
+                          {/author/i.test(paper.authorPosition)
+                            ? paper.authorPosition
+                            : `${paper.authorPosition} author`}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
               </article>
             ))}

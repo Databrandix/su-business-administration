@@ -982,7 +982,15 @@ async function seedResearchPapers() {
         authors:         p.authors,
         area:            p.area,
         date:            p.date && p.date.length > 0 ? p.date : null,
-        publicationYear: parseYearFromDate(p.date),
+        // publicationYear is already structured in the source data;
+        // fall back to parsing `date` for rows that predate it.
+        publicationYear: p.publicationYear ?? parseYearFromDate(p.date ?? ''),
+        link:            p.link,
+        publisher:       p.publisher,
+        indexing:        p.indexing,
+        quartile:        p.quartile,
+        metrics:         p.metrics,
+        authorPosition:  p.authorPosition,
         displayOrder:    i,
       },
     });

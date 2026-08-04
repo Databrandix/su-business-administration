@@ -755,6 +755,13 @@ model ResearchPaper {
   id              String   @id @default(cuid())
   title           String   @db.Text
   authors         String   @db.Text
+  // Designation shown under `authors` on /research. Kept separate so the
+  // name alone can link to the faculty profile.
+  authorRole      String?
+  // Faculty.slug of the department member credited on this paper. Null
+  // for external co-authors or when no profile exists — the name then
+  // renders as plain text.
+  facultySlug     String?
   area            String   @db.Text
   // date — free-form string. Source data has inconsistent formats:
   // "14 August 2019", "January–February 2023", "2023", "" (empty).
@@ -763,6 +770,9 @@ model ResearchPaper {
   date            String?
   publicationYear Int?
   link            String?   @db.Text
+  // Button text for `link` on the public page. Blank falls back to
+  // "View Publication" so existing rows need no backfill.
+  linkLabel       String?
   displayOrder    Int
 
   // Journal metadata. All optional — older rows and non-indexed

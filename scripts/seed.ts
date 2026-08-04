@@ -980,12 +980,15 @@ async function seedResearchPapers() {
       data: {
         title:           p.title,
         authors:         p.authors,
+        authorRole:      p.authorRole,
+        facultySlug:     p.facultySlug,
         area:            p.area,
         date:            p.date && p.date.length > 0 ? p.date : null,
         // publicationYear is already structured in the source data;
         // fall back to parsing `date` for rows that predate it.
         publicationYear: p.publicationYear ?? parseYearFromDate(p.date ?? ''),
         link:            p.link,
+        linkLabel:       p.linkLabel,
         publisher:       p.publisher,
         indexing:        p.indexing,
         quartile:        p.quartile,

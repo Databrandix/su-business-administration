@@ -40,10 +40,13 @@ function readResearchPaperRow(formData: FormData) {
   return {
     title:           getStr(formData, 'title'),
     authors:         getStr(formData, 'authors'),
+    authorRole:      emptyToNull(formData.get('authorRole')),
+    facultySlug:     emptyToNull(formData.get('facultySlug')),
     area:            getStr(formData, 'area'),
     date:            emptyToNull(formData.get('date')),
     publicationYear: getIntOrNull(formData, 'publicationYear'),
     link:            emptyToNull(formData.get('link')),
+    linkLabel:       emptyToNull(formData.get('linkLabel')),
     publisher:       emptyToNull(formData.get('publisher')),
     indexing:        emptyToNull(formData.get('indexing')),
     quartile:        emptyToNull(formData.get('quartile')),

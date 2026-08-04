@@ -661,10 +661,13 @@ export const visitorUpdateSchema = visitorCreateSchema;
 export const researchPaperCreateSchema = z.object({
   title:           z.string().min(1),
   authors:         z.string().min(1),
+  authorRole:      optionalNullableString,
+  facultySlug:     optionalNullableString,
   area:            z.string().min(1),
   date:            optionalNullableString,
   publicationYear: z.number().int().min(1900).max(2100).nullable().optional(),
   link:            urlOrEmpty.optional(),
+  linkLabel:       optionalNullableString,
   // Journal metadata — all optional; non-indexed papers leave them blank.
   publisher:       optionalNullableString,
   indexing:        optionalNullableString,

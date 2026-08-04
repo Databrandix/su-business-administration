@@ -1,4 +1,5 @@
-import { Calendar, MapPin, Users, FileText } from 'lucide-react';
+import Link from 'next/link';
+import { Calendar, MapPin, Users, FileText, ExternalLink } from 'lucide-react';
 import PageShell from '@/components/layout/PageShell';
 import Container from '@/components/ui/Container';
 import { getResearchPapers, getPageHero } from '@/lib/identity';
@@ -57,13 +58,7 @@ export default async function ResearchPage() {
 
                 <div className="flex-1 min-w-0">
                   <h3 className="text-[15px] md:text-[16px] font-bold leading-snug text-primary mb-3">
-                    {paper.link ? (
-                      <a href={paper.link} target="_blank" rel="nofollow" className="hover:underline">
-                        {paper.title}
-                      </a>
-                    ) : (
-                      paper.title
-                    )}
+                    {paper.title}
                   </h3>
 
                   <div className="flex flex-wrap gap-x-5 gap-y-2 mb-3 text-[12.5px]">
@@ -77,7 +72,21 @@ export default async function ResearchPage() {
 
                   <div className="flex items-start gap-2 mb-2 text-[13px] leading-[1.6]">
                     <Users size={13} className="shrink-0 mt-1 text-accent" />
-                    <span className="text-gray-700 font-medium">{paper.authors}</span>
+                    <div className="flex flex-col">
+                      {paper.facultySlug ? (
+                        <Link
+                          href={`/faculty-member/${paper.facultySlug}`}
+                          className="text-gray-700 font-medium hover:text-accent hover:underline"
+                        >
+                          {paper.authors}
+                        </Link>
+                      ) : (
+                        <span className="text-gray-700 font-medium">{paper.authors}</span>
+                      )}
+                      {paper.authorRole && (
+                        <span className="text-[12px] text-gray-500">{paper.authorRole}</span>
+                      )}
+                    </div>
                   </div>
 
                   {paper.publisher && (
@@ -115,6 +124,20 @@ export default async function ResearchPage() {
                             : `${paper.authorPosition} author`}
                         </span>
                       )}
+                    </div>
+                  )}
+
+                  {paper.link && (
+                    <div className="mt-4">
+                      <a
+                        href={paper.link}
+                        target="_blank"
+                        rel="noopener noreferrer nofollow"
+                        className="group/link inline-flex items-center gap-1.5 rounded-full border border-primary/20 px-4 py-1.5 text-[12.5px] font-semibold text-primary transition-colors hover:border-accent hover:bg-accent hover:text-white"
+                      >
+                        <ExternalLink size={13} />
+                        {paper.linkLabel || 'View Publication'}
+                      </a>
                     </div>
                   )}
                 </div>

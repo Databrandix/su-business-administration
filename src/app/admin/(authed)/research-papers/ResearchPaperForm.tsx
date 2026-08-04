@@ -29,11 +29,33 @@ export default function ResearchPaperForm({ initial }: { initial: ResearchPaper 
         <TextAreaField label="Authors" name="authors" required rows={2}
                        defaultValue={initial?.authors ?? ''}
                        placeholder="Comma-separated list" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextField label="Author designation (optional)" name="authorRole"
+                     defaultValue={initial?.authorRole ?? ''}
+                     placeholder="Assistant Professor" />
+          <TextField label="Faculty profile slug (optional)" name="facultySlug"
+                     defaultValue={initial?.facultySlug ?? ''}
+                     placeholder="shoriful-islam" />
+        </div>
+        <p className="text-xs text-gray-500">
+          The designation renders under the author name. Setting the slug turns
+          that name into a link to <code className="font-mono">/faculty-member/&lt;slug&gt;</code>;
+          leave it blank for external authors.
+        </p>
         <TextAreaField label="Department / Affiliation (area)" name="area" required rows={2}
                        defaultValue={initial?.area ?? ''} />
-        <TextField label="Link (DOI / journal page, optional)" name="link"
-                   defaultValue={initial?.link ?? ''}
-                   placeholder="https://doi.org/…" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <TextField label="Link (DOI / journal page, optional)" name="link"
+                     defaultValue={initial?.link ?? ''}
+                     placeholder="https://doi.org/…" />
+          <TextField label="Link button text (optional)" name="linkLabel"
+                     defaultValue={initial?.linkLabel ?? ''}
+                     placeholder="View Publication" />
+        </div>
+        <p className="text-xs text-gray-500">
+          The link renders as a button below the paper. Leave the button text
+          blank to use &quot;View Publication&quot;.
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <TextField label="Date (free-form, optional)" name="date"
                      defaultValue={initial?.date ?? ''}

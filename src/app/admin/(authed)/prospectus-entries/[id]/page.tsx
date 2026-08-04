@@ -20,7 +20,8 @@ export default async function EditProspectusPage({ params }: { params: Promise<{
           Edit prospectus: <span className="text-accent">{item.shortTitle}</span>
         </h1>
         <p className="mt-1 text-sm text-gray-500">
-          Slug: <code className="font-mono">{item.slug}</code> · {item.level}
+          Slug: <code className="font-mono">{item.slug}</code>
+          {item.level && <> · {item.level}</>}
         </p>
       </header>
       <ProspectusForm initial={item} />

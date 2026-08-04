@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import PageShell from '@/components/layout/PageShell';
 import Container from '@/components/ui/Container';
-import { getEventBySlug, getEventSlugs } from '@/lib/identity';
+import { getEventBySlug, getEventSlugs, getPageHero } from '@/lib/identity';
 
 export async function generateStaticParams() {
   const slugs = await getEventSlugs();
@@ -70,7 +70,13 @@ export default async function EventDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const ev = await getEventBySlug(slug);
+  // Detail pages share the Events listing hero, so the chair changes
+  // the banner once in /admin/page-heroes → Events and every event
+  // page follows. The event's own cover art stays on the card below.
+  const [ev, hero] = await Promise.all([
+    getEventBySlug(slug),
+    getPageHero('student-society-events'),
+  ]);
   if (!ev) notFound();
 
   const description = coerceParagraphs(ev.description);
@@ -79,7 +85,13 @@ export default async function EventDetailPage({
   const catStyle = CATEGORY_STYLES[ev.category] ?? 'bg-gray-100 text-gray-700';
 
   return (
-    <PageShell title={ev.shortTitle} overline="Events" contentClassName="bg-gray-50 py-12 md:py-20">
+    <PageShell
+      title={ev.shortTitle}
+      overline={hero?.heroOverline ?? 'Events'}
+      image={hero?.heroImageUrl ?? undefined}
+      imagePosition={hero ? `center ${hero.heroImageVerticalPercent}%` : undefined}
+      contentClassName="bg-gray-50 py-12 md:py-20"
+    >
       <Container>
         {/* Back link */}
         <Link

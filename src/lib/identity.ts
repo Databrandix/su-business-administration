@@ -282,10 +282,16 @@ export const getNewsHomeTop = cache(async () => {
   });
 });
 
+// displayOrder leads so the chair can surface any event from
+// /admin/events; date remains the tie-breaker for rows never dragged.
+const EVENT_ORDER = [
+  { displayOrder: 'asc' as const },
+  { eventDate: { sort: 'desc' as const, nulls: 'last' as const } },
+  { createdAt: 'desc' as const },
+];
+
 export const getEvents = cache(async () => {
-  return prisma.event.findMany({
-    orderBy: [{ eventDate: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
-  });
+  return prisma.event.findMany({ orderBy: EVENT_ORDER });
 });
 
 export const getEventBySlug = cache(async (slug: string) => {
@@ -299,10 +305,7 @@ export const getEventSlugs = cache(async () => {
 
 // Homepage EventsSection — top 3 (same sort as full list).
 export const getEventsHomeTop = cache(async () => {
-  return prisma.event.findMany({
-    orderBy: [{ eventDate: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
-    take: 3,
-  });
+  return prisma.event.findMany({ orderBy: EVENT_ORDER, take: 3 });
 });
 
 export const getNotices = cache(async () => {

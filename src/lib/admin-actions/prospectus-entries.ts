@@ -39,7 +39,9 @@ function readProspectusRow(formData: FormData) {
     title:         getStr(formData, 'title'),
     shortTitle:    getStr(formData, 'shortTitle'),
     department:    getStr(formData, 'department'),
-    level:         getStr(formData, 'level'),
+    // Optional: the "—" option submits '', which must reach Zod as
+    // null rather than an empty string the enum would reject.
+    level:         emptyToNull(formData.get('level')),
     coverUrl:      getStr(formData, 'coverUrl'),
     coverPublicId: emptyToNull(formData.get('coverPublicId')),
     pdfUrl:        emptyToNull(formData.get('pdfUrl')),

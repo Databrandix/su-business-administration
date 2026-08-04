@@ -11,8 +11,14 @@ export default async function EventsAdminPage() {
   const session = await getSession();
   if (!session?.user) redirect('/admin/login');
 
+  // Must mirror EVENT_ORDER in lib/identity.ts, or dragging a row here
+  // would move it somewhere else on the public page.
   const events = await prisma.event.findMany({
-    orderBy: [{ eventDate: { sort: 'desc', nulls: 'last' } }, { createdAt: 'desc' }],
+    orderBy: [
+      { displayOrder: 'asc' },
+      { eventDate: { sort: 'desc', nulls: 'last' } },
+      { createdAt: 'desc' },
+    ],
   });
 
   return (
@@ -20,7 +26,7 @@ export default async function EventsAdminPage() {
       <header>
         <h1 className="text-2xl font-display font-bold text-gray-900">Events</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Events for <code className="font-mono">/student-society/events</code> and the homepage EventsSection. Sorted by event date (newest first; undated rows last).
+          Events for <code className="font-mono">/student-society/events</code> and the homepage EventsSection. Drag to reorder — the top three appear on the homepage.
         </p>
       </header>
 

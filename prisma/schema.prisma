@@ -622,11 +622,16 @@ model Event {
   ctaLabel      String?
   ctaHref       String?
   ctaExternal   Boolean   @default(false)
+  // displayOrder — admin-controlled ordering (drag-to-reorder in
+  // /admin/events). Sorted ASC ahead of eventDate, so the chair can
+  // surface any event regardless of how old it is.
+  displayOrder  Int       @default(0)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   @@index([eventDate])
   @@index([status])
+  @@index([displayOrder])
   @@map("event")
 }
 
@@ -915,8 +920,10 @@ model ProspectusEntry {
   title         String
   shortTitle    String
   department    String
-  // level — 'Undergraduate' | 'Postgraduate'. Zod-validated.
-  level         String
+  // level — 'Undergraduate' | 'Postgraduate', or null when the entry
+  // belongs to neither tier. Zod-validated. Null rows render without
+  // the level pill and stay out of the UG/PG filter tabs.
+  level         String?
   coverUrl      String
   coverPublicId String?
   pdfUrl        String?

@@ -11,7 +11,10 @@ export interface ProspectusItem {
   title: string;
   shortTitle: string;
   department: string;
-  level: string; // 'Undergraduate' | 'Postgraduate' (Zod-validated upstream)
+  // 'Undergraduate' | 'Postgraduate' (Zod-validated upstream), or null
+  // for entries that belong to neither tier — those render without the
+  // level pill and only appear under the "All" tab.
+  level: string | null;
   cover: string;
   pdf: string;
 }
@@ -30,7 +33,7 @@ export default function ProspectusClient({ items }: { items: ProspectusItem[] })
       return (
         p.title.toLowerCase().includes(q) ||
         p.department.toLowerCase().includes(q) ||
-        p.level.toLowerCase().includes(q)
+        (p.level?.toLowerCase().includes(q) ?? false)
       );
     });
   }, [items, query, active]);
@@ -124,15 +127,17 @@ export default function ProspectusClient({ items }: { items: ProspectusItem[] })
 
               {/* Body */}
               <div className="p-5 flex-1 flex flex-col">
-                <span
-                  className={`inline-block w-fit px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase mb-3 ${
-                    p.level === 'Undergraduate'
-                      ? 'bg-primary/8 text-primary'
-                      : 'bg-accent/10 text-accent'
-                  }`}
-                >
-                  {p.level}
-                </span>
+                {p.level && (
+                  <span
+                    className={`inline-block w-fit px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase mb-3 ${
+                      p.level === 'Undergraduate'
+                        ? 'bg-primary/8 text-primary'
+                        : 'bg-accent/10 text-accent'
+                    }`}
+                  >
+                    {p.level}
+                  </span>
+                )}
 
                 <h3 className="font-display text-base md:text-lg font-bold text-primary leading-snug mb-1">
                   {p.shortTitle}

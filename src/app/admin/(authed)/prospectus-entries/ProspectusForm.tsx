@@ -39,8 +39,9 @@ export default function ProspectusForm({ initial }: { initial: ProspectusEntry |
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <TextField label="Slug" name="slug" required monospace
                      defaultValue={initial?.slug ?? ''} placeholder="bba-business-administration" />
-          <SelectField label="Level" name="level" required options={LEVELS}
-                       defaultValue={initial?.level ?? 'Undergraduate'} />
+          <SelectField label="Level (optional)" name="level" options={LEVELS}
+                       emptyLabel="— No level —"
+                       defaultValue={initial?.level ?? ''} />
         </div>
         <TextField label="Title (full)" name="title" required defaultValue={initial?.title ?? ''} />
         <TextField label="Short title (shown on card)" name="shortTitle" required defaultValue={initial?.shortTitle ?? ''} />
@@ -119,8 +120,13 @@ function TextField({
 }
 
 function SelectField({
-  label, name, defaultValue, required, options,
-}: { label: string; name: string; defaultValue?: string; required?: boolean; options: readonly string[] }) {
+  label, name, defaultValue, required, options, emptyLabel,
+}: {
+  label: string; name: string; defaultValue?: string; required?: boolean;
+  options: readonly string[];
+  /** Adds a blank first option submitting '' — for nullable columns. */
+  emptyLabel?: string;
+}) {
   return (
     <div>
       <label htmlFor={name} className="block text-sm font-medium text-gray-700 mb-1">
@@ -128,6 +134,7 @@ function SelectField({
       </label>
       <select id={name} name={name} defaultValue={defaultValue} required={required}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent bg-white">
+        {emptyLabel !== undefined && <option value="">{emptyLabel}</option>}
         {options.map((o) => <option key={o} value={o}>{o}</option>)}
       </select>
     </div>

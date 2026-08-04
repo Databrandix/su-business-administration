@@ -108,10 +108,19 @@ export async function createEventAction(
     };
   }
 
+  // New events land at the end of the manual order; the chair drags
+  // them up from /admin/events if they belong near the top.
+  const last = await prisma.event.findFirst({
+    orderBy: { displayOrder: 'desc' },
+    select: { displayOrder: true },
+  });
+  const displayOrder = (last?.displayOrder ?? -1) + 1;
+
   try {
     await prisma.event.create({
       data: {
         ...parsed.data,
+        displayOrder,
         description: parsed.data.description as Prisma.InputJsonValue,
         details: parsed.data.details as unknown as Prisma.InputJsonValue,
       },
@@ -180,5 +189,24 @@ export async function deleteEventAction(id: string): Promise<ActionResult> {
     return { ok: false, error: e instanceof Error ? e.message : 'Database error' };
   }
   revalidateEventSurfaces(slug ?? undefined);
+  return { ok: true };
+}
+
+export async function reorderEventsAction(ids: string[]): Promise<ActionResult> {
+  const denied = await requireAuth();
+  if (denied) return denied;
+  const existing = await prisma.event.findMany({ select: { id: true } });
+  const existingIds = new Set(existing.map((r) => r.id));
+  if (ids.length !== existingIds.size || !ids.every((id) => existingIds.has(id))) {
+    return { ok: false, error: 'Reorder list must include exactly the existing events' };
+  }
+  try {
+    await prisma.$transaction(
+      ids.map((id, index) => prisma.event.update({ where: { id }, data: { displayOrder: index } })),
+    );
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Database error' };
+  }
+  revalidateEventSurfaces();
   return { ok: true };
 }

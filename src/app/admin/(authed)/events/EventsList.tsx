@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Pencil, Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 import type { Event as EventRow } from '@prisma/client';
-import { deleteEventAction } from '@/lib/admin-actions/events';
+import SortableList from '@/components/admin/SortableList';
+import { deleteEventAction, reorderEventsAction } from '@/lib/admin-actions/events';
 import { useAdminListItems } from '@/lib/hooks/useAdminListItems';
 import { useConfirm } from '@/components/admin/ConfirmDialogProvider';
 
@@ -53,10 +54,15 @@ export default function EventsList({ items: initialItems }: { items: EventRow[] 
   }
 
   return (
-    <ul className="space-y-2">
-      {items.map((event) => (
-        <li key={event.id}
-            className="bg-white border border-gray-200 rounded-lg p-3 flex items-center justify-between gap-4">
+    <SortableList
+      items={items}
+      getId={(event) => event.id}
+      onReorder={async (ids) => {
+        const res = await reorderEventsAction(ids);
+        if (!res.ok) throw new Error(res.error);
+      }}
+      renderItem={(event) => (
+        <div className="flex items-center justify-between gap-4 min-w-0">
           <div className="flex items-center gap-3 min-w-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -95,8 +101,8 @@ export default function EventsList({ items: initialItems }: { items: EventRow[] 
               <Trash2 size={16} />
             </button>
           </div>
-        </li>
-      ))}
-    </ul>
+        </div>
+      )}
+    />
   );
 }

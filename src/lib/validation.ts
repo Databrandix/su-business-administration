@@ -783,7 +783,9 @@ export const prospectusEntryCreateSchema = z.object({
   title:         z.string().min(1).max(500),
   shortTitle:    z.string().min(1).max(300),
   department:    z.string().min(1).max(300),
-  level:         prospectusLevelEnum,
+  // Optional — an entry that fits neither tier renders without the
+  // level pill and is excluded from the UG/PG filter tabs.
+  level:         prospectusLevelEnum.nullable().optional(),
   coverUrl:      z.string().min(1),
   coverPublicId: optionalNullableString,
   pdfUrl:        optionalNullableString,

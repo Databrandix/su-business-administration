@@ -3,8 +3,7 @@ import HeroSection from '@/components/sections/HeroSection';
 import {
   getDepartmentIdentity,
   getProgramsWithCta,
-  getResearchAreas,
-  getLabs,
+  getResearchAreas,
   getNewsHomeTop,
   getEventsHomeTop,
   getNoticesHomeTop,
@@ -28,9 +27,6 @@ const QuickLinksSection = dynamic(() => import('@/components/sections/QuickLinks
 const NoticesSection = dynamic(() => import('@/components/sections/NoticesSection'), {
   loading: sectionSkeleton('min-h-[400px]'),
 });
-const ResearchLabsSection = dynamic(() => import('@/components/sections/ResearchLabsSection'), {
-  loading: sectionSkeleton('min-h-[500px]'),
-});
 const MajorResearchSection = dynamic(() => import('@/components/sections/MajorResearchSection'), {
   loading: sectionSkeleton('min-h-[500px]'),
 });
@@ -45,11 +41,10 @@ const ServicesSection = dynamic(() => import('@/components/sections/ServicesSect
 });
 
 export default async function HomePage() {
-  const [dept, programs, researchAreas, labs, newsTop, eventsTop, noticesTop] = await Promise.all([
+  const [dept, programs, researchAreas, newsTop, eventsTop, noticesTop] = await Promise.all([
     getDepartmentIdentity(),
     getProgramsWithCta(),
-    getResearchAreas(),
-    getLabs(),
+    getResearchAreas(),
     getNewsHomeTop(),
     getEventsHomeTop(),
     getNoticesHomeTop(),
@@ -72,8 +67,7 @@ export default async function HomePage() {
       <OverviewSection />
       <ProgramsSection programs={programs} />
       <QuickLinksSection />
-      <NoticesSection notices={noticesTop} />
-      <ResearchLabsSection labs={labs} />
+      <NoticesSection notices={noticesTop} />
       <MajorResearchSection areas={researchAreas} />
       <EventsSection events={eventsTop} />
       <NewsSection news={newsTop} />

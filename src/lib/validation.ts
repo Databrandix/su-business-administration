@@ -393,67 +393,6 @@ const activitiesArraySchema = z.array(
   }),
 );
 
-// ─────────────────────────────────────────────────────────────────
-//  Lab systems — Phase 5 (2 singletons + 2 multi-row)
-// ─────────────────────────────────────────────────────────────────
-
-export const labFacilityLandingUpdateSchema = z.object({
-  heroTitle:         z.string().min(1).max(300),
-  heroOverline:      optionalNullableString,
-  heroImageUrl:      z.string().min(1),
-  heroImagePublicId: optionalNullableString,
-  heroImageVerticalPercent: z.coerce.number().int().min(0).max(100).default(50),
-  introBody:         z.string().min(1),
-});
-
-const slugRegexLab = /^[a-z0-9-]+$/;
-
-export const labCreateSchema = z.object({
-  slug:              z.string().min(1).max(120).regex(slugRegexLab, 'Slug must be lowercase letters, numbers, and hyphens only'),
-  name:              z.string().min(1).max(300),
-  tagline:           z.string().min(1),
-  description:       z.string().min(1),
-  heroImageUrl:      optionalNullableString,
-  heroImagePublicId: optionalNullableString,
-  gallery:           z.array(z.string()).default([]),
-  galleryPublicIds:  z.array(z.string()).default([]),
-  displayOrder:      z.number().int().min(0).optional(),
-});
-
-export const labUpdateSchema = labCreateSchema.partial();
-
-const laboratoryFeaturesArraySchema = z.array(
-  z.object({
-    iconName:    z.string().min(1),
-    title:       z.string().min(1),
-    description: z.string().min(1),
-  }),
-);
-
-export const laboratoryFacilityLandingUpdateSchema = z.object({
-  heroTitle:         z.string().min(1).max(300),
-  heroOverline:      optionalNullableString,
-  heroImageUrl:      z.string().min(1),
-  heroImagePublicId: optionalNullableString,
-  heroImageVerticalPercent: z.coerce.number().int().min(0).max(100).default(50),
-  introBody:         z.string().min(1),
-  featuresOverline:  optionalNullableString,
-  featuresHeading:   z.string().min(1).max(300),
-  features:          laboratoryFeaturesArraySchema,
-});
-
-export const laboratoryLabCreateSchema = z.object({
-  iconName:     z.string().min(1).max(100),
-  title:        z.string().min(1).max(300),
-  description:  z.string().min(1),
-  keyLabel:     z.string().min(1).max(100),
-  keyItems:     z.string().min(1),
-  focus:        z.string().min(1),
-  displayOrder: z.number().int().min(0).optional(),
-});
-
-export const laboratoryLabUpdateSchema = laboratoryLabCreateSchema.partial();
-
 export const aboutBusinessClubUpdateSchema = z.object({
   heroTitle:                z.string().min(1).max(300),
   heroOverline:             optionalNullableString,

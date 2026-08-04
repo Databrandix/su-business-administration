@@ -19,7 +19,7 @@ export type { SearchItem } from './search';
 //  defined in '@/lib/search'.
 //
 //  DB-driven entities (Phase 2/3/5/6/7) — all 15 covered here:
-//    Faculty, Programs, Research Areas, Labs, News, Events,
+//    Faculty, Programs, Research Areas, News, Events,
 //    Notices, Gallery, Alumni, Club, FAQ, Visitor, ResearchPaper,
 //    BusRoute, Syllabus
 //
@@ -38,8 +38,6 @@ const staticPages: SearchItem[] = [
   { title: 'Message from Head', type: 'Page', href: '/about/message-from-head', description: "Head of Department's welcome message" },
   { title: "Dean's Message", type: 'Page', href: '/about/deans-message', description: "Dean's welcome message" },
   { title: 'Mission & Vision', type: 'Page', href: '/about/mission-vision', description: "Department's mission and long-term vision" },
-  { title: 'Laboratory Facility', type: 'Page', href: '/about/laboratory-facility', description: 'Departmental labs and equipment' },
-  { title: 'Lab Facility', type: 'Page', href: '/about/lab-facility', description: 'List of all departmental labs' },
   { title: 'Business Club', type: 'Page', href: '/about/business-club', description: 'Sonargaon University Business Club' },
 
   // Faculty
@@ -77,7 +75,6 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
     facultyRows,
     programRows,
     researchAreaRows,
-    labRows,
     newsRows,
     eventRows,
     noticeRows,
@@ -104,9 +101,6 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
     }),
     prisma.researchArea.findMany({
       select: { areaName: true, description: true },
-    }),
-    prisma.lab.findMany({
-      select: { slug: true, name: true, tagline: true },
     }),
     prisma.news.findMany({
       select: { slug: true, title: true, shortTitle: true, summary: true },
@@ -201,14 +195,6 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
     description: r.description ?? undefined,
     href: '/research',
     type: 'ResearchArea',
-  }));
-
-  // Labs (Phase 5 — DB). Hash-fragment for the slug-based detail UX.
-  const labItems: SearchItem[] = labRows.map((l) => ({
-    title: l.name,
-    description: l.tagline,
-    href: `/about/lab-facility#${l.slug}`,
-    type: 'Lab',
   }));
 
   // News (Phase 6 — DB)
@@ -381,7 +367,6 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
     ...facultyItems,
     ...programItems,
     ...researchAreaItems,
-    ...labItems,
     ...newsItems,
     ...eventItems,
     ...noticeItems,

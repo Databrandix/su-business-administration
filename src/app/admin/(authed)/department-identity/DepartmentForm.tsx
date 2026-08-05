@@ -4,7 +4,7 @@ import { useActionState, useEffect, useState } from 'react';
 import type { DepartmentIdentity } from '@prisma/client';
 import { toast } from 'sonner';
 import ImageUploader from '@/components/admin/ImageUploader';
-import HeroImagePositionSlider from '@/components/admin/HeroImagePositionSlider';
+import HeroImagesEditor from './HeroImagesEditor';
 import {
   updateDepartmentAction,
   type ActionResult,
@@ -71,48 +71,28 @@ export default function DepartmentForm({ initial }: { initial: Initial }) {
 
       {/* ─── Hero images ─── */}
       <Card title="Hero images (3)">
-        <p className="text-xs text-gray-500 -mt-2">
-          Alt text describes each image for screen readers. Update the alt when you replace the image.
-        </p>
-        <div className="space-y-3 pb-2 border-b border-gray-100">
-          <ImageUploader kind="department-hero" name="heroImage1" aspectRatio="wide"
-                         label="Hero #1"
-                         initialUrl={initial?.heroImage1Url}
-                         initialPublicId={initial?.heroImage1PublicId} />
-          <TextField label="Alt text #1" name="heroImage1Alt"
-                     defaultValue={initial?.heroImage1Alt ?? ''} />
-          <HeroImagePositionSlider
-            name="heroImage1VerticalPercent"
-            initialValue={initial?.heroImage1VerticalPercent}
-            label="Hero #1 vertical position"
-          />
-        </div>
-        <div className="space-y-3 pb-2 border-b border-gray-100">
-          <ImageUploader kind="department-hero" name="heroImage2" aspectRatio="wide"
-                         label="Hero #2"
-                         initialUrl={initial?.heroImage2Url}
-                         initialPublicId={initial?.heroImage2PublicId} />
-          <TextField label="Alt text #2" name="heroImage2Alt"
-                     defaultValue={initial?.heroImage2Alt ?? ''} />
-          <HeroImagePositionSlider
-            name="heroImage2VerticalPercent"
-            initialValue={initial?.heroImage2VerticalPercent}
-            label="Hero #2 vertical position"
-          />
-        </div>
-        <div className="space-y-3">
-          <ImageUploader kind="department-hero" name="heroImage3" aspectRatio="wide"
-                         label="Hero #3"
-                         initialUrl={initial?.heroImage3Url}
-                         initialPublicId={initial?.heroImage3PublicId} />
-          <TextField label="Alt text #3" name="heroImage3Alt"
-                     defaultValue={initial?.heroImage3Alt ?? ''} />
-          <HeroImagePositionSlider
-            name="heroImage3VerticalPercent"
-            initialValue={initial?.heroImage3VerticalPercent}
-            label="Hero #3 vertical position"
-          />
-        </div>
+        <HeroImagesEditor
+          initial={[
+            {
+              url: initial?.heroImage1Url ?? '',
+              publicId: initial?.heroImage1PublicId ?? '',
+              alt: initial?.heroImage1Alt ?? '',
+              verticalPercent: initial?.heroImage1VerticalPercent ?? 50,
+            },
+            {
+              url: initial?.heroImage2Url ?? '',
+              publicId: initial?.heroImage2PublicId ?? '',
+              alt: initial?.heroImage2Alt ?? '',
+              verticalPercent: initial?.heroImage2VerticalPercent ?? 50,
+            },
+            {
+              url: initial?.heroImage3Url ?? '',
+              publicId: initial?.heroImage3PublicId ?? '',
+              alt: initial?.heroImage3Alt ?? '',
+              verticalPercent: initial?.heroImage3VerticalPercent ?? 50,
+            },
+          ]}
+        />
       </Card>
 
       {/* ─── Errors + submit ─── */}

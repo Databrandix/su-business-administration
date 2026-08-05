@@ -1,8 +1,9 @@
 import PageShell from '@/components/layout/PageShell';
 import Container from '@/components/ui/Container';
-import { getProgramFeeStructures, getPageHero } from '@/lib/identity';
+import { getProgramFeeStructures, getPrograms, getPageHero } from '@/lib/identity';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 import { DynamicLucideIcon } from '@/components/ui/DynamicLucideIcon';
+import ProgramTabs from './ProgramTabs';
 
 export const metadata = {
   title: 'Tuition Fees — Department of Business Administration',
@@ -92,8 +93,9 @@ function coercePolicies(v: unknown): FeePolicy[] {
 const fmt = (n: number) => 'BDT ' + n.toLocaleString('en-BD');
 
 export default async function TuitionFeesPage() {
-  const [feeStructures, hero] = await Promise.all([
+  const [feeStructures, programs, hero] = await Promise.all([
     getProgramFeeStructures(),
+    getPrograms(),
     getPageHero('admission-tuition-fees'),
   ]);
 
@@ -107,6 +109,17 @@ export default async function TuitionFeesPage() {
       contentClassName="bg-gray-50 py-12 md:py-20"
     >
       <Container>
+        {/* Program selector. Selection is inert for now — the fee
+            content it will drive lands in a later step. */}
+        <ProgramTabs
+          programs={programs.map((p) => ({
+            id: p.id,
+            code: p.degreeCode,
+            name: p.programName,
+            tier: p.overline,
+          }))}
+        />
+
         {feeStructures.length === 0 ? (
           <div className="bg-white rounded-xl shadow-md border border-gray-100 p-12 md:p-16 text-center">
             <p className="text-primary font-semibold text-base mb-1">
@@ -125,9 +138,13 @@ export default async function TuitionFeesPage() {
               <div key={fs.id} className={programIdx > 0 ? 'mt-20 pt-16 border-t border-gray-200' : ''}>
                 {/* Intro */}
                 <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
-                  <span className="inline-block text-accent text-[11px] font-bold tracking-[0.3em] uppercase mb-2">
-                    {fs.introOverline}
-                  </span>
+                  {/* Optional — a blank overline should collapse rather
+                      than leave its bottom margin behind. */}
+                  {fs.introOverline && (
+                    <span className="inline-block text-accent text-[11px] font-bold tracking-[0.3em] uppercase mb-2">
+                      {fs.introOverline}
+                    </span>
+                  )}
                   <h2 className="font-display text-2xl md:text-3xl font-bold text-primary leading-tight mb-4">
                     {fs.introHeading}
                   </h2>

@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import HeroSection from '@/components/sections/HeroSection';
 import {
   getDepartmentIdentity,
+  getHomeOverview,
   getProgramsHomeTop,
   getResearchAreas,
 
@@ -9,6 +10,7 @@ import {
   getEventsHomeTop,
   getNoticesHomeTop,
 } from '@/lib/identity';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 function sectionSkeleton(minHeight: string) {
   return function Skeleton() {
@@ -42,8 +44,9 @@ const ServicesSection = dynamic(() => import('@/components/sections/ServicesSect
 });
 
 export default async function HomePage() {
-  const [dept, programs, researchAreas, newsTop, eventsTop, noticesTop] = await Promise.all([
+  const [dept, overview, programs, researchAreas, newsTop, eventsTop, noticesTop] = await Promise.all([
     getDepartmentIdentity(),
+    getHomeOverview(),
     getProgramsHomeTop(),
     getResearchAreas(),
 
@@ -66,7 +69,26 @@ export default async function HomePage() {
         programShortForm={dept.programShortForm}
         programSubtitle={dept.programSubtitle}
       />
-      <OverviewSection />
+      {/* Row is seeded by migration; the section is simply skipped if
+          an operator ever deletes it rather than crashing the page. */}
+      {overview && (
+        <OverviewSection
+          heading={overview.heading}
+          bodyHtml={sanitizeHtml(overview.body)}
+          imageUrl={overview.imageUrl}
+          imageAlt={overview.imageAlt}
+          primaryCta={{
+            label: overview.primaryCtaLabel,
+            href: overview.primaryCtaHref,
+            isExternal: overview.primaryCtaExternal,
+          }}
+          secondaryCta={{
+            label: overview.secondaryCtaLabel,
+            href: overview.secondaryCtaHref,
+            isExternal: overview.secondaryCtaExternal,
+          }}
+        />
+      )}
       <ProgramsSection programs={programs} showAllLink />
       <QuickLinksSection />
       <NoticesSection notices={noticesTop} />

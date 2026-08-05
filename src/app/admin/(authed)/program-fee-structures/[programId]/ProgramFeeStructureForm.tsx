@@ -57,9 +57,9 @@ export default function ProgramFeeStructureForm({
   return (
     <form action={formAction} className="space-y-6">
       <Card title="Intro">
-        <TextField label="Intro overline pill" name="introOverline" required
-                   defaultValue={initial?.introOverline ?? `${program.programName}`}
-                   placeholder="BBA in Business Administration" />
+        <TextField label="Intro overline pill (optional)" name="introOverline"
+                   defaultValue={initial?.introOverline ?? ''}
+                   placeholder="Leave blank to hide the small label above the heading" />
         <TextField label="Intro heading" name="introHeading" required
                    defaultValue={initial?.introHeading ?? 'Tuition Fee Structure'} />
         <TextAreaField label="Intro paragraph" name="introBody" required rows={3}

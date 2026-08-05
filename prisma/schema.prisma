@@ -1236,6 +1236,36 @@ model JourneyCTAContent {
   @@map("journey_cta_content")
 }
 
+// Singleton — the department introduction that sits between the
+// homepage hero and the programs list. Mirrors JourneyCTAContent:
+// copy + image + two CTAs, all in one row so the admin edits it on a
+// single form.
+model HomeOverview {
+  id                   String   @id @default("singleton")
+
+  heading              String
+  // body is HTML-allowed (inline <strong>/<em>) under the Phase 4 J1
+  // author-trusted pattern; sanitized at render time.
+  body                 String   @db.Text
+
+  imageUrl             String
+  imagePublicId        String?
+  imageAlt             String   @default("")
+
+  // Two CTAs (MainNavItem pattern — label + href + isExternal).
+  primaryCtaLabel      String
+  primaryCtaHref       String
+  primaryCtaExternal   Boolean  @default(false)
+
+  secondaryCtaLabel    String
+  secondaryCtaHref     String
+  secondaryCtaExternal Boolean  @default(false)
+
+  updatedAt            DateTime @updatedAt
+
+  @@map("home_overview")
+}
+
 // ─────────────────────────────────────────────────────────────────
 //  Phase 17 — Legal pages (Privacy Policy + Terms & Conditions)
 //    Single combined singleton so both pages share one admin form +

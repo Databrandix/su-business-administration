@@ -17,6 +17,12 @@ type Props = {
   initialValue: number | null | undefined;
   label?: string;
   helperText?: string;
+  /**
+   * Notifies a parent that owns the value — needed where the slider can
+   * be remounted into a different slot (hero reordering), so the parent
+   * carries the current percent across the swap.
+   */
+  onChange?: (verticalPercent: number) => void;
 };
 
 function clampPercent(n: number): number {
@@ -29,10 +35,17 @@ export default function HeroImagePositionSlider({
   initialValue,
   label = 'Image vertical position',
   helperText = 'Drag the slider to move the image up or down within the banner. 0 = top edge visible, 100 = bottom edge visible. Try different values to frame the subject correctly.',
+  onChange,
 }: Props) {
   const [verticalPercent, setVerticalPercent] = useState<number>(
     clampPercent(typeof initialValue === 'number' ? initialValue : 50),
   );
+
+  function commit(raw: number) {
+    const next = clampPercent(raw);
+    setVerticalPercent(next);
+    onChange?.(next);
+  }
 
   return (
     <div>
@@ -47,7 +60,7 @@ export default function HeroImagePositionSlider({
           max={100}
           step={1}
           value={verticalPercent}
-          onChange={(e) => setVerticalPercent(clampPercent(Number(e.target.value)))}
+          onChange={(e) => commit(Number(e.target.value))}
           className="flex-1 accent-accent cursor-pointer"
         />
         <input
@@ -56,7 +69,7 @@ export default function HeroImagePositionSlider({
           max={100}
           step={1}
           value={verticalPercent}
-          onChange={(e) => setVerticalPercent(clampPercent(Number(e.target.value)))}
+          onChange={(e) => commit(Number(e.target.value))}
           className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-center"
           aria-label={`${label} percent`}
         />

@@ -40,6 +40,7 @@ type Kind =
   | 'contact-hero'
   // Phase 12
   | 'journey-cta-hero'
+  | 'home-overview-image'
   // Phase 17
   | 'legal-hero';
 
@@ -72,6 +73,7 @@ const RECOMMENDED_SIZE_BY_KIND: Record<Kind, string | null> = {
   'prospectus-pdf':        null,
   'contact-hero':          'Landscape banner · 1920×500',
   'journey-cta-hero':      'Landscape · 1920×800',
+  'home-overview-image':   'Landscape · 1264×843 (3:2)',
   'legal-hero':            'Landscape banner · 1920×500',
 };
 

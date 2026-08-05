@@ -307,6 +307,8 @@ export const uploadKindSchema = z.enum([
   'journey-cta-hero',
   // Phase 17
   'legal-hero',
+  // Homepage department-introduction image (HomeOverview singleton).
+  'home-overview-image',
 ]);
 
 export const uploadSignSchema = z.object({
@@ -863,7 +865,8 @@ const feePolicySchema = z.object({
 
 export const programFeeStructureCreateSchema = z.object({
   programId:     z.string().min(1),
-  introOverline: z.string().min(1).max(300),
+  // Optional — blank collapses the small label above the heading.
+  introOverline: z.string().max(300).default(''),
   introHeading:  z.string().min(1).max(300),
   introBody:     z.string().min(1),
   overviewStats: z.array(overviewStatSchema).default([]),
@@ -1112,6 +1115,22 @@ export const campusLocationUpdateSchema = campusLocationCreateSchema;
 //  Phase 12 — JourneyCTAContent singleton (chrome section between
 //    page content and the footer; previously hardcoded).
 // ─────────────────────────────────────────────────────────────────
+
+// ─── HomeOverview (singleton) ──────────────────────────────────
+// Homepage department introduction — copy + image + two CTAs.
+export const homeOverviewUpdateSchema = z.object({
+  heading:              z.string().min(1).max(300),
+  body:                 z.string().min(1),
+  imageUrl:             z.string().min(1),
+  imagePublicId:        nullableString,
+  imageAlt:             z.string().max(300).default(''),
+  primaryCtaLabel:      z.string().min(1).max(100),
+  primaryCtaHref:       z.string().min(1).max(500),
+  primaryCtaExternal:   z.boolean().optional().default(false),
+  secondaryCtaLabel:    z.string().min(1).max(100),
+  secondaryCtaHref:     z.string().min(1).max(500),
+  secondaryCtaExternal: z.boolean().optional().default(false),
+});
 
 export const journeyCTAContentUpdateSchema = z.object({
   heroImageUrl:         z.string().min(1),

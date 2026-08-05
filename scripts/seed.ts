@@ -1443,7 +1443,9 @@ async function seedProgramFeeStructures() {
 
   const data = {
     programId:     program.id,
-    introOverline: 'Bachelor of Business Administration (BBA)',
+    // Blank — the heading alone carries the section; an overline here
+    // just repeated the program name.
+    introOverline: '',
     introHeading:  'Tuition Fee Structure',
     introBody:
       'Cost per credit and the total program cost vary based on your academic background (SSC + HSC or Diploma) and the shift you choose. Use the breakdown below to find the fees that apply to you.',
@@ -1810,6 +1812,28 @@ async function seedJourneyCTAContent() {
   console.log('✓ JourneyCTAContent seeded (singleton)');
 }
 
+async function seedHomeOverview() {
+  await prisma.homeOverview.upsert({
+    where: { id: 'singleton' },
+    update: {},
+    create: {
+      id: 'singleton',
+      heading: 'Business Administration (BA)',
+      body: 'The Department of Business Administration is committed to developing future business leaders through quality education, innovation, and practical learning. With a strong emphasis on academic excellence, ethical values, and industry engagement, the department equips students with the knowledge, leadership, and problem-solving skills needed to succeed in today’s dynamic business environment and contribute meaningfully to society.',
+      imageUrl: '/assets/overview-bba.webp',
+      imagePublicId: null,
+      imageAlt: 'Sonargaon University Business Administration students',
+      primaryCtaLabel: 'Explore More',
+      primaryCtaHref: '/about/overview',
+      primaryCtaExternal: false,
+      secondaryCtaLabel: 'Dean’s Message',
+      secondaryCtaHref: '/about/deans-message',
+      secondaryCtaExternal: false,
+    },
+  });
+  console.log('✓ HomeOverview seeded (singleton)');
+}
+
 // ─────────────────────────────────────────────────────────────────
 //  Phase 17 — LegalPagesContent (Privacy Policy + Terms & Conditions)
 //    Two pages, one combined singleton. Bodies stored as structured
@@ -1982,6 +2006,7 @@ async function main() {
 
   console.log('\nPhase 12 journey CTA…');
   await seedJourneyCTAContent();
+  await seedHomeOverview();
 
   console.log('\nPhase 17 legal pages…');
   await seedLegalPagesContent();

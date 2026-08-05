@@ -1344,18 +1344,27 @@ async function seedAdmissionRequirements() {
 }
 
 async function seedProgramFeeStructures() {
-  // Lookup B.Sc. ME by degreeCode (seeded as 'BSc-ME' by seedPrograms).
-  const program = await prisma.program.findUnique({ where: { degreeCode: 'BSc-ME' } });
+  // Lookup BBA by degreeCode (seeded as 'BBA' by seedPrograms).
+  const program = await prisma.program.findUnique({ where: { degreeCode: 'BBA' } });
   if (!program) {
-    console.log('⚠ Program BSc-ME not found — skipping ProgramFeeStructure seed');
+    console.log('⚠ Program BBA not found — skipping ProgramFeeStructure seed');
     return;
   }
 
+  // Fall-2026 fees, approved by the Board of Trustees on 05 July 2026.
+  // Read directly off the approval sheet: BBA runs in SUN (Morning) and
+  // STAR (Friday) only — its Moon (Evening) row is "----" — and the
+  // Diploma Cost column is empty under STAR. Credits are 141 across
+  // every tier; BBA has no separate diploma credit count.
+  const CREDITS = 141;
+  const tier = (gpa: string, waiver: string, perCredit: number, total: number) =>
+    ({ gpa, waiver, credits: CREDITS, perCredit, total });
+
   const overviewStats = [
-    { iconName: 'GraduationCap', label: 'Total Credits',        value: '160' },
-    { iconName: 'Calendar',      label: 'Semester System',      value: 'Tri-Semester' },
-    { iconName: 'CreditCard',    label: 'Admission Fee',        value: 'BDT 12,500' },
-    { iconName: 'Wallet',        label: 'Total Semester Fees',  value: 'BDT 96,000' },
+    { iconName: 'GraduationCap', label: 'Total Credits',   value: '141' },
+    { iconName: 'Calendar',      label: 'Semester System', value: 'Tri-Semester' },
+    { iconName: 'CreditCard',    label: 'Admission Fee',   value: 'BDT 12,500' },
+    { iconName: 'Wallet',        label: 'Semester Fee',    value: 'BDT 96,000' },
   ];
 
   const shifts = [
@@ -1363,60 +1372,42 @@ async function seedProgramFeeStructures() {
       iconName: 'Sun',
       name: 'SUN',
       shiftLabel: 'Morning Shift',
-      description: 'Primarily for students from an SSC + HSC background.',
+      description:
+        'Admission fee BDT 12,500 \u00b7 Semester fee BDT 96,000. Open to both SSC + HSC and Diploma applicants.',
       groups: [
         {
           background: 'SSC + HSC',
           tiers: [
-            { gpa: '5.00 – 8.99', perCredit: 975, total: 264500 },
-            { gpa: '9.00 – 9.99', perCredit: 897, total: 252020 },
-            { gpa: '10.00',       perCredit: 741, total: 227060 },
-          ],
-        },
-      ],
-    },
-    {
-      iconName: 'Moon',
-      name: 'MOON',
-      shiftLabel: 'Evening Shift',
-      description: 'Available for both SSC + HSC and Diploma students.',
-      groups: [
-        {
-          background: 'SSC + HSC',
-          tiers: [
-            { gpa: '5.00 – 7.99', perCredit: 1613, total: 342580 },
-            { gpa: '8.00 – 9.00', perCredit: 1523, total: 328180 },
-            { gpa: '10.00',       perCredit: 1434, total: 313940 },
+            tier('Below 5.00', '0%',  2430, 451130),
+            tier('5.00\u20138.99', '33%', 1628, 338048),
+            tier('9.00\u20139.99', '36%', 1555, 327755),
+            tier('10.00',     '54%', 1118, 266138),
           ],
         },
         {
           background: 'Diploma',
           tiers: [
-            { gpa: '5.00 – 7.99', perCredit: 1410, total: 310772 },
-            { gpa: '8.00 – 9.00', perCredit: 1332, total: 297812 },
+            tier('Below 5.00', '0%',  2430, 451130),
+            tier('5.00\u20137.99', '33%', 1628, 338048),
+            tier('8.00\u20139.00', '36%', 1555, 327755),
           ],
         },
       ],
     },
     {
-      iconName: 'Star',
+      iconName: 'CalendarDays',
       name: 'STAR',
       shiftLabel: 'Friday Shift',
-      description: 'Available for both SSC + HSC and Diploma students.',
+      description:
+        'Admission fee BDT 12,500 \u00b7 Semester fee BDT 72,000. Available for SSC + HSC applicants.',
       groups: [
         {
           background: 'SSC + HSC',
           tiers: [
-            { gpa: '5.00 – 7.99', perCredit: 940, total: 234900 },
-            { gpa: '8.00 – 9.00', perCredit: 846, total: 219860 },
-            { gpa: '10.00',       perCredit: 705, total: 197300 },
-          ],
-        },
-        {
-          background: 'Diploma',
-          tiers: [
-            { gpa: '5.00 – 7.99', perCredit: 808, total: 213860 },
-            { gpa: '8.00 – 9.00', perCredit: 723, total: 200324 },
+            tier('Below 5.00', '0%',  3000, 507500),
+            tier('5.00\u20138.99', '42%', 1740, 329840),
+            tier('9.00\u20139.99', '45%', 1650, 317150),
+            tier('10.00',     '47%', 1590, 308690),
           ],
         },
       ],
@@ -1425,19 +1416,24 @@ async function seedProgramFeeStructures() {
 
   const policies = [
     {
-      iconName: 'Award',
-      title: 'Golden A+ Waiver',
-      text: 'Students with a Golden A+ in both SSC and HSC receive a 100% Tuition Fee Waiver.',
-    },
-    {
       iconName: 'Percent',
-      title: 'Payment Discounts',
-      text: '10% waiver on tuition fees if the full 1st semester fee is paid at admission. 15% waiver on tuition fees if the full program fee is paid at admission.',
+      title: 'Advance Payment Waiver',
+      text: 'A 10% waiver on tuition fees applies when the full first-semester fee is paid at admission, and 15% when the full program fee is paid at admission.',
     },
     {
-      iconName: 'Receipt',
-      title: 'Additional Fees',
-      text: 'A BDT 7,500 fee is charged for the Provisional Certificate (PVC) in the final semester.',
+      iconName: 'Award',
+      title: '100% Tuition Fee Waiver',
+      text: 'Applicants with Golden A+ in both SSC and HSC/Diploma receive a full tuition fee waiver.',
+    },
+    {
+      iconName: 'FileText',
+      title: 'Provisional Certificate Fee',
+      text: 'An additional BDT 7,500 is charged for the Provisional Certificate (PVC) in the final semester.',
+    },
+    {
+      iconName: 'CalendarClock',
+      title: 'Monthly Payment Schedule',
+      text: 'One month of tuition and semester fees must be paid along with the admission fee. Tuition and semester fees are payable in advance every month; a penalty applies otherwise.',
     },
   ];
 
@@ -1448,7 +1444,7 @@ async function seedProgramFeeStructures() {
     introOverline: '',
     introHeading:  'Tuition Fee Structure',
     introBody:
-      'Cost per credit and the total program cost vary based on your academic background (SSC + HSC or Diploma) and the shift you choose. Use the breakdown below to find the fees that apply to you.',
+      'Cost per credit and the total program cost vary with your academic background and the shift you choose. Waivers are applied on the standard per-credit rate.',
     overviewStats: overviewStats as unknown as Prisma.InputJsonValue,
     shifts:        shifts        as unknown as Prisma.InputJsonValue,
     policies:      policies      as unknown as Prisma.InputJsonValue,

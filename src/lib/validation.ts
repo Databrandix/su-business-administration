@@ -840,6 +840,9 @@ const overviewStatSchema = z.object({
 
 const feeTierSchema = z.object({
   gpa:       z.string().min(1),
+  // Optional so tiers seeded before these columns existed still parse.
+  waiver:    z.string().optional(),
+  credits:   z.number().optional(),
   perCredit: z.number(),
   total:     z.number(),
 });

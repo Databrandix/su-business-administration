@@ -18,7 +18,15 @@ export const metadata = {
 // ─── Json column shapes (defensive coerce) ───────────────────────
 
 type OverviewStat = { iconName: string; label: string; value: string };
-type FeeTier = { gpa: string; perCredit: number; total: number };
+// waiver / credits are optional: rows seeded before they existed still
+// render, just without those two cells.
+type FeeTier = {
+  gpa: string;
+  waiver?: string;
+  credits?: number;
+  perCredit: number;
+  total: number;
+};
 type FeeGroup = { background: string; tiers: FeeTier[] };
 type FeeShift = {
   iconName: string;
@@ -47,6 +55,8 @@ function coerceTiers(v: unknown): FeeTier[] {
     .filter((r): r is Record<string, unknown> => typeof r === 'object' && r !== null)
     .map((r) => ({
       gpa:       typeof r.gpa       === 'string' ? r.gpa       : '',
+      waiver:    typeof r.waiver    === 'string' ? r.waiver    : undefined,
+      credits:   typeof r.credits   === 'number' ? r.credits   : undefined,
       perCredit: typeof r.perCredit === 'number' ? r.perCredit : 0,
       total:     typeof r.total     === 'number' ? r.total     : 0,
     }))
@@ -92,50 +102,20 @@ function coercePolicies(v: unknown): FeePolicy[] {
 
 const fmt = (n: number) => 'BDT ' + n.toLocaleString('en-BD');
 
-export default async function TuitionFeesPage() {
-  const [feeStructures, programs, hero] = await Promise.all([
-    getProgramFeeStructures(),
-    getPrograms(),
-    getPageHero('admission-tuition-fees'),
-  ]);
+// The row shape getProgramFeeStructures returns — derived rather than
+// hand-written so a schema change surfaces here as a type error.
+type FeeStructureRow = Awaited<ReturnType<typeof getProgramFeeStructures>>[number];
+
+// One program's fee content: intro, overview stats, shift tables and
+// policies. Lifted out of the page body so ProgramTabs can receive it
+// as a panel and show one program at a time.
+function FeeStructureBlock({ fs }: { fs: FeeStructureRow }) {
+  const overview = coerceOverview(fs.overviewStats);
+  const shifts   = coerceShifts(fs.shifts);
+  const policies = coercePolicies(fs.policies);
 
   return (
-    <PageShell
-      title={hero?.heroTitle ?? 'Tuition Fees'}
-      subtitle={hero?.heroSubtitle ?? undefined}
-      overline={hero?.heroOverline ?? 'Admission'}
-      image={hero?.heroImageUrl ?? '/assets/admission-hero.webp'}
-      imagePosition={hero ? `center ${hero.heroImageVerticalPercent}%` : 'top'}
-      contentClassName="bg-gray-50 py-12 md:py-20"
-    >
-      <Container>
-        {/* Program selector. Selection is inert for now — the fee
-            content it will drive lands in a later step. */}
-        <ProgramTabs
-          programs={programs.map((p) => ({
-            id: p.id,
-            code: p.degreeCode,
-            name: p.programName,
-            tier: p.overline,
-          }))}
-        />
-
-        {feeStructures.length === 0 ? (
-          <div className="bg-white rounded-xl shadow-md border border-gray-100 p-12 md:p-16 text-center">
-            <p className="text-primary font-semibold text-base mb-1">
-              Tuition fee structures not yet published
-            </p>
-            <p className="text-gray-500 text-sm">
-              Please check back later for the latest per-program fee tables.
-            </p>
-          </div>
-        ) : (
-          feeStructures.map((fs, programIdx) => {
-            const overview = coerceOverview(fs.overviewStats);
-            const shifts   = coerceShifts(fs.shifts);
-            const policies = coercePolicies(fs.policies);
-            return (
-              <div key={fs.id} className={programIdx > 0 ? 'mt-20 pt-16 border-t border-gray-200' : ''}>
+              <div>
                 {/* Intro */}
                 <div className="max-w-3xl mx-auto text-center mb-12 md:mb-16">
                   {/* Optional — a blank overline should collapse rather
@@ -221,17 +201,36 @@ export default async function TuitionFeesPage() {
 
                             {/* Fee tables */}
                             <div className="p-6 md:p-8 space-y-8">
-                              {shift.groups.map((group) => (
+                              {shift.groups.map((group) => {
+                                // Undergraduate groups name an entry
+                                // background ("SSC + HSC"); master's
+                                // groups name the table itself, so only
+                                // the former take the "Background" suffix.
+                                const isBackground =
+                                  !/fee|structure|rate/i.test(group.background);
+                                // GPA tiers are an undergraduate concept;
+                                // master's rows are named fee categories.
+                                const firstColumnLabel = isBackground
+                                  ? 'GPA Range'
+                                  : 'Category';
+                                return (
                                 <div key={group.background}>
                                   <h4 className="text-[11px] font-bold tracking-[0.25em] uppercase text-accent mb-3">
-                                    {group.background} Background
+                                    {group.background}
+                                    {isBackground ? ' Background' : ''}
                                   </h4>
                                   <div className="overflow-x-auto -mx-2">
-                                    <table className="w-full min-w-[480px] border-collapse">
+                                    <table className="w-full min-w-[620px] border-collapse">
                                       <thead>
                                         <tr className="border-b-2 border-primary/15 text-left">
                                           <th className="px-3 py-3 text-[11px] font-bold tracking-wider uppercase text-gray-500">
-                                            GPA Range
+                                            {firstColumnLabel}
+                                          </th>
+                                          <th className="px-3 py-3 text-[11px] font-bold tracking-wider uppercase text-gray-500 text-center">
+                                            Waiver
+                                          </th>
+                                          <th className="px-3 py-3 text-[11px] font-bold tracking-wider uppercase text-gray-500 text-center">
+                                            Credits
                                           </th>
                                           <th className="px-3 py-3 text-[11px] font-bold tracking-wider uppercase text-gray-500 text-right">
                                             Per Credit
@@ -249,14 +248,24 @@ export default async function TuitionFeesPage() {
                                           >
                                             <td className="px-3 py-4">
                                               <span className="inline-block px-3 py-1 bg-primary/8 text-primary text-sm font-semibold rounded">
-                                                GPA {tier.gpa}
+                                                {tier.gpa}
                                               </span>
+                                            </td>
+                                            <td className="px-3 py-4 text-center font-display font-bold text-accent">
+                                              {tier.waiver ?? '—'}
+                                            </td>
+                                            <td className="px-3 py-4 text-center font-display font-bold text-gray-800">
+                                              {tier.credits ?? '—'}
                                             </td>
                                             <td className="px-3 py-4 text-right font-display font-bold text-gray-800">
                                               {fmt(tier.perCredit)}
                                             </td>
                                             <td className="px-3 py-4 text-right font-display font-bold text-accent">
-                                              {fmt(tier.total)}
+                                              {/* A zero total means the row
+                                                  quotes a rate, not a cost —
+                                                  the base per-credit price
+                                                  before any waiver. */}
+                                              {tier.total > 0 ? fmt(tier.total) : '—'}
                                             </td>
                                           </tr>
                                         ))}
@@ -264,7 +273,8 @@ export default async function TuitionFeesPage() {
                                     </table>
                                   </div>
                                 </div>
-                              ))}
+                                );
+                              })}
                             </div>
                           </article>
                         );
@@ -306,9 +316,37 @@ export default async function TuitionFeesPage() {
                   </section>
                 )}
               </div>
-            );
-          })
-        )}
+  );
+}
+export default async function TuitionFeesPage() {
+  const [feeStructures, programs, hero] = await Promise.all([
+    getProgramFeeStructures(),
+    getPrograms(),
+    getPageHero('admission-tuition-fees'),
+  ]);
+
+  return (
+    <PageShell
+      title={hero?.heroTitle ?? 'Tuition Fees'}
+      subtitle={hero?.heroSubtitle ?? undefined}
+      overline={hero?.heroOverline ?? 'Admission'}
+      image={hero?.heroImageUrl ?? '/assets/admission-hero.webp'}
+      imagePosition={hero ? `center ${hero.heroImageVerticalPercent}%` : 'top'}
+      contentClassName="bg-gray-50 py-12 md:py-20"
+    >
+      <Container>
+        <ProgramTabs
+          programs={programs.map((p) => {
+            const fs = feeStructures.find((f) => f.program.id === p.id);
+            return {
+              id: p.id,
+              code: p.degreeCode,
+              name: p.programName,
+              tier: p.overline,
+              panel: fs ? <FeeStructureBlock fs={fs} /> : undefined,
+            };
+          })}
+        />
       </Container>
     </PageShell>
   );

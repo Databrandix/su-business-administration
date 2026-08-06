@@ -300,6 +300,8 @@ export const uploadKindSchema = z.enum([
   'admission-notice-file',
   'prospectus-cover',
   'prospectus-pdf',
+  'department-layout-cover',
+  'department-layout-pdf',
   // Phase 10
   'contact-hero',
   // Phase 12
@@ -384,6 +386,21 @@ export const aboutMissionVisionUpdateSchema = z.object({
   visionOverline:    optionalNullableString,
   visionHeading:     z.string().min(1).max(300),
   visionBody:        z.string().min(1),
+});
+
+export const aboutDepartmentLayoutUpdateSchema = z.object({
+  heroTitle:         z.string().min(1).max(300),
+  heroOverline:      optionalNullableString,
+  heroImageUrl:      z.string().min(1),
+  heroImagePublicId: optionalNullableString,
+  heroImageVerticalPercent: z.coerce.number().int().min(0).max(100).default(50),
+  paragraphs:        z.array(z.string().min(1)).default([]),
+  cardTitle:         z.string().min(1).max(300),
+  coverUrl:          optionalNullableString,
+  coverPublicId:     optionalNullableString,
+  pdfUrl:            optionalNullableString,
+  pdfPublicId:       optionalNullableString,
+  pdfFileName:       optionalNullableString,
 });
 
 // Activities + stats shapes — Json validated as structured arrays

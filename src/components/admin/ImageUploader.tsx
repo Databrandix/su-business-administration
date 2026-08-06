@@ -36,6 +36,8 @@ type Kind =
   | 'admission-notice-file'
   | 'prospectus-cover'
   | 'prospectus-pdf'
+  | 'department-layout-cover'
+  | 'department-layout-pdf'
   // Phase 10
   | 'contact-hero'
   // Phase 12
@@ -70,6 +72,8 @@ const RECOMMENDED_SIZE_BY_KIND: Record<Kind, string | null> = {
   'admission-notice-file': null,
   'prospectus-cover':      'Portrait · 800×1131 (A4 ratio)',
   'prospectus-pdf':        null,
+  'department-layout-cover': 'Portrait · 800×1000 (4:5)',
+  'department-layout-pdf':   null,
   'contact-hero':          'Landscape banner · 1920×500',
   'journey-cta-hero':      'Landscape · 1920×800',
   'home-overview-image':   'Landscape · 1264×843 (3:2)',

@@ -240,6 +240,10 @@ export const getAboutBusinessClub = cache(async () => {
   return prisma.aboutBusinessClub.findUnique({ where: { id: 'singleton' } });
 });
 
+export const getAboutDepartmentLayout = cache(async () => {
+  return prisma.aboutDepartmentLayout.findUnique({ where: { id: 'singleton' } });
+});
+
 // Faculty (Phase 2). Full rows are returned — including Json
 // section content + Dean/Head message extras — so the public
 // pages can render every section without per-page Prisma calls.

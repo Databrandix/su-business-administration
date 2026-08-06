@@ -776,6 +776,27 @@ async function seedAboutOverview() {
   console.log('✓ AboutOverview seeded');
 }
 
+async function seedAboutDepartmentLayout() {
+  await prisma.aboutDepartmentLayout.upsert({
+    where: { id: 'singleton' },
+    update: {},
+    create: {
+      id: 'singleton',
+      heroTitle:         'Department Layout',
+      heroOverline:      'About',
+      // Shares the Mission & Vision banner, framing included.
+      heroImageUrl:      '/assets/mission-vision-hero.webp',
+      heroImagePublicId: null,
+      heroImageVerticalPercent: 3,
+      // Cover + PDF are uploaded from /admin/about-department-layout;
+      // until then the page shows a holding note.
+      paragraphs: [],
+      cardTitle: 'BBA Department Layout',
+    },
+  });
+  console.log('✓ AboutDepartmentLayout seeded');
+}
+
 async function seedAboutMissionVision() {
   await prisma.aboutMissionVision.upsert({
     where: { id: 'singleton' },
@@ -2032,6 +2053,7 @@ async function main() {
   console.log('\nPhase 4 about pages…');
   await seedAboutOverview();
   await seedAboutMissionVision();
+  await seedAboutDepartmentLayout();
   await seedAboutBusinessClub();
 
   console.log('\nPhase 6 content hubs…');

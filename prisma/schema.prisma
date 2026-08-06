@@ -482,6 +482,32 @@ model AboutOverview {
   @@map("about_overview")
 }
 
+// Singleton — /about/department-layout. Renders one downloadable card:
+// a cover image, a caption, and a Download button for the layout PDF —
+// the same cover+PDF shape as ProspectusEntry, but a single fixed entry
+// rather than a list.
+model AboutDepartmentLayout {
+  id                       String   @id @default("singleton")
+  heroTitle                String
+  heroOverline             String?
+  heroImageUrl             String
+  heroImagePublicId        String?
+  heroImageVerticalPercent Int      @default(50)
+  // Optional intro copy above the card.
+  paragraphs               Json     @default("[]")
+  // The layout card. Caption under the cover; nullable cover/PDF so the
+  // row can exist before the artwork and file are uploaded.
+  cardTitle                String   @default("Department Layout")
+  coverUrl                 String?
+  coverPublicId            String?
+  pdfUrl                   String?
+  pdfPublicId              String?
+  pdfFileName              String?
+  updatedAt                DateTime @updatedAt
+
+  @@map("about_department_layout")
+}
+
 model AboutMissionVision {
   id                       String   @id @default("singleton")
   // Hero

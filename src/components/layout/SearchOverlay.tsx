@@ -8,7 +8,7 @@ const TYPE_BADGE_COLOR: Record<SearchItem['type'], string> = {
   Page: 'bg-primary/10 text-primary',
   Faculty: 'bg-accent/10 text-accent',
   News: 'bg-blue-100 text-blue-700',
-  FAQ: 'bg-amber-100 text-amber-700',
+  FAQs: 'bg-amber-100 text-amber-700',
   Lab: 'bg-emerald-100 text-emerald-700',
   Club: 'bg-violet-100 text-violet-700',
   Alumni: 'bg-pink-100 text-pink-700',

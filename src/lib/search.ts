@@ -14,7 +14,7 @@ export interface SearchItem {
     | 'Page'
     | 'Faculty'
     | 'News'
-    | 'FAQ'
+    | 'FAQs'
     | 'Lab'
     | 'Club'
     | 'Alumni'

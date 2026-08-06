@@ -57,7 +57,7 @@ export default async function BusinessClubPage() {
   const row = await getAboutBusinessClub();
   if (!row) {
     throw new Error(
-      'AboutBusinessClub row missing (id="singleton"). Run `npm run db:seed`.',
+      'AboutBusinessClub row missing (id="singleton"). Create it from the admin panel.',
     );
   }
 

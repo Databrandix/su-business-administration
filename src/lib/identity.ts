@@ -11,7 +11,7 @@ export const getDepartmentIdentity = cache(async () => {
   });
   if (!dept) {
     throw new Error(
-      'DepartmentIdentity row missing (id="singleton"). Run `npm run db:seed`.',
+      'DepartmentIdentity row missing (id="singleton"). Create it from the admin panel.',
     );
   }
   return dept;
@@ -23,7 +23,7 @@ export const getUniversityIdentity = cache(async () => {
   });
   if (!uni) {
     throw new Error(
-      'UniversityIdentity row missing (id="singleton"). Run `npm run db:seed`.',
+      'UniversityIdentity row missing (id="singleton"). Create it from the admin panel.',
     );
   }
   return uni;

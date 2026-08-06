@@ -34,7 +34,7 @@ export default async function NewsletterPage() {
   const row = await getNewsletterPage();
   if (!row) {
     throw new Error(
-      'NewsletterPage row missing (id="singleton"). Run `npm run db:seed`.',
+      'NewsletterPage row missing (id="singleton"). Create it from the admin panel.',
     );
   }
 

@@ -14,7 +14,7 @@ export default async function DepartmentLayoutPage() {
   const row = await getAboutDepartmentLayout();
   if (!row) {
     throw new Error(
-      'AboutDepartmentLayout row missing (id="singleton"). Run `npm run db:seed`.',
+      'AboutDepartmentLayout row missing (id="singleton"). Create it from the admin panel.',
     );
   }
 

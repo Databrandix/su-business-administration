@@ -13,7 +13,7 @@ export default async function TermsAndConditionsPage() {
   const row = await getLegalPagesContent();
   if (!row) {
     throw new Error(
-      'LegalPagesContent row missing (id="singleton"). Run `npm run db:seed`.',
+      'LegalPagesContent row missing (id="singleton"). Create it from the admin panel.',
     );
   }
 

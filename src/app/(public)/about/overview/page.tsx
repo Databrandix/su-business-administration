@@ -13,7 +13,7 @@ export default async function OverviewPage() {
   const row = await getAboutOverview();
   if (!row) {
     throw new Error(
-      'AboutOverview row missing (id="singleton"). Run `npm run db:seed`.',
+      'AboutOverview row missing (id="singleton"). Create it from the admin panel.',
     );
   }
 

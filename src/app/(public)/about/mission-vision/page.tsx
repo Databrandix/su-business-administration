@@ -13,7 +13,7 @@ export default async function MissionVisionPage() {
   const row = await getAboutMissionVision();
   if (!row) {
     throw new Error(
-      'AboutMissionVision row missing (id="singleton"). Run `npm run db:seed`.',
+      'AboutMissionVision row missing (id="singleton"). Create it from the admin panel.',
     );
   }
 

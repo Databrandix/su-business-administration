@@ -835,19 +835,19 @@ model Syllabus {
   id            String   @id @default(cuid())
   slug          String   @unique
   title         String
-  shortTitle    String
+  // Optional — public card and admin list fall back to `title`.
+  shortTitle    String?
   department    String
   // level — 'Undergraduate' | 'Postgraduate'. Zod-validated.
   level         String
-  coverUrl      String
-  coverPublicId String?
   // PDF attachment — nullable so admin can save metadata-only first.
   // Cloudinary raw resource type via accept='application/pdf'
   // (reuses Phase 6 ImageUploader extension).
   pdfUrl        String?
   pdfPublicId   String?
   pdfFileName   String?
-  summary       String   @db.Text
+  // Optional — the card simply omits the paragraph when absent.
+  summary       String?  @db.Text
   displayOrder  Int
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

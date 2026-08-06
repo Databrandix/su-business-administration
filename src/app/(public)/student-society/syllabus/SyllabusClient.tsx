@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { useMemo, useState } from 'react';
 import { Search, Download } from 'lucide-react';
 
@@ -10,9 +9,8 @@ export type SyllabusCardRow = {
   shortTitle: string;
   department: string;
   level: string;
-  coverUrl: string;
   pdfUrl: string | null;
-  summary: string;
+  summary: string | null;
 };
 
 const FILTERS = ['All', 'Undergraduate', 'Postgraduate'] as const;
@@ -98,17 +96,6 @@ export default function SyllabusClient({ items }: { items: readonly SyllabusCard
                 filtered.length === 1 ? 'w-full max-w-md' : ''
               }`}
             >
-              <div className="bg-gray-50">
-                <Image
-                  src={s.coverUrl}
-                  alt={s.title}
-                  width={600}
-                  height={800}
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="block w-full h-auto"
-                />
-              </div>
-
               <div className="p-5 flex-1 flex flex-col">
                 <span
                   className={`inline-block w-fit px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase mb-3 ${
@@ -124,7 +111,9 @@ export default function SyllabusClient({ items }: { items: readonly SyllabusCard
                   {s.shortTitle}
                 </h3>
                 <p className="text-sm text-gray-600 mb-3">{s.department}</p>
-                <p className="text-sm text-gray-700 leading-relaxed mb-5">{s.summary}</p>
+                {s.summary && (
+                  <p className="text-sm text-gray-700 leading-relaxed mb-5">{s.summary}</p>
+                )}
 
                 {s.pdfUrl ? (
                   <a

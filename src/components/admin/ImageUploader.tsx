@@ -9,6 +9,7 @@ import {
   applyDeliveryTransformation,
   type ImageQualityPreset,
 } from '@/lib/image-quality';
+import { compressImage, formatBytes } from '@/lib/image-compress';
 
 type Kind =
   | 'department-logo'
@@ -29,7 +30,6 @@ type Kind =
   | 'alumni-photo'
   | 'club-image'
   | 'visitor-photo'
-  | 'syllabus-cover'
   | 'syllabus-pdf'
   // Phase 8a
   | 'admission-notice-hero'
@@ -65,7 +65,6 @@ const RECOMMENDED_SIZE_BY_KIND: Record<Kind, string | null> = {
   'alumni-photo':          'Square portrait · 400×400',
   'club-image':            'Landscape · 1200×675 (16:9)',
   'visitor-photo':         'Square portrait · 400×400',
-  'syllabus-cover':        'Portrait · 800×1131 (A4 ratio)',
   'syllabus-pdf':          null,
   'admission-notice-hero': 'Landscape banner · 1920×600',
   'admission-notice-file': null,
@@ -76,6 +75,9 @@ const RECOMMENDED_SIZE_BY_KIND: Record<Kind, string | null> = {
   'home-overview-image':   'Landscape · 1264×843 (3:2)',
   'legal-hero':            'Landscape banner · 1920×500',
 };
+
+/** Cloudinary's per-file limit on the current plan (10 MB). */
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
 export type UploadMeta = {
   fileType: 'image' | 'pdf';
@@ -167,10 +169,31 @@ export default function ImageUploader({
   const showQuality = accept !== 'application/pdf';
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const original = e.target.files?.[0];
+    if (!original) return;
     setUploading(true);
     try {
+      // 0. Shrink oversized camera photos before they leave the browser.
+      //    Straight-from-camera JPEGs (6000×4000, ~12 MB) exceed
+      //    Cloudinary's 10 MB limit and are far larger than any layout
+      //    needs. Non-images and already-small files pass through.
+      const file = await compressImage(original);
+      if (file !== original) {
+        toast.info(
+          `Optimized image · ${formatBytes(original.size)} → ${formatBytes(file.size)}`,
+        );
+      }
+
+      // Anything still over Cloudinary's cap (animated GIF, huge PDF)
+      // can't be fixed here — fail with a clear reason rather than
+      // spending the round-trip to have Cloudinary reject it.
+      if (file.size > MAX_UPLOAD_BYTES) {
+        throw new Error(
+          `File is ${formatBytes(file.size)} — the maximum is ` +
+            `${formatBytes(MAX_UPLOAD_BYTES)}. Please use a smaller file.`,
+        );
+      }
+
       // 1. Get signed Cloudinary params from our server
       const signRes = await fetch('/api/admin/uploads/sign', {
         method: 'POST',
@@ -190,9 +213,28 @@ export default function ImageUploader({
       fd.append('timestamp', String(sign.timestamp));
       fd.append('folder', sign.folder);
       fd.append('signature', sign.signature);
-      const upRes = await fetch(sign.uploadUrl, { method: 'POST', body: fd });
+      // A blocked request (ad-blocker, extension, offline) rejects the
+      // fetch outright rather than returning a response — surface that
+      // as its own message so it isn't mistaken for a Cloudinary error.
+      let upRes: Response;
+      try {
+        upRes = await fetch(sign.uploadUrl, { method: 'POST', body: fd });
+      } catch {
+        throw new Error(
+          `Could not reach Cloudinary (${sign.uploadUrl}). A browser ` +
+            'extension, ad-blocker, or network policy is likely blocking ' +
+            'the request — try again in an incognito window.',
+        );
+      }
       if (!upRes.ok) {
-        throw new Error('Cloudinary upload failed');
+        // Cloudinary reports the real reason in { error: { message } }.
+        const detail = await upRes
+          .json()
+          .then((d) => d?.error?.message)
+          .catch(() => null);
+        throw new Error(
+          `Cloudinary upload failed (${upRes.status})${detail ? `: ${detail}` : ''}`,
+        );
       }
       const upJson = await upRes.json();
 

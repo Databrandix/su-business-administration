@@ -103,7 +103,8 @@ async function seedPrograms() {
       programName: 'Bachelor of Business Administration (BBA)',
       degreeCode: 'BBA',
       slug: 'bba',
-      duration: '4 Years · 8 Semesters',
+      // Tri-semester calendar: 4 years × 3 semesters per year.
+      duration: '4 Years · 12 Semesters',
       description:
         'Our flagship Bachelor of Business Administration (BBA) program builds a strong foundation in business and management by combining academic excellence, practical learning, and industry exposure. The program prepares graduates for leadership roles in business, entrepreneurship, and organizations across the public and private sectors.',
       // Long-form body for /programs/bba (the homepage card uses
@@ -135,10 +136,15 @@ async function seedPrograms() {
   const graduatePrograms = [
     {
       degreeCode: 'MBA',
+      slug: 'mba',
       programName: 'Master of Business Administration (MBA)',
-      duration: '2 Years · 4 Semesters',
+      duration: '1 Year',
       description:
         'The MBA builds broad managerial capability across finance, marketing, operations, and human resources. Designed for graduates from any discipline, it develops the analytical judgement and leadership skills needed to move into management roles across the public and private sectors.',
+      overviewParagraphs: [
+        'The Department of Business Administration offers a one year graduate program titled Master of Business Administration (MBA). BBA graduates can obtain their MBA while keeping their current jobs and pursuing higher education by enrolling in an MBA program. The majority of MBA students have a BBA and are experienced professionals with work experience before beginning the program.',
+        'Students will graduate from this program with the knowledge and abilities needed to identify, frame, and address business problems in accordance with established performance, cost, time, safety, and other quality goals and objectives. This program also places a focus on projects based on industry and research, which would improve their abilities to become effective professionals for overall development.',
+      ],
       specializations: [
         'Finance & Banking',
         'Human Resource Management (HRM)',
@@ -148,10 +154,15 @@ async function seedPrograms() {
     },
     {
       degreeCode: 'MBA-REG',
+      slug: 'regular-mba',
       programName: 'Regular Master of Business Administration',
-      duration: '2 Years · 4 Semesters',
+      duration: '1 Year',
       description:
         'The regular MBA track follows a full-time daytime schedule built for recent graduates continuing directly into postgraduate study. Coursework pairs core management theory with case analysis, group projects, and a research dissertation in the final semester.',
+      overviewParagraphs: [
+        'The Department of Business Administration offers a one year graduate program titled Regular Master of Business Administration (RMBA). Graduates having no knowledge in business education and also have no work experience or have working experience less than two years can obtain their RMBA degree. With the knowledge and skills necessary to identify, frame, and resolve business issues in line with predetermined performance, cost, time, safety, and other quality goals and objectives, students will graduate from this program.',
+        'Additionally, this curriculum emphasizes initiatives that are grounded in industry and research to help participants become more effective professionals for development as a whole.',
+      ],
       specializations: [
         'Core Management Foundation',
         'Case-Based Learning',
@@ -161,10 +172,15 @@ async function seedPrograms() {
     },
     {
       degreeCode: 'EMBA',
+      slug: 'emba',
       programName: 'Executive Master of Business Administration (EMBA)',
-      duration: '1.5–2 Years · Evening & Weekend',
+      duration: '1 Year 3 Months',
       description:
         'The EMBA is built for working professionals who need postgraduate management education without stepping away from their careers. Classes run evenings and weekends, and the curriculum draws directly on the organisational problems participants bring from their own workplaces.',
+      overviewParagraphs: [
+        'The Department of Business Administration offers a one year and three months graduate program titled Executive Master of Business Administration (EMBA). Executives can obtain their EMBA while keeping their current jobs by enrolling in an EMBA program, or executive MBA program. Before enrolling in the program, most EMBA students are well-established professionals with a considerable amount of job experience.',
+        'The curriculum will equip students with the skills necessary to recognize, formulate, and resolve business issues that adhere to predetermined performance, cost, time, safety, and other quality goals and objectives. This program also emphasizes on industry and research based projects, which would enhance their skills to become successful professionals for a holistic development.',
+      ],
       specializations: [
         'Strategic Leadership',
         'Financial Decision Making',
@@ -174,10 +190,15 @@ async function seedPrograms() {
     },
     {
       degreeCode: 'MBM',
+      slug: 'mbm',
       programName: 'Masters in Bank Management (MBM)',
-      duration: '2 Years · 4 Semesters',
+      duration: '1 Year',
       description:
         'The MBM prepares specialists for careers in banking and financial services. The programme covers credit appraisal, risk management, treasury operations, and the regulatory framework governing both conventional and Islamic banking in Bangladesh.',
+      overviewParagraphs: [
+        'The Department of Business Administration offers a one year graduate program titled Master of Bank Management (MBM). Graduates having no knowledge in business education and also have no work experience or have working experience two years can obtain their MBM degree. With the knowledge and skills necessary to identify, frame, and resolve business issues in line with predetermined performance, cost, time, safety, and other quality goals and objectives, students will graduate from this program.',
+        'Additionally, this curriculum emphasizes initiatives that are grounded in industry and research to help participants become more effective professionals for development as a whole.',
+      ],
       specializations: [
         'Credit & Risk Management',
         'Treasury Operations',
@@ -187,10 +208,15 @@ async function seedPrograms() {
     },
     {
       degreeCode: 'MBA-SCM',
+      slug: 'mba-supply-chain-management',
       programName: 'MBA in Supply Chain Management',
-      duration: '2 Years · 4 Semesters',
+      duration: '2 Years',
       description:
         'This programme develops expertise in the movement of goods, information, and finance across a supply network. Students study procurement, logistics, inventory strategy, and the sustainability practices reshaping how global supply chains are designed and audited.',
+      overviewParagraphs: [
+        'The Department of Business Administration offers a 2-Year Graduate Program titled Masters in Supply Chain Management (MSCM). Graduates from any discipline can obtain their MSCM degree. With the knowledge and skills necessary to identify, frame, and resolve business issues in line with predetermined performance, cost, time, safety, and other quality goals and objectives, students will graduate from this program.',
+        'Additionally, this curriculum emphasizes initiatives that are grounded in industry and research to help participants become more effective professionals in the sector of supply chain management for development as a whole.',
+      ],
       specializations: [
         'Procurement & Sourcing',
         'Logistics & Distribution',
@@ -200,10 +226,22 @@ async function seedPrograms() {
     },
     {
       degreeCode: 'MBA-AM',
+      slug: 'mba-apparel-merchandising',
       programName: 'MBA in Apparel Merchandising',
-      duration: '2 Years · 4 Semesters',
+      // Blank — the content submission form gave no duration for this
+      // programme. The badge hides itself when empty; fill in from
+      // /admin/programs once AMT confirms it.
+      duration: '',
       description:
         'Built around the readymade garment sector that anchors Bangladesh’s export economy, this programme covers order management, buyer relations, costing, and compliance — the working knowledge merchandisers need on the factory floor and at the negotiating table.',
+      // PLACEHOLDER — the content submission form left this as "Please
+      // Collect from AMT Department". Written to match the house style
+      // of the supplied overviews; replace from /admin/programs once the
+      // AMT department provides its own copy.
+      overviewParagraphs: [
+        'The Department of Business Administration offers a graduate program titled MBA in Apparel Merchandising. Designed around the needs of the country’s largest export sector, the program prepares graduates from any discipline to manage merchandising, sourcing, buyer communication and order execution across the apparel value chain.',
+        'Students develop the knowledge and skills necessary to identify, frame, and resolve business issues in line with predetermined performance, cost, time, safety, and other quality goals and objectives. This curriculum also emphasizes initiatives that are grounded in industry and research to help participants become more effective professionals in the apparel merchandising sector for development as a whole.',
+      ],
       specializations: [
         'Order & Buyer Management',
         'Costing & Pricing',
@@ -213,10 +251,20 @@ async function seedPrograms() {
     },
     {
       degreeCode: 'MBA-TFM',
+      slug: 'mba-textile-fashion-marketing',
       programName: 'MBA in Textile & Fashion Marketing',
-      duration: '2 Years · 4 Semesters',
+      // Blank — see the AMT note above; FDT gave no duration either.
+      duration: '',
       description:
         'This programme sits at the meeting point of textiles, fashion, and brand strategy. Students study consumer behaviour in fashion markets, retail and merchandising strategy, and the branding decisions that determine how textile products reach and hold their market.',
+      // PLACEHOLDER — the content submission form left this as "Please
+      // Collect from FDT Department". Written to match the house style
+      // of the supplied overviews; replace from /admin/programs once the
+      // FDT department provides its own copy.
+      overviewParagraphs: [
+        'The Department of Business Administration offers a graduate program titled MBA in Textile & Fashion Marketing. The program brings together marketing principles and the textile and fashion industry, preparing graduates from any discipline to work in brand management, retail, product development and market expansion.',
+        'Students develop the knowledge and skills necessary to identify, frame, and resolve business issues in line with predetermined performance, cost, time, safety, and other quality goals and objectives. This curriculum also emphasizes initiatives that are grounded in industry and research to help participants become more effective professionals in the textile and fashion marketing sector for development as a whole.',
+      ],
       specializations: [
         'Fashion Brand Strategy',
         'Retail & Visual Merchandising',
@@ -235,8 +283,10 @@ async function seedPrograms() {
         overline: 'Graduate',
         programName: g.programName,
         degreeCode: g.degreeCode,
+        slug: g.slug,
         duration: g.duration,
         description: g.description,
+        overviewParagraphs: g.overviewParagraphs,
         displayOrder: graduateOrder,
         imageUrl: '/assets/program-undergraduate.webp',
         imagePublicId: null,
@@ -380,8 +430,10 @@ async function seedFaculty() {
             messagePhotoUrl: '/assets/head-mostofa-hossain.webp',
             messageTitleLine1: 'Head of the Department',
             messageTitleLine2: 'Department of Business Administration',
-            messageHeroImageUrl: '/assets/message-from-head-hero.webp',
-            messageHeroImageVerticalPercent: 0,
+            // Same hero as the Dean's-message page — the two /about
+            // message pages share one banner by design.
+            messageHeroImageUrl: '/assets/mission-vision-hero.webp',
+            messageHeroImageVerticalPercent: 3,
           }
         : {};
 
@@ -546,11 +598,29 @@ async function seedMainNav() {
       ],
     },
     {
-      name: 'Faculty Member', href: '/faculty-member', hasDropdown: false, title: null, displayOrder: 2,
+      // Mirrors the Program rows seeded in seedPrograms(). The two tier
+      // headings link to the /programs listing (which groups by tier);
+      // every other item deep-links to that program's own page.
+      name: 'Program', href: null, hasDropdown: true, title: 'Program', displayOrder: 2,
+      items: [
+        { name: 'Undergraduate',                                    href: '/programs',                                  displayOrder: 1 },
+        { name: 'Bachelor of Business Administration (BBA)',        href: '/programs/bba',                              displayOrder: 2 },
+        { name: 'Graduate',                                         href: '/programs',                                  displayOrder: 3 },
+        { name: 'Master of Business Administration (MBA)',          href: '/programs/mba',                              displayOrder: 4 },
+        { name: 'Regular Master of Business Administration',        href: '/programs/regular-mba',                      displayOrder: 5 },
+        { name: 'Executive Master of Business Administration (EMBA)', href: '/programs/emba',                           displayOrder: 6 },
+        { name: 'Masters in Bank Management (MBM)',                 href: '/programs/mbm',                              displayOrder: 7 },
+        { name: 'MBA in Supply Chain Management',                   href: '/programs/mba-supply-chain-management',      displayOrder: 8 },
+        { name: 'MBA in Apparel Merchandising',                     href: '/programs/mba-apparel-merchandising',        displayOrder: 9 },
+        { name: 'MBA in Textile & Fashion Marketing',               href: '/programs/mba-textile-fashion-marketing',    displayOrder: 10 },
+      ],
+    },
+    {
+      name: 'Faculty Member', href: '/faculty-member', hasDropdown: false, title: null, displayOrder: 3,
       items: [],
     },
     {
-      name: 'Admission', href: null, hasDropdown: true, title: 'Admission', displayOrder: 3,
+      name: 'Admission', href: null, hasDropdown: true, title: 'Admission', displayOrder: 4,
       items: [
         { name: 'Admission Requirements', href: '/admission/requirements',       displayOrder: 1 },
         { name: 'Tuition Fees',           href: '/admission/tuition-fees',       displayOrder: 2 },
@@ -562,7 +632,7 @@ async function seedMainNav() {
       ],
     },
     {
-      name: 'Student Society', href: null, hasDropdown: true, title: 'Student Society', displayOrder: 4,
+      name: 'Student Society', href: null, hasDropdown: true, title: 'Student Society', displayOrder: 5,
       items: [
         { name: 'Notice Board', href: '/student-society/notice-board', displayOrder: 1 },
         { name: 'Events',       href: '/student-society/events',       displayOrder: 2 },
@@ -575,7 +645,7 @@ async function seedMainNav() {
       ],
     },
     {
-      name: 'Contact', href: '/contact', hasDropdown: false, title: null, displayOrder: 5,
+      name: 'Contact', href: '/contact', hasDropdown: false, title: null, displayOrder: 6,
       items: [],
     },
   ];
@@ -1173,8 +1243,6 @@ async function seedSyllabus() {
       shortTitle:    'Bachelor of Business Administration',
       department:    'Business Administration',
       level:         'Undergraduate',
-      coverUrl:      '/assets/syllabus-me-cover.webp',
-      coverPublicId: null,
       pdfUrl:        '/assets/syllabus-me.pdf',
       pdfPublicId:   null,
       pdfFileName:   'syllabus-me.pdf',

@@ -130,11 +130,22 @@ function Input({
       <label className="block text-[10px] font-semibold uppercase tracking-wider text-gray-500 mb-0.5">
         {label}
       </label>
+      {/* autoComplete/data-* opt-outs: browsers and password managers
+          treat generic "Label"/"Title" text fields as identity fields
+          and paint a suggestion overlay on top of the typed value,
+          which renders as doubled text. Same opt-out IconInputField
+          already uses. */}
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck={false}
+        data-1p-ignore
+        data-lpignore="true"
+        data-form-type="other"
         className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
       />
     </div>

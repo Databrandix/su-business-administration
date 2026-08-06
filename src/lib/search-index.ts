@@ -285,7 +285,8 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
   // list page where the "Download" button surfaces alongside others.
   const syllabusItems: SearchItem[] = syllabusRows.map((s) => ({
     title: s.title,
-    description: s.summary,
+    // Summary is optional — omit rather than render an empty line.
+    description: s.summary ?? undefined,
     href: s.pdfUrl ?? '/student-society/syllabus',
     type: 'Syllabus',
   }));

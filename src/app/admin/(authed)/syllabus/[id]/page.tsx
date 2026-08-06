@@ -17,7 +17,7 @@ export default async function EditSyllabusPage({ params }: { params: Promise<{ i
     <div className="space-y-6 max-w-3xl">
       <header>
         <h1 className="text-2xl font-display font-bold text-gray-900">
-          Edit syllabus: <span className="text-accent">{item.shortTitle}</span>
+          Edit syllabus: <span className="text-accent">{item.shortTitle || item.title}</span>
         </h1>
         <p className="mt-1 text-sm text-gray-500">
           Slug: <code className="font-mono">{item.slug}</code> · {item.level}

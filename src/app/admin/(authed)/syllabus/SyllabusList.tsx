@@ -55,8 +55,6 @@ export default function SyllabusList({ items: initialItems }: { items: Syllabus[
       renderItem={(s) => (
         <div className="flex items-center justify-between gap-4 min-w-0">
           <div className="flex items-center gap-3 min-w-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={s.coverUrl} alt="" className="w-12 h-14 rounded bg-gray-50 border border-gray-200 object-cover shrink-0" />
             <div className="min-w-0">
               <div className="flex items-center gap-2 mb-0.5">
                 <span className={`inline-block text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${s.level === 'Undergraduate' ? 'bg-primary/10 text-primary' : 'bg-accent/10 text-accent'}`}>
@@ -64,7 +62,7 @@ export default function SyllabusList({ items: initialItems }: { items: Syllabus[
                 </span>
                 {s.pdfUrl && <FileText size={14} className="text-accent" />}
               </div>
-              <div className="font-medium text-gray-900 text-sm truncate">{s.shortTitle}</div>
+              <div className="font-medium text-gray-900 text-sm truncate">{s.shortTitle || s.title}</div>
               <div className="text-xs text-gray-500 truncate font-mono">/{s.slug}</div>
             </div>
           </div>
@@ -73,7 +71,7 @@ export default function SyllabusList({ items: initialItems }: { items: Syllabus[
                   className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 hover:text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-accent/40">
               <Pencil size={16} />
             </Link>
-            <button type="button" onClick={() => handleDelete(s.id, s.shortTitle)} aria-label="Delete syllabus"
+            <button type="button" onClick={() => handleDelete(s.id, s.shortTitle || s.title)} aria-label="Delete syllabus"
                     className="p-2 rounded-lg text-gray-500 hover:bg-red-50 hover:text-red-600 transition-colors focus:outline-none focus:ring-2 focus:ring-red-300">
               <Trash2 size={16} />
             </button>

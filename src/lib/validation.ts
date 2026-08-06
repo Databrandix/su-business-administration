@@ -294,7 +294,6 @@ export const uploadKindSchema = z.enum([
   'alumni-photo',
   'club-image',
   'visitor-photo',
-  'syllabus-cover',
   'syllabus-pdf',
   // Phase 8a
   'admission-notice-hero',
@@ -712,15 +711,13 @@ export const syllabusLevelEnum = z.enum(['Undergraduate', 'Postgraduate']);
 export const syllabusCreateSchema = z.object({
   slug:          z.string().min(1).max(160).regex(slugRegexHub, 'Slug must be lowercase letters, numbers, and hyphens only'),
   title:         z.string().min(1).max(500),
-  shortTitle:    z.string().min(1).max(300),
+  shortTitle:    optionalNullableString,
   department:    z.string().min(1).max(300),
   level:         syllabusLevelEnum,
-  coverUrl:      z.string().min(1),
-  coverPublicId: optionalNullableString,
   pdfUrl:        optionalNullableString,
   pdfPublicId:   optionalNullableString,
   pdfFileName:   optionalNullableString,
-  summary:       z.string().min(1),
+  summary:       optionalNullableString,
 });
 
 export const syllabusUpdateSchema = syllabusCreateSchema;

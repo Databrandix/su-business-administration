@@ -41,7 +41,7 @@ export default function ProgramForm({ initial }: { initial: Program | null }) {
                      defaultValue={initial?.degreeCode ?? ''} />
           <TextField label="Duration" name="duration" required
                      defaultValue={initial?.duration ?? ''}
-                     placeholder="4 Years · 8 Semesters" />
+                     placeholder="4 Years · 12 Semesters" />
         </div>
         <TextField label="Page slug (optional)" name="slug" monospace
                    defaultValue={initial?.slug ?? ''}

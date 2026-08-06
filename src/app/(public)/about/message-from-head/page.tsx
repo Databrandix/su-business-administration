@@ -15,7 +15,8 @@ export const metadata = {
     'Welcome message from the Head of the Department of Business Administration, Sonargaon University.',
 };
 
-const FALLBACK_HERO = '/assets/message-from-head-hero.webp';
+// Shares the Dean's-message banner — both /about message pages use it.
+const FALLBACK_HERO = '/assets/mission-vision-hero.webp';
 
 export default async function MessageFromHeadPage() {
   const [head, dept, uni] = await Promise.all([

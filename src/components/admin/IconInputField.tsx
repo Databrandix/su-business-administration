@@ -58,10 +58,16 @@ export default function IconInputField({
           {required && <span className="text-red-500 ml-0.5" aria-hidden="true">*</span>}
         </label>
       )}
-      <div className="flex items-stretch gap-2">
+      {/* min-w-0 on the row and the input wrapper: without it a flex
+          item's default `min-width: auto` refuses to shrink below its
+          content, so in narrow grid columns (the 220px ICON column in
+          the Overview stats / Policies editors) the "Pick" button was
+          pushed out of its column and painted over the LABEL field
+          next to it. */}
+      <div className="flex items-stretch gap-2 min-w-0">
         <div
           className={
-            'flex items-center gap-2 flex-1 border rounded-md px-2.5 py-1.5 bg-white ' +
+            'flex items-center gap-2 flex-1 min-w-0 border rounded-md px-2.5 py-1.5 bg-white ' +
             (showWarn
               ? 'border-amber-300 focus-within:border-amber-500 focus-within:ring-2 focus-within:ring-amber-200'
               : 'border-gray-300 focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30')
@@ -85,13 +91,13 @@ export default function IconInputField({
             required={required}
             autoComplete="off"
             spellCheck={false}
-            className="flex-1 text-sm outline-none bg-transparent placeholder:text-gray-400"
+            className="flex-1 min-w-0 text-sm outline-none bg-transparent placeholder:text-gray-400"
           />
         </div>
         <button
           type="button"
           onClick={() => setPickerOpen(true)}
-          className="px-3 inline-flex items-center gap-1.5 bg-accent/10 text-accent rounded-md text-xs font-medium hover:bg-accent/20 transition-colors"
+          className="px-3 shrink-0 inline-flex items-center gap-1.5 bg-accent/10 text-accent rounded-md text-xs font-medium hover:bg-accent/20 transition-colors"
           aria-label="Open icon picker"
         >
           <Sparkles size={14} /> Pick

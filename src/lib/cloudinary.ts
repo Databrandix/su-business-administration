@@ -51,7 +51,6 @@ const KIND_TO_SUBFOLDER: Record<string, string> = {
   'alumni-photo':          'alumni',
   'club-image':            'clubs',
   'visitor-photo':         'visitors',
-  'syllabus-cover':        'syllabus/covers',
   'syllabus-pdf':          'syllabus/pdfs',
   // Phase 8a — Admission CMS Part 1. 'admission-notice-file' and
   // 'prospectus-pdf' both reuse the /auto/upload endpoint (image or

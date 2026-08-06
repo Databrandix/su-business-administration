@@ -15,12 +15,6 @@ export interface FAQ {
 export const faqs: FAQ[] = [
   // ───── General Admission & Eligibility ─────
   {
-    id: 1,
-    category: 'Admission',
-    question: 'Is the LL.B (2-year) program available? What is the cost?',
-    answer: 'We apologize, but our 2-year LLM/LL.B programs are currently closed.',
-  },
-  {
     id: 2,
     category: 'Admission',
     question: 'Can I get admitted with a study gap?',
@@ -38,19 +32,6 @@ export const faqs: FAQ[] = [
     question: 'What is the minimum GPA required for admission?',
     answer:
       'A minimum GPA of 2.5 (or 2nd division) in both SSC and HSC (or equivalent) is required. For O-Levels, 4 subjects are required, and for A-Levels, 2 subjects with a minimum GPA of 2.50. Alternatively, an average of 450 marks in 5 GED subjects is accepted.',
-  },
-  {
-    id: 5,
-    category: 'Admission',
-    question: 'Can I get admitted if my GPA is less than 2.50?',
-    answer:
-      'Yes, but only for the Fashion Design program, provided you have at least a GPA of 2.00 in both SSC and HSC.',
-  },
-  {
-    id: 6,
-    category: 'Admission',
-    question: 'I have SSC in Science but HSC in Arts/Commerce. Can I get into CSE or EEE?',
-    answer: 'No, a Science background is mandatory for Engineering programs.',
   },
   {
     id: 7,
@@ -85,30 +66,6 @@ export const faqs: FAQ[] = [
     question: "What is the university's UGC ranking?",
     answer:
       'Our university is currently ranked 63rd in the UGC rankings. However, a university should not be judged by ranking alone; we offer quality education, experienced faculty, modern labs, free transport, and affordable tuition fees.',
-  },
-  {
-    id: 12,
-    category: 'Rankings',
-    question: 'Does the university have IEB membership?',
-    answer: 'Currently, we do not have it, but the process is underway.',
-  },
-  {
-    id: 13,
-    category: 'Rankings',
-    question: 'Does the university have Bar Council approval?',
-    answer: 'Yes, we have Bar Council approval.',
-  },
-  {
-    id: 14,
-    category: 'Rankings',
-    question: 'Can I sit for the Bar Council Exam after finishing LL.B?',
-    answer: 'Yes, you are eligible for the Bar Council Exam.',
-  },
-  {
-    id: 15,
-    category: 'Rankings',
-    question: 'Is there an age limit for the Bar Council Exam?',
-    answer: 'No, there is no age limit for the Bar Council Enrollment Exam.',
   },
 
   // ───── Campus & Facilities ─────
@@ -223,13 +180,6 @@ export const faqs: FAQ[] = [
     question: 'Why do costs vary between different batches?',
     answer:
       'Class schedules and timings vary. Costs are adjusted based on the requirements for managing faculty and staff resources for specific batch timings.',
-  },
-  {
-    id: 33,
-    category: 'Exams',
-    question: 'Can I get admitted to LL.B by only paying the admission fee?',
-    answer:
-      'Yes, you can complete the admission process by paying only the initial admission fee.',
   },
 ];
 

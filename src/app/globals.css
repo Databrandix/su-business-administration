@@ -49,6 +49,33 @@ html {
   -webkit-text-fill-color: transparent;
 }
 
+@layer base {
+  /* Long values stay inside single-line fields instead of painting
+     past the border. Textareas are excluded — they must keep
+     wrapping. */
+  input[type='text'],
+  input[type='search'],
+  input[type='email'],
+  input[type='url'],
+  input[type='tel'],
+  input[type='password'],
+  input[type='number'] {
+    text-overflow: ellipsis;
+  }
+
+  /* Chrome/Edge autofill otherwise repaints the field with its own
+     background and text layer. */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill {
+    -webkit-text-fill-color: inherit;
+    -webkit-box-shadow: 0 0 0 1000px #fff inset;
+    caret-color: inherit;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+}
+
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;

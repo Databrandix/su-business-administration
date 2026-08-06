@@ -101,6 +101,10 @@ export default function PoliciesEditor({ name, initialValue }: Props) {
                 onChange={(e) => update(r.id, 'text', e.target.value)}
                 rows={3}
                 placeholder="Students with a Golden A+ in both SSC and HSC receive a 100% Tuition Fee Waiver."
+                autoComplete="off"
+                data-1p-ignore
+                data-lpignore="true"
+                data-form-type="other"
                 className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent resize-y"
               />
             </div>
@@ -129,11 +133,18 @@ function Input({
       <label className="block text-[10px] font-semibold uppercase tracking-wider text-gray-500 mb-0.5">
         {label}
       </label>
+      {/* See OverviewStatsEditor — same autofill-overlay opt-out. */}
       <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck={false}
+        data-1p-ignore
+        data-lpignore="true"
+        data-form-type="other"
         className="w-full px-2.5 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent"
       />
     </div>

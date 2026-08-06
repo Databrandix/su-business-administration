@@ -43,17 +43,12 @@ export default function SyllabusForm({ initial }: { initial: Syllabus | null }) 
                        defaultValue={initial?.level ?? 'Undergraduate'} />
         </div>
         <TextField label="Title (full)" name="title" required defaultValue={initial?.title ?? ''} />
-        <TextField label="Short title" name="shortTitle" required defaultValue={initial?.shortTitle ?? ''} />
+        <TextField label="Short title" name="shortTitle" defaultValue={initial?.shortTitle ?? ''}
+                   placeholder="Optional — falls back to the full title" />
         <TextField label="Department" name="department" required
                    defaultValue={initial?.department ?? 'Business Administration'} />
-        <TextAreaField label="Summary" name="summary" required rows={4}
+        <TextAreaField label="Summary" name="summary" rows={4}
                        defaultValue={initial?.summary ?? ''} />
-      </Card>
-
-      <Card title="Cover image">
-        <ImageUploader kind="syllabus-cover" name="cover"
-                       initialUrl={initial?.coverUrl}
-                       initialPublicId={initial?.coverPublicId} />
       </Card>
 
       <Card title="PDF (downloadable)">

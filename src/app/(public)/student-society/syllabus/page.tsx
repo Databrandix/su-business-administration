@@ -35,10 +35,11 @@ export default async function SyllabusPage() {
           items={items.map((s) => ({
             slug:       s.slug,
             title:      s.title,
-            shortTitle: s.shortTitle,
+            // Short title is optional — the card heading uses the full
+            // title when it isn't set.
+            shortTitle: s.shortTitle ?? s.title,
             department: s.department,
             level:      s.level,
-            coverUrl:   s.coverUrl,
             pdfUrl:     s.pdfUrl,
             summary:    s.summary,
           }))}

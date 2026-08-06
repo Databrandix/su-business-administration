@@ -112,13 +112,16 @@ export default async function ProgramDetailPage({
               </p>
             )}
 
-            {/* Duration pill */}
-            <div className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary/5 px-4 py-2">
-              <Clock size={16} className="text-accent" />
-              <span className="text-[13px] font-semibold text-primary">
-                {program.duration}
-              </span>
-            </div>
+            {/* Duration pill — hidden when the programme has no
+                published duration, so the clock icon never sits alone. */}
+            {program.duration && (
+              <div className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary/5 px-4 py-2">
+                <Clock size={16} className="text-accent" />
+                <span className="text-[13px] font-semibold text-primary">
+                  {program.duration}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="relative overflow-hidden rounded-2xl shadow-lg lg:sticky lg:top-32">

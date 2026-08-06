@@ -34,15 +34,13 @@ function readSyllabusRow(formData: FormData) {
   return {
     slug:          getStr(formData, 'slug'),
     title:         getStr(formData, 'title'),
-    shortTitle:    getStr(formData, 'shortTitle'),
+    shortTitle:    emptyToNull(formData.get('shortTitle')),
     department:    getStr(formData, 'department'),
     level:         getStr(formData, 'level'),
-    coverUrl:      getStr(formData, 'coverUrl'),
-    coverPublicId: emptyToNull(formData.get('coverPublicId')),
     pdfUrl:        emptyToNull(formData.get('pdfUrl')),
     pdfPublicId:   emptyToNull(formData.get('pdfPublicId')),
     pdfFileName:   emptyToNull(formData.get('pdfFileName')),
-    summary:       getStr(formData, 'summary'),
+    summary:       emptyToNull(formData.get('summary')),
   };
 }
 

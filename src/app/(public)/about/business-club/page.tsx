@@ -145,24 +145,40 @@ export default async function BusinessClubPage() {
                     key={activity.title}
                     className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 border border-gray-100"
                   >
-                    <div className="relative aspect-[4/3] overflow-hidden">
-                      <Image
-                        src={activity.imageUrl}
-                        alt={activity.title}
-                        fill
-                        sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                        className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
-                      <div className="absolute top-4 left-4 w-11 h-11 rounded-lg bg-white/95 backdrop-blur flex items-center justify-center shadow-md">
-                        <DynamicLucideIcon name={activity.iconName} size={20} className="text-accent" strokeWidth={1.75} />
+                    {activity.imageUrl ? (
+                      <div className="relative aspect-[4/3] overflow-hidden">
+                        <Image
+                          src={activity.imageUrl}
+                          alt={activity.title}
+                          fill
+                          sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                          className="object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-primary/60 to-transparent" />
+                        <div className="absolute top-4 left-4 w-11 h-11 rounded-lg bg-white/95 backdrop-blur flex items-center justify-center shadow-md">
+                          <DynamicLucideIcon name={activity.iconName} size={20} className="text-accent" strokeWidth={1.75} />
+                        </div>
+                        {activity.category && (
+                          <span className="absolute bottom-4 left-4 text-[10px] font-bold tracking-[0.2em] uppercase text-white bg-accent/90 px-2.5 py-1 rounded-full">
+                            {activity.category}
+                          </span>
+                        )}
                       </div>
-                      {activity.category && (
-                        <span className="absolute bottom-4 left-4 text-[10px] font-bold tracking-[0.2em] uppercase text-white bg-accent/90 px-2.5 py-1 rounded-full">
-                          {activity.category}
-                        </span>
-                      )}
-                    </div>
+                    ) : (
+                      // No photo yet — a gradient band keeps the icon and
+                      // category badge visible instead of dropping them
+                      // along with the image.
+                      <div className="relative flex items-center gap-4 bg-gradient-to-br from-primary to-accent px-6 py-5">
+                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/95 shadow-md">
+                          <DynamicLucideIcon name={activity.iconName} size={20} className="text-accent" strokeWidth={1.75} />
+                        </div>
+                        {activity.category && (
+                          <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+                            {activity.category}
+                          </span>
+                        )}
+                      </div>
+                    )}
                     <div className="p-6">
                       <h3 className="font-display text-lg font-bold text-primary leading-snug mb-3">
                         {activity.title}

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Plus, X, ChevronUp, ChevronDown } from 'lucide-react';
-import type { SectionContent, SectionItem } from '@/lib/faculty-data';
+import type { SectionContent, SectionItem } from '@/lib/faculty-section-content';
 
 type Item = { text: string; link: string };
 type Group = { heading: string; items: Item[] };

@@ -32,7 +32,9 @@ export default function PageShell({
   subtitle,
   overline,
   children,
-  image = '/assets/site-school-1024x576.webp',
+  // Shared convocation banner — the default when a page supplies no
+  // hero of its own.
+  image = '/assets/mission-vision-hero.webp',
   imagePosition = 'center',
   contentClassName = 'py-12 md:py-16',
 }: PageShellProps) {

@@ -192,6 +192,11 @@ model Program {
   majorOptions         Json    @default("[]")
   majorOptionsNote     String?
   courseStructureTotal String?
+  // Downloadable course plan offered under the Credit Distribution
+  // table. Nullable — the card is hidden until a PDF is uploaded.
+  coursePlanPdfUrl      String?
+  coursePlanPdfPublicId String?
+  coursePlanPdfFileName String?
 
   // Phase 8b — back-relation for ProgramFeeStructure (1:1, optional).
   // Program admin form stays focused on academic metadata (per
@@ -223,6 +228,41 @@ model CareerProspects {
   updatedAt DateTime @updatedAt
 
   @@map("career_prospects")
+}
+
+// One numbered service on /student-society/service-charter: what to do,
+// the ordered steps, and who is responsible.
+model ServiceCharterItem {
+  id           String   @id @default(cuid())
+  title        String   @db.Text
+  // Ordered steps. A single-step service renders with an arrow; two or
+  // more render as a numbered list, matching the source document.
+  steps        Json     @default("[]")
+  // Responsible person shown in the card footer.
+  personName   String?
+  personPhone  String?
+  personEmail  String?
+  personRoom   String?
+  // Free-form extra line under the email (e.g. "Student Welfare Division").
+  personNote   String?
+  displayOrder Int
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([displayOrder])
+  @@map("service_charter_item")
+}
+
+// Intro copy + downloadable PDF for the Service Charter page.
+model ServiceCharterMeta {
+  id          String   @id @default("singleton")
+  intro       String   @db.Text
+  pdfUrl      String?
+  pdfPublicId String?
+  pdfFileName String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("service_charter_meta")
 }
 
 model ResearchArea {
@@ -390,7 +430,10 @@ model MainNavItem {
   id           String       @id @default(cuid())
   groupId      String
   name         String
-  href         String
+  // Nullable so an item that only heads its flyout ("Undergraduate",
+  // "Graduate") can exist without a destination — the Navbar renders
+  // those as plain headings rather than links.
+  href         String?
   isExternal   Boolean      @default(false)
   isDisabled   Boolean      @default(false)
   displayOrder Int
@@ -917,6 +960,11 @@ model Syllabus {
   pdfFileName   String?
   // Optional — the card simply omits the paragraph when absent.
   summary       String?  @db.Text
+  // Cover artwork at the top of the card. Optional on purpose: a
+  // required cover previously blocked admins from saving a syllabus
+  // before artwork existed, so the card falls back to a placeholder.
+  coverUrl      String?
+  coverPublicId String?
   displayOrder  Int
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

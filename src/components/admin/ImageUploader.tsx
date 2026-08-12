@@ -31,6 +31,7 @@ type Kind =
   | 'club-image'
   | 'visitor-photo'
   | 'syllabus-pdf'
+  | 'syllabus-cover'
   // Phase 8a
   | 'admission-notice-hero'
   | 'admission-notice-file'
@@ -38,6 +39,8 @@ type Kind =
   | 'prospectus-pdf'
   | 'department-layout-cover'
   | 'department-layout-pdf'
+  | 'program-course-plan-pdf'
+  | 'service-charter-pdf'
   // Phase 10
   | 'contact-hero'
   // Phase 12
@@ -68,12 +71,15 @@ const RECOMMENDED_SIZE_BY_KIND: Record<Kind, string | null> = {
   'club-image':            'Landscape · 1200×675 (16:9)',
   'visitor-photo':         'Square portrait · 400×400',
   'syllabus-pdf':          null,
+  'syllabus-cover':        'Landscape · 1200×600 (2:1)',
   'admission-notice-hero': 'Landscape banner · 1920×600',
   'admission-notice-file': null,
   'prospectus-cover':      'Portrait · 800×1131 (A4 ratio)',
   'prospectus-pdf':        null,
   'department-layout-cover': 'Portrait · 800×1000 (4:5)',
   'department-layout-pdf':   null,
+  'program-course-plan-pdf': null,
+  'service-charter-pdf':     null,
   'contact-hero':          'Landscape banner · 1920×500',
   'journey-cta-hero':      'Landscape · 1920×800',
   'home-overview-image':   'Landscape · 1264×843 (3:2)',

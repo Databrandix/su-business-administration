@@ -68,6 +68,9 @@ export async function createProgramAction(
     majorOptions:         parseJsonArray(formData, 'majorOptions'),
     majorOptionsNote:     emptyToNull(formData.get('majorOptionsNote')),
     courseStructureTotal: emptyToNull(formData.get('courseStructureTotal')),
+    coursePlanPdfUrl:      emptyToNull(formData.get('coursePlanPdfUrl')),
+    coursePlanPdfPublicId: emptyToNull(formData.get('coursePlanPdfPublicId')),
+    coursePlanPdfFileName: emptyToNull(formData.get('coursePlanPdfFileName')),
   };
 
   const parsed = programCreateSchema.safeParse(raw);
@@ -107,6 +110,9 @@ export async function createProgramAction(
         majorOptions:         parsed.data.majorOptions ?? [],
         majorOptionsNote:     parsed.data.majorOptionsNote ?? null,
         courseStructureTotal: parsed.data.courseStructureTotal ?? null,
+        coursePlanPdfUrl:      parsed.data.coursePlanPdfUrl ?? null,
+        coursePlanPdfPublicId: parsed.data.coursePlanPdfPublicId ?? null,
+        coursePlanPdfFileName: parsed.data.coursePlanPdfFileName ?? null,
       },
     });
   } catch (e: unknown) {
@@ -154,6 +160,9 @@ export async function updateProgramAction(
     majorOptions:         parseJsonArray(formData, 'majorOptions'),
     majorOptionsNote:     emptyToNull(formData.get('majorOptionsNote')),
     courseStructureTotal: emptyToNull(formData.get('courseStructureTotal')),
+    coursePlanPdfUrl:      emptyToNull(formData.get('coursePlanPdfUrl')),
+    coursePlanPdfPublicId: emptyToNull(formData.get('coursePlanPdfPublicId')),
+    coursePlanPdfFileName: emptyToNull(formData.get('coursePlanPdfFileName')),
   };
 
   const parsed = programUpdateSchema.safeParse(raw);

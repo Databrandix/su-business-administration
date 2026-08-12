@@ -1,5 +1,9 @@
 import { v2 as cloudinary } from 'cloudinary';
+import type { z } from 'zod';
 import { ApiError } from './auth-server';
+import type { uploadKindSchema } from './validation';
+
+type UploadKind = z.infer<typeof uploadKindSchema>;
 
 function required(name: string): string {
   const v = process.env[name];
@@ -28,7 +32,11 @@ function ensureConfigured() {
 // Folder layout: <root>/<kind>/  — per-department isolation comes from
 // CLOUDINARY_UPLOAD_FOLDER, so cloning this repo for another department
 // only requires changing that env var.
-const KIND_TO_SUBFOLDER: Record<string, string> = {
+// Keyed by UploadKind rather than plain string, so adding a kind to the
+// Zod enum without giving it a folder here is a compile error. The two
+// lists previously drifted apart silently, which surfaced only as an
+// "invalid kind" rejection at upload time.
+const KIND_TO_SUBFOLDER: Record<UploadKind, string> = {
   'department-logo':       'department/logo',
   'department-hero':       'department/hero',
   'university-logo':       'university/logo',
@@ -52,6 +60,7 @@ const KIND_TO_SUBFOLDER: Record<string, string> = {
   'club-image':            'clubs',
   'visitor-photo':         'visitors',
   'syllabus-pdf':          'syllabus/pdfs',
+  'syllabus-cover':        'syllabus/covers',
   // Phase 8a — Admission CMS Part 1. 'admission-notice-file' and
   // 'prospectus-pdf' both reuse the /auto/upload endpoint (image or
   // PDF auto-detected); the admin forms pass accept='application/pdf'
@@ -62,6 +71,8 @@ const KIND_TO_SUBFOLDER: Record<string, string> = {
   'prospectus-pdf':        'admission/prospectus/pdfs',
   'department-layout-cover': 'about/department-layout/covers',
   'department-layout-pdf':   'about/department-layout/pdfs',
+  'program-course-plan-pdf': 'programs/course-plans',
+  'service-charter-pdf':     'student-society/service-charter',
   // Phase 10 — contact page hero image.
   'contact-hero':          'contact/hero',
   // Phase 12 — journey CTA hero image (between content + footer chrome).
@@ -73,7 +84,7 @@ const KIND_TO_SUBFOLDER: Record<string, string> = {
   'legal-hero':            'legal/hero',
 };
 
-function folderFor(kind: string): string {
+function folderFor(kind: UploadKind): string {
   const root = process.env.CLOUDINARY_UPLOAD_FOLDER || 'phase-0';
   const sub  = KIND_TO_SUBFOLDER[kind] ?? 'misc';
   return `${root}/${sub}`;
@@ -101,7 +112,7 @@ function folderFor(kind: string): string {
 //  src/lib/image-quality.ts. This means we can change delivery
 //  preferences later without losing the source.
 //
-export function signUploadParams(kind: string) {
+export function signUploadParams(kind: UploadKind) {
   ensureConfigured();
   const timestamp = Math.round(Date.now() / 1000);
   const folder = folderFor(kind);

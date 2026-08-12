@@ -42,6 +42,7 @@ export default async function SyllabusPage() {
             level:      s.level,
             pdfUrl:     s.pdfUrl,
             summary:    s.summary,
+            coverUrl:   s.coverUrl,
           }))}
         />
       </Container>

@@ -5,10 +5,13 @@ import {
   Clock,
   ClipboardList,
   CreditCard,
+  Download,
+  Table2,
 } from 'lucide-react';
 import PageShell from '@/components/layout/PageShell';
 import Container from '@/components/ui/Container';
 import { DynamicLucideIcon } from '@/components/ui/DynamicLucideIcon';
+import SemesterAccordion from '@/components/programs/SemesterAccordion';
 import {
   getProgramBySlug,
   getProgramSlugs,
@@ -105,6 +108,20 @@ function coerceMajorOptions(v: unknown): MajorOption[] {
     .filter((o) => o.name && o.courses.length > 0);
 }
 
+// Credits are stored as display strings ("3.00", "0.75", "----"), so a
+// non-numeric entry contributes nothing rather than poisoning the sum.
+function sumCredits(courses: Course[]): number {
+  return courses.reduce((acc, c) => {
+    const n = Number.parseFloat(c.credits);
+    return acc + (Number.isFinite(n) ? n : 0);
+  }, 0);
+}
+
+// Trims the padding zeros the source data carries (18.00 → 18).
+function fmtCredits(n: number): string {
+  return String(Number(n.toFixed(2)));
+}
+
 type CareerRow = { area: string; roles: string; sectors: string };
 
 function coerceCareerRows(v: unknown): CareerRow[] {
@@ -138,6 +155,19 @@ export default async function ProgramDetailPage({
   const careerRows = coerceCareerRows(careers?.rows);
   const semesters = coerceSemesters(program.courseStructure);
   const majorOptions = coerceMajorOptions(program.majorOptions);
+
+  // Credit totals are derived from the course rows rather than stored,
+  // so the distribution table can never drift from the semester tables.
+  const totalCourses = semesters.reduce((n, s) => n + s.courses.length, 0);
+  const semesterTotals = semesters.map((s) => ({
+    title: s.title,
+    courses: s.courses.length,
+    credits: sumCredits(s.courses),
+  }));
+  const coreCredits = semesterTotals.reduce((n, s) => n + s.credits, 0);
+  // One major track is required, so it counts toward the published total.
+  const majorCredits = majorOptions[0] ? sumCredits(majorOptions[0].courses) : 0;
+  const grandTotal = coreCredits + majorCredits;
 
   return (
     <PageShell
@@ -237,134 +267,6 @@ export default async function ProgramDetailPage({
           </section>
         )}
 
-        {/* ───── Course Structure — per-program curriculum ───── */}
-        {semesters.length > 0 && (
-          <section className="mx-auto mb-14 max-w-6xl md:mb-20">
-            <h2 className="mb-2 text-center font-display text-xl font-bold text-primary md:text-2xl">
-              Course Structure
-            </h2>
-            {program.courseStructureTotal && (
-              <p className="mb-6 text-center text-[15px] text-gray-600">
-                {program.courseStructureTotal}
-              </p>
-            )}
-
-            <div className="flex flex-col gap-5">
-              {semesters.map((sem, si) => (
-                <div
-                  key={si}
-                  className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
-                >
-                  <header className="border-b border-gray-200 bg-primary/5 px-6 py-4">
-                    <h3 className="font-display text-base font-bold text-primary md:text-lg">
-                      {sem.title}
-                    </h3>
-                    {sem.note && (
-                      <p className="mt-1 text-[13px] leading-relaxed text-gray-600">
-                        {sem.note}
-                      </p>
-                    )}
-                  </header>
-
-                  {/* Course titles run long, so the table scrolls
-                      horizontally on narrow screens. */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full min-w-[620px] border-collapse text-left">
-                      <thead>
-                        <tr className="border-b border-gray-200 bg-gray-50 text-[12px] font-bold uppercase tracking-wider text-gray-500">
-                          <th scope="col" className="w-14 px-5 py-2.5">Sl.</th>
-                          <th scope="col" className="w-32 px-5 py-2.5">Course Code</th>
-                          <th scope="col" className="px-5 py-2.5">Course Title</th>
-                          <th scope="col" className="w-32 px-5 py-2.5 text-center">Contact hrs./week</th>
-                          <th scope="col" className="w-24 px-5 py-2.5 text-center">Credits</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {sem.courses.map((c, ci) => (
-                          <tr key={ci} className="border-b border-gray-100 last:border-b-0">
-                            <td className="px-5 py-3 align-top text-[14px] text-gray-400">
-                              {ci + 1}
-                            </td>
-                            <td className="px-5 py-3 align-top">
-                              <span className="font-mono text-[13.5px] font-semibold text-primary">
-                                {c.code}
-                              </span>
-                            </td>
-                            <td className="px-5 py-3 align-top text-[14.5px] leading-[1.6] text-gray-800">
-                              {c.title}
-                            </td>
-                            <td className="px-5 py-3 text-center align-top text-[14px] text-gray-600">
-                              {c.contact || '—'}
-                            </td>
-                            <td className="px-5 py-3 text-center align-top font-display text-[14px] font-bold text-accent">
-                              {c.credits || '—'}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {sem.footer && (
-                    <p className="border-t border-gray-100 bg-gray-50/60 px-6 py-3 text-[13px] text-gray-600">
-                      {sem.footer}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Major options — the final semester's elective tracks. */}
-            {majorOptions.length > 0 && (
-              <div className="mt-8">
-                <h3 className="mb-2 text-center font-display text-lg font-bold text-primary md:text-xl">
-                  Major Options
-                </h3>
-                {program.majorOptionsNote && (
-                  <p className="mx-auto mb-6 max-w-3xl text-center text-[14px] leading-relaxed text-gray-600">
-                    {program.majorOptionsNote}
-                  </p>
-                )}
-
-                <div className="grid gap-5 lg:grid-cols-2">
-                  {majorOptions.map((opt, oi) => (
-                    <div
-                      key={oi}
-                      className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
-                    >
-                      <header className="flex items-center gap-3 border-b border-gray-200 bg-primary/5 px-5 py-3.5">
-                        {opt.roman && (
-                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent text-[12px] font-bold text-white">
-                            {opt.roman}
-                          </span>
-                        )}
-                        <h4 className="font-display text-[15px] font-bold text-primary">
-                          {opt.name}
-                        </h4>
-                      </header>
-                      <ul className="divide-y divide-gray-100">
-                        {opt.courses.map((c, ci) => (
-                          <li key={ci} className="flex gap-3 px-5 py-3">
-                            <span className="w-20 shrink-0 font-mono text-[12.5px] font-semibold text-primary">
-                              {c.code}
-                            </span>
-                            <span className="flex-1 text-[14px] leading-[1.6] text-gray-800">
-                              {c.title}
-                            </span>
-                            <span className="shrink-0 font-display text-[13px] font-bold text-accent">
-                              {c.credits}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </section>
-        )}
-
         {/* ───── Career Prospects — shared across every program ───── */}
         {(careerIntro.length > 0 || careerRows.length > 0) && (
           <section className="mx-auto mb-14 max-w-6xl md:mb-20">
@@ -424,6 +326,163 @@ export default async function ProgramDetailPage({
           </section>
         )}
 
+        {/* ───── Course Structure — per-program curriculum ───── */}
+        {semesters.length > 0 && (
+          <section className="mx-auto mb-14 max-w-6xl md:mb-20">
+            <h2 className="mb-2 text-center font-display text-xl font-bold text-primary md:text-2xl">
+              Course Structure
+            </h2>
+            <p className="mx-auto mb-8 max-w-2xl text-center text-[15px] text-gray-600">
+              {totalCourses} courses across {semesters.length} semesters. Select
+              a semester to see its courses.
+            </p>
+
+            <SemesterAccordion semesters={semesters} />
+
+            {/* Major options — the final semester's elective tracks. */}
+            {majorOptions.length > 0 && (
+              <div className="mt-8">
+                <h3 className="mb-2 text-center font-display text-lg font-bold text-primary md:text-xl">
+                  Major Options
+                </h3>
+                {program.majorOptionsNote && (
+                  <p className="mx-auto mb-6 max-w-3xl text-center text-[14px] leading-relaxed text-gray-600">
+                    {program.majorOptionsNote}
+                  </p>
+                )}
+
+                <div className="grid gap-5 lg:grid-cols-2">
+                  {majorOptions.map((opt, oi) => (
+                    <div
+                      key={oi}
+                      className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm"
+                    >
+                      <header className="flex items-center gap-3 border-b border-gray-200 bg-primary/5 px-5 py-3.5">
+                        {opt.roman && (
+                          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent text-[12px] font-bold text-white">
+                            {opt.roman}
+                          </span>
+                        )}
+                        <h4 className="font-display text-[15px] font-bold text-primary">
+                          {opt.name}
+                        </h4>
+                      </header>
+                      <ul className="divide-y divide-gray-100">
+                        {opt.courses.map((c, ci) => (
+                          <li key={ci} className="flex gap-3 px-5 py-3">
+                            <span className="w-20 shrink-0 font-mono text-[12.5px] font-semibold text-primary">
+                              {c.code}
+                            </span>
+                            <span className="flex-1 text-[14px] leading-[1.6] text-gray-800">
+                              {c.title}
+                            </span>
+                            <span className="shrink-0 font-display text-[13px] font-bold text-accent">
+                              {c.credits}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
+        {/* ───── Credit Distribution — derived from the course rows ───── */}
+        {semesterTotals.length > 0 && (
+          <section className="mx-auto mb-14 max-w-6xl md:mb-20">
+            <h2 className="mb-6 text-center font-display text-xl font-bold text-primary md:text-2xl">
+              Credit Distribution
+            </h2>
+            <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+              <table className="w-full min-w-[34rem] text-left text-[14px]">
+                <caption className="sr-only">
+                  Credits per semester with a running cumulative total
+                </caption>
+                <thead>
+                  <tr className="bg-gray-50 text-[11px] font-semibold uppercase tracking-wider text-gray-500">
+                    <th scope="col" className="px-5 py-3">Semester</th>
+                    <th scope="col" className="px-5 py-3 text-right">Courses</th>
+                    <th scope="col" className="px-5 py-3 text-right">Credits</th>
+                    <th scope="col" className="px-5 py-3 text-right">Cumulative</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {semesterTotals.map((s, i) => {
+                    const cumulative = semesterTotals
+                      .slice(0, i + 1)
+                      .reduce((n, r) => n + r.credits, 0);
+                    return (
+                      <tr key={i} className="border-t border-gray-100">
+                        <td className="px-5 py-3 font-medium text-gray-800">{s.title}</td>
+                        <td className="px-5 py-3 text-right tabular-nums text-gray-600">
+                          {s.courses}
+                        </td>
+                        <td className="px-5 py-3 text-right font-bold tabular-nums text-primary">
+                          {fmtCredits(s.credits)}
+                        </td>
+                        <td className="px-5 py-3 text-right font-semibold tabular-nums text-gray-700">
+                          {fmtCredits(cumulative)}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr className="border-t-2 border-gray-200 bg-gray-50">
+                    <td className="px-5 py-3 font-bold text-primary">Total</td>
+                    <td className="px-5 py-3 text-right font-bold tabular-nums text-primary">
+                      {totalCourses}
+                    </td>
+                    <td className="px-5 py-3 text-right font-bold tabular-nums text-primary" colSpan={2}>
+                      {fmtCredits(coreCredits)}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <div className="mt-4 grid gap-4 sm:grid-cols-3">
+              <SummaryCard label="Total Credits" value={fmtCredits(grandTotal)} />
+              <SummaryCard label="Core Credits" value={fmtCredits(coreCredits)} />
+              {majorCredits > 0 && (
+                <SummaryCard label="Major Credits" value={fmtCredits(majorCredits)} />
+              )}
+            </div>
+
+            {/* Download card — hidden until a course plan PDF is uploaded. */}
+            {program.coursePlanPdfUrl && (
+              <div className="mt-10">
+                <div className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-7 text-center shadow-sm sm:flex-row sm:text-left">
+                  <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-white shadow-md">
+                    <Table2 size={22} strokeWidth={1.75} aria-hidden="true" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-display text-[15px] font-bold text-primary">
+                      Course structure and credit distribution
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      The tables on this page, as a PDF you can keep.
+                    </p>
+                  </div>
+                  <a
+                    href={program.coursePlanPdfUrl}
+                    download={program.coursePlanPdfFileName || undefined}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-white shadow-md transition-colors hover:bg-primary/90"
+                  >
+                    <Download size={17} aria-hidden="true" />
+                    Download PDF
+                  </a>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
+
         {/* ───── Ready to Apply ───── */}
         <section className="mx-auto max-w-3xl">
           <div className="rounded-2xl bg-primary p-8 text-center shadow-2xl md:p-12">
@@ -455,5 +514,18 @@ export default async function ProgramDetailPage({
         </section>
       </Container>
     </PageShell>
+  );
+}
+
+function SummaryCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-xl border border-gray-100 bg-white p-5 text-center shadow-sm">
+      <div className="mb-1 text-[10px] font-bold uppercase tracking-wider text-gray-500">
+        {label}
+      </div>
+      <div className="font-display text-lg font-bold leading-tight text-primary md:text-xl">
+        {value}
+      </div>
+    </div>
   );
 }

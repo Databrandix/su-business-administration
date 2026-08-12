@@ -77,7 +77,7 @@ export default function OverviewSection({
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="order-1 lg:order-2 overflow-hidden lg:relative"
+            className="order-1 lg:order-2 overflow-hidden rounded-2xl lg:relative"
           >
             <Image
               src={imageUrl}
@@ -85,7 +85,12 @@ export default function OverviewSection({
               width={1264}
               height={843}
               sizes="(min-width: 1024px) 540px, 100vw"
-              className="h-auto w-full lg:absolute lg:inset-0 lg:h-full lg:w-full lg:object-contain"
+              // object-cover, not contain: the grid stretches this column
+              // to the text column's height, and contain letterboxed the
+              // photo inside it — leaving white bands whose corners the
+              // radius could not reach. Cover fills the box, so the
+              // rounded edges are the photo's own edges.
+              className="h-auto w-full rounded-2xl object-cover lg:absolute lg:inset-0 lg:h-full lg:w-full"
             />
           </motion.div>
         </div>

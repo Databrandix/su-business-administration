@@ -41,6 +41,8 @@ function readSyllabusRow(formData: FormData) {
     pdfPublicId:   emptyToNull(formData.get('pdfPublicId')),
     pdfFileName:   emptyToNull(formData.get('pdfFileName')),
     summary:       emptyToNull(formData.get('summary')),
+    coverUrl:      emptyToNull(formData.get('coverUrl')),
+    coverPublicId: emptyToNull(formData.get('coverPublicId')),
   };
 }
 

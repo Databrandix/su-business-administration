@@ -133,6 +133,9 @@ export const programCreateSchema = z.object({
   majorOptions:         majorOptionsSchema.optional(),
   majorOptionsNote:     optionalNullableString,
   courseStructureTotal: optionalNullableString,
+  coursePlanPdfUrl:      optionalNullableString,
+  coursePlanPdfPublicId: optionalNullableString,
+  coursePlanPdfFileName: optionalNullableString,
 });
 
 export const programUpdateSchema = programCreateSchema.partial();
@@ -315,6 +318,7 @@ export const uploadKindSchema = z.enum([
   'department-hero',
   'university-logo',
   'program-image',
+  'program-course-plan-pdf',
   'research-icon',
   'faculty-photo',
   'faculty-message-hero',
@@ -330,6 +334,8 @@ export const uploadKindSchema = z.enum([
   'club-image',
   'visitor-photo',
   'syllabus-pdf',
+  'syllabus-cover',
+  'service-charter-pdf',
   // Phase 8a
   'admission-notice-hero',
   'admission-notice-file',
@@ -388,7 +394,8 @@ export const mainNavGroupUpdateSchema = mainNavGroupCreateSchema.partial();
 
 export const mainNavItemCreateSchema = z.object({
   name:         z.string().min(1).max(200),
-  href:         z.string().min(1),
+  // Blank when the item only heads its flyout ("Undergraduate").
+  href:         optionalNullableString,
   isExternal:   z.boolean().optional().default(false),
   isDisabled:   z.boolean().optional().default(false),
   displayOrder: z.number().int().min(0).optional(),
@@ -421,6 +428,26 @@ export const aboutMissionVisionUpdateSchema = z.object({
   visionOverline:    optionalNullableString,
   visionHeading:     z.string().min(1).max(300),
   visionBody:        z.string().min(1),
+});
+
+export const serviceCharterItemCreateSchema = z.object({
+  title:       z.string().min(1).max(1000),
+  steps:       z.array(z.string().min(1)).default([]),
+  personName:  optionalNullableString,
+  personPhone: optionalNullableString,
+  personEmail: optionalNullableString,
+  personRoom:  optionalNullableString,
+  personNote:  optionalNullableString,
+  displayOrder: z.number().int().min(0).optional(),
+});
+export const serviceCharterItemUpdateSchema =
+  serviceCharterItemCreateSchema.partial();
+
+export const serviceCharterMetaUpdateSchema = z.object({
+  intro:       z.string().min(1),
+  pdfUrl:      optionalNullableString,
+  pdfPublicId: optionalNullableString,
+  pdfFileName: optionalNullableString,
 });
 
 export const careerProspectsUpdateSchema = z.object({
@@ -804,6 +831,8 @@ export const syllabusCreateSchema = z.object({
   pdfPublicId:   optionalNullableString,
   pdfFileName:   optionalNullableString,
   summary:       optionalNullableString,
+  coverUrl:      optionalNullableString,
+  coverPublicId: optionalNullableString,
 });
 
 export const syllabusUpdateSchema = syllabusCreateSchema;

@@ -50,7 +50,8 @@ type QuickAccessRow = {
 type MainNavItemRow = {
   id: string;
   name: string;
-  href: string;
+  // null when the item only heads its flyout and links nowhere.
+  href: string | null;
   isExternal: boolean;
   isDisabled: boolean;
   // Optional third level. Present only on items fetched via getMainNav;
@@ -62,7 +63,7 @@ type MainNavItemRow = {
 type NavChildRow = {
   id: string;
   name: string;
-  href: string;
+  href: string | null;
   isExternal: boolean;
   isDisabled: boolean;
 };
@@ -396,8 +397,17 @@ export default function Navbar({
                   <div className="pb-2 pl-3 flex flex-col gap-1">
                     {group.items.map((child) => (
                       <div key={child.id} className="flex flex-col">
+                        {/* A row with children but no destination of its own
+                            (e.g. "Undergraduate") is a heading for the list
+                            beneath it, not a link — render it as plain text so
+                            it cannot be clicked. */}
+                        {!child.href && (child.children?.length ?? 0) > 0 ? (
+                          <span className="py-1.5 text-[13px] font-medium text-gray-700 transition-colors hover:text-accent">
+                            {child.name}
+                          </span>
+                        ) : (
                         <a
-                          href={child.isDisabled ? '#' : child.href}
+                          href={child.isDisabled ? '#' : (child.href ?? '#')}
                           {...(child.isExternal && !child.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
                           className={`py-1.5 text-[13px] font-medium transition-colors ${
                             child.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:text-accent'
@@ -406,6 +416,7 @@ export default function Navbar({
                         >
                           {child.name}
                         </a>
+                        )}
                         {/* Third level — no hover on touch, so children are
                             simply indented under their parent. */}
                         {(child.children?.length ?? 0) > 0 && (
@@ -413,7 +424,7 @@ export default function Navbar({
                             {child.children!.map((sub) => (
                               <a
                                 key={sub.id}
-                                href={sub.isDisabled ? '#' : sub.href}
+                                href={sub.isDisabled ? '#' : (sub.href ?? '#')}
                                 {...(sub.isExternal && !sub.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
                                 className={`py-1.5 text-[12.5px] transition-colors ${
                                   sub.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 hover:text-accent'
@@ -454,7 +465,7 @@ export default function Navbar({
               {mobileQuickLinks.map((link) => (
                 <a
                   key={link.id}
-                  href={link.isDisabled ? '#' : link.href}
+                  href={link.isDisabled ? '#' : (link.href ?? '#')}
                   {...(link.isExternal && !link.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
                   className={`text-[12.5px] transition-colors py-1 ${
                     link.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:text-accent'
@@ -544,15 +555,38 @@ function NavGroup({
               const kids = child.children ?? [];
               const hasKids = kids.length > 0 && !child.isDisabled;
 
+              // A row with children but no destination of its own (e.g.
+              // "Undergraduate") heads the flyout beneath it rather than
+              // linking anywhere, so it renders as a non-interactive span —
+              // hovering still opens the flyout because that is driven by
+              // the wrapping .group/item, not by the anchor.
+              const isHeading = !child.href && hasKids;
+              const RowTag = isHeading ? 'span' : 'a';
+
               return (
                 <div key={child.id} className="group/item relative">
-                  <a
-                    href={child.isDisabled ? '#' : child.href}
-                    {...(child.isExternal && !child.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
+                  <RowTag
+                    {...(isHeading
+                      ? {}
+                      : {
+                          href: child.isDisabled ? '#' : child.href!,
+                          ...(child.isExternal && !child.isDisabled && {
+                            target: '_blank',
+                            rel: 'noopener noreferrer',
+                          }),
+                          'aria-disabled': child.isDisabled || undefined,
+                        })}
                     className={`block px-5 py-2.5 text-sm font-medium transition-colors ${
-                      child.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-accent/5 hover:text-accent'
+                      child.isDisabled
+                        ? 'text-gray-400 cursor-not-allowed'
+                        : // Headings keep the same hover treatment as links —
+                          // they open a flyout, so they must feel interactive
+                          // even though they navigate nowhere. A span has no
+                          // pointer cursor of its own, so it is set here.
+                          `text-gray-700 hover:bg-accent/5 hover:text-accent${
+                            isHeading ? ' cursor-pointer' : ''
+                          }`
                     }`}
-                    aria-disabled={child.isDisabled || undefined}
                     aria-haspopup={hasKids || undefined}
                   >
                     <span className="inline-flex items-center gap-2">
@@ -568,7 +602,7 @@ function NavGroup({
                         />
                       )}
                     </span>
-                  </a>
+                  </RowTag>
 
                   {/* Third level — flyout to the right of the parent row. */}
                   {hasKids && (
@@ -576,7 +610,7 @@ function NavGroup({
                       {kids.map((sub) => (
                         <a
                           key={sub.id}
-                          href={sub.isDisabled ? '#' : sub.href}
+                          href={sub.isDisabled ? '#' : (sub.href ?? '#')}
                           {...(sub.isExternal && !sub.isDisabled && { target: '_blank', rel: 'noopener noreferrer' })}
                           className={`block px-5 py-2.5 text-sm font-medium transition-colors ${
                             sub.isDisabled ? 'text-gray-400 cursor-not-allowed' : 'text-gray-700 hover:bg-accent/5 hover:text-accent'

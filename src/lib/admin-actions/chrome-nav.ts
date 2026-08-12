@@ -270,9 +270,12 @@ export async function reorderMainNavGroupsAction(ids: string[]): Promise<ActionR
 // ─────────────────────────────────────────────────────────────────
 
 function readItemRow(fd: FormData) {
+  const href = getStr(fd, 'href');
   return {
     name:       getStr(fd, 'name'),
-    href:       getStr(fd, 'href'),
+    // Empty means "no destination" — the item heads its flyout instead of
+    // linking anywhere, so it is stored as NULL rather than "".
+    href:       href.length > 0 ? href : null,
     isExternal: readBoolCheckbox(fd, 'isExternal'),
     isDisabled: readBoolCheckbox(fd, 'isDisabled'),
   };
@@ -280,7 +283,6 @@ function readItemRow(fd: FormData) {
 
 function validateItemRow(row: ReturnType<typeof readItemRow>): ActionResult | null {
   if (!row.name) return { ok: false, error: 'Item name is required' };
-  if (!row.href) return { ok: false, error: 'Item href is required' };
   return null;
 }
 

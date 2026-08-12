@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import type { Program } from '@prisma/client';
 import ImageUploader from '@/components/admin/ImageUploader';
@@ -25,6 +25,14 @@ export default function ProgramForm({ initial }: { initial: Program | null }) {
     action,
     { ok: null },
   );
+
+  // The PDF uploader reports through onChange rather than rendering its
+  // own form inputs, so its values are mirrored into hidden inputs.
+  const [coursePlanPdf, setCoursePlanPdf] = useState({
+    url:      initial?.coursePlanPdfUrl ?? '',
+    publicId: initial?.coursePlanPdfPublicId ?? '',
+    fileName: initial?.coursePlanPdfFileName ?? '',
+  });
 
   useEffect(() => {
     if (state.ok === true) toast.success(isEdit ? 'Program saved' : 'Program created');
@@ -97,6 +105,31 @@ export default function ProgramForm({ initial }: { initial: Program | null }) {
                    placeholder="Total 141 Credits" />
         <CourseStructureEditor name="courseStructure"
                                initialValue={initial?.courseStructure} />
+
+        <div className="border-t border-gray-100 pt-4">
+          <p className="mb-1 text-sm font-medium text-gray-700">
+            Course plan PDF (optional)
+          </p>
+          <p className="mb-2 text-xs text-gray-500">
+            Shown as a download card under the Credit Distribution table.
+            The card is hidden until a file is uploaded.
+          </p>
+          <ImageUploader
+            kind="program-course-plan-pdf"
+            name="coursePlanPdf"
+            accept="application/pdf"
+            initialUrl={coursePlanPdf.url}
+            initialPublicId={coursePlanPdf.publicId}
+            initialFileType="pdf"
+            initialFileName={coursePlanPdf.fileName}
+            onChange={(url, publicId, meta) => {
+              setCoursePlanPdf({ url, publicId, fileName: meta?.fileName ?? '' });
+            }}
+          />
+          <input type="hidden" name="coursePlanPdfUrl" value={coursePlanPdf.url} />
+          <input type="hidden" name="coursePlanPdfPublicId" value={coursePlanPdf.publicId} />
+          <input type="hidden" name="coursePlanPdfFileName" value={coursePlanPdf.fileName} />
+        </div>
       </Card>
 
       <Card title="Program page — major options (optional)">

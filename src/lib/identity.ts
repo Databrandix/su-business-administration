@@ -119,6 +119,14 @@ export const getProgramBySlug = cache(async (slug: string) => {
   });
 });
 
+export const getServiceCharter = cache(async () => {
+  const [items, meta] = await Promise.all([
+    prisma.serviceCharterItem.findMany({ orderBy: { displayOrder: 'asc' } }),
+    prisma.serviceCharterMeta.findUnique({ where: { id: 'singleton' } }),
+  ]);
+  return { items, meta };
+});
+
 // One careers statement shared by every program detail page.
 export const getCareerProspects = cache(async () => {
   return prisma.careerProspects.findUnique({ where: { id: 'singleton' } });

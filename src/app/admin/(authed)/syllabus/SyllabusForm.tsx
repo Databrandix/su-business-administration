@@ -51,6 +51,21 @@ export default function SyllabusForm({ initial }: { initial: Syllabus | null }) 
                        defaultValue={initial?.summary ?? ''} />
       </Card>
 
+      <Card title="Cover image (optional)">
+        <p className="text-xs text-gray-500 -mt-2">
+          Shown at the top of the card on{' '}
+          <code className="font-mono">/student-society/syllabus</code>. Cards
+          without one show a placeholder.
+        </p>
+        <ImageUploader
+          kind="syllabus-cover"
+          name="cover"
+          aspectRatio="wide"
+          initialUrl={initial?.coverUrl}
+          initialPublicId={initial?.coverPublicId}
+        />
+      </Card>
+
       <Card title="PDF (downloadable)">
         <p className="text-xs text-gray-500 -mt-2">
           PDF served via Cloudinary auto/upload. Public download link uses this file directly.

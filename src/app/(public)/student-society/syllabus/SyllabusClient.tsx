@@ -1,7 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Search, Download } from 'lucide-react';
+import Image from 'next/image';
+import { Search, Download, ExternalLink, BookText } from 'lucide-react';
 
 export type SyllabusCardRow = {
   slug: string;
@@ -11,6 +12,7 @@ export type SyllabusCardRow = {
   level: string;
   pdfUrl: string | null;
   summary: string | null;
+  coverUrl: string | null;
 };
 
 const FILTERS = ['All', 'Undergraduate', 'Postgraduate'] as const;
@@ -96,6 +98,27 @@ export default function SyllabusClient({ items }: { items: readonly SyllabusCard
                 filtered.length === 1 ? 'w-full max-w-md' : ''
               }`}
             >
+              {/* Cover artwork. Optional — a placeholder keeps the card
+                  the same shape until artwork is uploaded, so a row of
+                  cards never goes ragged. */}
+              <div className="bg-gray-50">
+                {s.coverUrl ? (
+                  <Image
+                    src={s.coverUrl}
+                    alt={`${s.shortTitle} — syllabus cover`}
+                    width={1200}
+                    height={600}
+                    sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                    className="block h-auto w-full"
+                  />
+                ) : (
+                  <div className="flex aspect-[2/1] flex-col items-center justify-center gap-2 border-b border-dashed border-gray-200 text-gray-400">
+                    <BookText size={30} strokeWidth={1.5} aria-hidden="true" />
+                    <span className="text-[13px] font-medium">Cover image coming soon</span>
+                  </div>
+                )}
+              </div>
+
               <div className="p-5 flex-1 flex flex-col">
                 <span
                   className={`inline-block w-fit px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase mb-3 ${
@@ -116,14 +139,25 @@ export default function SyllabusClient({ items }: { items: readonly SyllabusCard
                 )}
 
                 {s.pdfUrl ? (
-                  <a
-                    href={s.pdfUrl}
-                    download
-                    className="mt-auto inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-md transition-colors"
-                  >
-                    <Download size={16} />
-                    Download Syllabus
-                  </a>
+                  <div className="mt-auto flex flex-col gap-2.5">
+                    <a
+                      href={s.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary/90"
+                    >
+                      <ExternalLink size={16} />
+                      View Syllabus
+                    </a>
+                    <a
+                      href={s.pdfUrl}
+                      download
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-md border-2 border-primary bg-white px-5 py-3 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-white"
+                    >
+                      <Download size={16} />
+                      Download
+                    </a>
+                  </div>
                 ) : (
                   <span className="mt-auto inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-gray-100 text-gray-400 text-sm font-semibold rounded-md cursor-not-allowed">
                     PDF not uploaded yet

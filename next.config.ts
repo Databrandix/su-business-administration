@@ -31,7 +31,10 @@ const cspReportOnly = [
   "img-src 'self' data: blob: https://res.cloudinary.com",
   "font-src 'self' data:",
   "connect-src 'self'",
-  "frame-src https://www.google.com https://maps.google.com",
+  // Cloudinary is framed too: the prospectus cards embed their PDF in an
+  // iframe for an inline preview, and PDFs are served from the same CDN
+  // as the images above.
+  "frame-src 'self' https://www.google.com https://maps.google.com https://res.cloudinary.com",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",

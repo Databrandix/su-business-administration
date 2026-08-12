@@ -1,8 +1,7 @@
 'use client';
 
-import Image from 'next/image';
 import { useMemo, useState } from 'react';
-import { Search, Download } from 'lucide-react';
+import { Search, Download, FileText, ExternalLink, BookOpen } from 'lucide-react';
 
 type Level = 'Undergraduate' | 'Postgraduate';
 
@@ -15,7 +14,9 @@ export interface ProspectusItem {
   // for entries that belong to neither tier — those render without the
   // level pill and only appear under the "All" tab.
   level: string | null;
-  cover: string;
+  // No `cover` here: the page embeds the PDF itself rather than a
+  // thumbnail of it. The coverUrl column is still populated in the DB and
+  // still editable in admin, so covers can return without a migration.
   pdf: string;
 }
 
@@ -99,69 +100,93 @@ export default function ProspectusClient({ items }: { items: ProspectusItem[] })
           )}
         </div>
       ) : (
-        <div
-          className={
-            filtered.length === 1
-              ? 'flex justify-center'
-              : 'grid sm:grid-cols-2 lg:grid-cols-3 gap-6'
-          }
-        >
-          {filtered.map((p) => (
-            <article
-              key={p.slug}
-              className={`bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow overflow-hidden flex flex-col ${
-                filtered.length === 1 ? 'w-full max-w-md' : ''
-              }`}
-            >
-              {/* Cover */}
-              <div className="bg-gray-50">
-                <Image
-                  src={p.cover}
-                  alt={p.title}
-                  width={600}
-                  height={800}
-                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                  className="block w-full h-auto"
-                />
-              </div>
-
-              {/* Body */}
-              <div className="p-5 flex-1 flex flex-col">
-                {p.level && (
-                  <span
-                    className={`inline-block w-fit px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase mb-3 ${
-                      p.level === 'Undergraduate'
-                        ? 'bg-primary/8 text-primary'
-                        : 'bg-accent/10 text-accent'
-                    }`}
+        <>
+          {/* One full-width reader per programme that has a PDF, so the
+              document itself is the page rather than a thumbnail of it. */}
+          {filtered
+            .filter((p) => p.pdf)
+            .map((p) => (
+              <section key={p.slug} className="mb-10 md:mb-14">
+                <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
+                  <div>
+                    <h2 className="font-display text-lg font-bold text-primary md:text-xl">
+                      {p.shortTitle}
+                    </h2>
+                    <p className="text-sm text-gray-600">{p.department}</p>
+                  </div>
+                  <a
+                    href={p.pdf}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors hover:text-accent"
                   >
-                    {p.level}
-                  </span>
-                )}
+                    <ExternalLink size={15} />
+                    Open in a new tab
+                  </a>
+                </div>
 
-                <h3 className="font-display text-base md:text-lg font-bold text-primary leading-snug mb-1">
-                  {p.shortTitle}
-                </h3>
-                <p className="text-sm text-gray-600 mb-5">{p.department}</p>
+                {/* A4 ratio on phones where a tall viewport is fine;
+                    a viewport-relative height from sm up so the reader
+                    never runs longer than the screen. */}
+                <div className="aspect-[595/842] min-h-[320px] overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm sm:aspect-auto sm:h-[75vh] sm:min-h-[420px]">
+                  <iframe
+                    src={`${p.pdf}#toolbar=0&navpanes=0&statusbar=0&view=FitH`}
+                    title={`${p.title} — prospectus`}
+                    className="h-full w-full"
+                  />
+                </div>
+              </section>
+            ))}
+
+          {/* Compact download rows — every programme, including any whose
+              PDF is not published yet. */}
+          <div className="mx-auto grid max-w-4xl gap-4">
+            {filtered.map((p) => (
+              <article
+                key={p.slug}
+                className="flex flex-col items-center gap-4 rounded-2xl border border-gray-200 bg-white p-5 text-center shadow-sm transition-shadow hover:shadow-md sm:flex-row sm:p-6 sm:text-left"
+              >
+                <span className="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-accent text-white shadow-md">
+                  <BookOpen size={22} strokeWidth={1.75} aria-hidden="true" />
+                </span>
+
+                <div className="min-w-0 flex-1">
+                  {p.level && (
+                    <span
+                      className={`mb-1.5 inline-block w-fit rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider ${
+                        p.level === 'Undergraduate'
+                          ? 'bg-primary/8 text-primary'
+                          : 'bg-accent/10 text-accent'
+                      }`}
+                    >
+                      {p.level}
+                    </span>
+                  )}
+                  <p className="font-display text-[15px] font-bold text-primary md:text-base">
+                    {p.shortTitle}
+                  </p>
+                  <p className="text-sm text-gray-500">{p.department}</p>
+                </div>
 
                 {p.pdf ? (
                   <a
                     href={p.pdf}
                     download
-                    className="mt-auto inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-md transition-colors"
+                    className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-white shadow-md transition-colors hover:bg-primary/90"
                   >
-                    <Download size={16} />
-                    Download
+                    <Download size={17} />
+                    Download PDF
                   </a>
                 ) : (
-                  <span className="mt-auto inline-flex items-center justify-center gap-2 w-full px-5 py-3 bg-gray-100 text-gray-400 text-sm font-semibold rounded-md cursor-not-allowed">
+                  <span className="inline-flex shrink-0 cursor-not-allowed items-center justify-center gap-2 rounded-lg bg-gray-100 px-6 py-3 font-semibold text-gray-400">
+                    <FileText size={17} />
                     PDF coming soon
                   </span>
                 )}
-              </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
+        </>
       )}
     </>
   );

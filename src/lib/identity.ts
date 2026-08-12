@@ -119,6 +119,11 @@ export const getProgramBySlug = cache(async (slug: string) => {
   });
 });
 
+// One careers statement shared by every program detail page.
+export const getCareerProspects = cache(async () => {
+  return prisma.careerProspects.findUnique({ where: { id: 'singleton' } });
+});
+
 export const getProgramSlugs = cache(async () => {
   const rows = await prisma.program.findMany({
     where: { slug: { not: null } },

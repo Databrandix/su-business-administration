@@ -5,6 +5,8 @@ import { useActionState, useEffect } from 'react';
 import { toast } from 'sonner';
 import type { Program } from '@prisma/client';
 import ImageUploader from '@/components/admin/ImageUploader';
+import CourseStructureEditor from '@/components/admin/CourseStructureEditor';
+import MajorOptionsEditor from '@/components/admin/MajorOptionsEditor';
 import {
   createProgramAction,
   updateProgramAction,
@@ -82,6 +84,30 @@ export default function ProgramForm({ initial }: { initial: Program | null }) {
         <TextAreaField label="Overview paragraphs (one per line)"
                        name="overviewParagraphs" rows={8}
                        defaultValue={toStringArray(initial?.overviewParagraphs).join('\n')} />
+      </Card>
+
+      <Card title="Program page — course structure">
+        <p className="text-xs text-gray-500 -mt-2">
+          Semester-by-semester course plan shown on{' '}
+          <code className="font-mono">/programs/&lt;slug&gt;</code>. Leave empty
+          to hide the section.
+        </p>
+        <TextField label="Total credits line (optional)" name="courseStructureTotal"
+                   defaultValue={initial?.courseStructureTotal ?? ''}
+                   placeholder="Total 141 Credits" />
+        <CourseStructureEditor name="courseStructure"
+                               initialValue={initial?.courseStructure} />
+      </Card>
+
+      <Card title="Program page — major options (optional)">
+        <p className="text-xs text-gray-500 -mt-2">
+          Final-semester elective tracks. Leave empty for programs without
+          majors.
+        </p>
+        <TextAreaField label="Note above the major options" name="majorOptionsNote" rows={2}
+                       defaultValue={initial?.majorOptionsNote ?? ''}
+                       placeholder="Students will have to select all the courses of any one major option…" />
+        <MajorOptionsEditor name="majorOptions" initialValue={initial?.majorOptions} />
       </Card>
 
       <Card title="Image (optional)">

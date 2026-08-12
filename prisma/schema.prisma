@@ -181,6 +181,18 @@ model Program {
   cta             String?
   ctaHref         String?
 
+  // Course plan for /programs/<slug>. Per-program rather than a shared
+  // singleton because each degree has its own curriculum.
+  //   courseStructure — { title, note?, courses: { code, title, contact,
+  //                       credits }[], footer? }[] , one entry per semester
+  //   majorOptions    — { roman, name, courses: {...}[] }[] for the final
+  //                     semester's elective tracks; empty for programs
+  //                     without majors
+  courseStructure      Json    @default("[]")
+  majorOptions         Json    @default("[]")
+  majorOptionsNote     String?
+  courseStructureTotal String?
+
   // Phase 8b — back-relation for ProgramFeeStructure (1:1, optional).
   // Program admin form stays focused on academic metadata (per
   // constraint #12); fee structure lives at /admin/program-fee-structures.
@@ -191,6 +203,26 @@ model Program {
 
   @@index([displayOrder])
   @@map("program")
+}
+
+// Career Prospects shown on every /programs/<slug> page. A singleton
+// rather than a per-Program column because the department publishes one
+// careers statement covering all eight degrees — duplicating it per row
+// would mean eight edits to fix one typo.
+model CareerProspects {
+  id        String   @id @default("singleton")
+  heading   String   @default("Career Prospects")
+  // Lead-in copy above the table — Json string[] of paragraphs.
+  intro     Json     @default("[]")
+  // { area, roles, sectors }[] rendered as the three-column table.
+  rows      Json     @default("[]")
+  // Column headers, editable without a deploy.
+  areaLabel    String @default("Functional Areas")
+  rolesLabel   String @default("Primary Career Roles")
+  sectorsLabel String @default("Leading Target Sectors")
+  updatedAt DateTime @updatedAt
+
+  @@map("career_prospects")
 }
 
 model ResearchArea {

@@ -26,6 +26,18 @@ function splitLines(raw: string): string[] {
     .filter(Boolean);
 }
 
+// The course-plan editors serialize their whole array as ONE JSON-encoded
+// hidden input. Defensive parse — returns [] on malformed.
+function parseJsonArray(fd: FormData, key: string): unknown {
+  const raw = fd.get(key);
+  if (typeof raw !== 'string' || !raw.trim()) return [];
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return [];
+  }
+}
+
 async function requireAuth(): Promise<ActionResult | null> {
   const session = await getSession();
   if (!session?.user) return { ok: false, error: 'Not authenticated' };
@@ -52,6 +64,10 @@ export async function createProgramAction(
     ctaHref:         emptyToNull(formData.get('ctaHref')),
     imageUrl:        emptyToNull(formData.get('imageUrl')),
     imagePublicId:   emptyToNull(formData.get('imagePublicId')),
+    courseStructure:      parseJsonArray(formData, 'courseStructure'),
+    majorOptions:         parseJsonArray(formData, 'majorOptions'),
+    majorOptionsNote:     emptyToNull(formData.get('majorOptionsNote')),
+    courseStructureTotal: emptyToNull(formData.get('courseStructureTotal')),
   };
 
   const parsed = programCreateSchema.safeParse(raw);
@@ -87,6 +103,10 @@ export async function createProgramAction(
         specializations: parsed.data.specializations,
         cta:             parsed.data.cta ?? null,
         ctaHref:         parsed.data.ctaHref ?? null,
+        courseStructure:      parsed.data.courseStructure ?? [],
+        majorOptions:         parsed.data.majorOptions ?? [],
+        majorOptionsNote:     parsed.data.majorOptionsNote ?? null,
+        courseStructureTotal: parsed.data.courseStructureTotal ?? null,
       },
     });
   } catch (e: unknown) {
@@ -130,6 +150,10 @@ export async function updateProgramAction(
     ctaHref:         emptyToNull(formData.get('ctaHref')),
     imageUrl:        emptyToNull(formData.get('imageUrl')),
     imagePublicId:   emptyToNull(formData.get('imagePublicId')),
+    courseStructure:      parseJsonArray(formData, 'courseStructure'),
+    majorOptions:         parseJsonArray(formData, 'majorOptions'),
+    majorOptionsNote:     emptyToNull(formData.get('majorOptionsNote')),
+    courseStructureTotal: emptyToNull(formData.get('courseStructureTotal')),
   };
 
   const parsed = programUpdateSchema.safeParse(raw);

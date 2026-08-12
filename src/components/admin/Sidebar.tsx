@@ -68,6 +68,7 @@ const PRIMARY_NAV: NavItem[] = [
   { href: '/admin/department-identity', label: 'Department Identity', icon: Building2 },
   { href: '/admin/university-identity', label: 'University Identity', icon: University },
   { href: '/admin/programs',            label: 'Programs',            icon: GraduationCap },
+  { href: '/admin/career-prospects',    label: 'Career Prospects',    icon: GraduationCap },
   { href: '/admin/research-areas',      label: 'Research Areas',      icon: Microscope },
   { href: '/admin/faculty',             label: 'Faculty',             icon: UsersRound },
   { href: '/admin/nav',                 label: 'Navigation',          icon: Navigation },

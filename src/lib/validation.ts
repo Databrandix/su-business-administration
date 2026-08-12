@@ -79,6 +79,37 @@ export const universityUpdateSchema = z.object({
 //  Program (list — CRUD + reorder)
 // ─────────────────────────────────────────────────────────────────
 
+// Course plan shapes — Json columns on Program, validated as structured
+// arrays so a malformed paste from the admin editor is rejected rather
+// than stored and rendered as an empty table.
+const courseRowSchema = z.object({
+  code:    z.string().min(1).max(50),
+  title:   z.string().min(1).max(400),
+  contact: z.string().max(50).optional().default(''),
+  credits: z.string().max(50).optional().default(''),
+});
+
+export const courseStructureSchema = z
+  .array(
+    z.object({
+      title:   z.string().min(1).max(300),
+      note:    z.string().max(1000).optional().default(''),
+      courses: z.array(courseRowSchema).default([]),
+      footer:  z.string().max(500).optional().default(''),
+    }),
+  )
+  .default([]);
+
+export const majorOptionsSchema = z
+  .array(
+    z.object({
+      roman:   z.string().max(20).optional().default(''),
+      name:    z.string().min(1).max(300),
+      courses: z.array(courseRowSchema).default([]),
+    }),
+  )
+  .default([]);
+
 export const programCreateSchema = z.object({
   overline:        z.string().max(50).default(''),
   programName:     z.string().min(1).max(300),
@@ -98,6 +129,10 @@ export const programCreateSchema = z.object({
   specializations: z.array(z.string()).default([]),
   cta:             z.string().nullable().optional(),
   ctaHref:         z.string().nullable().optional(),
+  courseStructure:      courseStructureSchema.optional(),
+  majorOptions:         majorOptionsSchema.optional(),
+  majorOptionsNote:     optionalNullableString,
+  courseStructureTotal: optionalNullableString,
 });
 
 export const programUpdateSchema = programCreateSchema.partial();
@@ -386,6 +421,23 @@ export const aboutMissionVisionUpdateSchema = z.object({
   visionOverline:    optionalNullableString,
   visionHeading:     z.string().min(1).max(300),
   visionBody:        z.string().min(1),
+});
+
+export const careerProspectsUpdateSchema = z.object({
+  heading: z.string().min(1).max(300),
+  intro:   z.array(z.string().min(1)).default([]),
+  rows: z
+    .array(
+      z.object({
+        area:    z.string().min(1).max(300),
+        roles:   z.string().min(1).max(2000),
+        sectors: z.string().min(1).max(2000),
+      }),
+    )
+    .default([]),
+  areaLabel:    z.string().min(1).max(300),
+  rolesLabel:   z.string().min(1).max(300),
+  sectorsLabel: z.string().min(1).max(300),
 });
 
 export const aboutDepartmentLayoutUpdateSchema = z.object({

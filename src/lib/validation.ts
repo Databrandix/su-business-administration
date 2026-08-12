@@ -476,6 +476,9 @@ export const aboutDepartmentLayoutUpdateSchema = z.object({
   paragraphs:        z.array(z.string().min(1)).default([]),
   // `building` is the muted second line of the location cell; `highlight`
   // bolds the department's own offices.
+  // Optional, NOT defaulted: undefined means "the form did not carry the
+  // editor", and the action omits the column so stored rows survive. An
+  // explicit [] still clears them.
   roomRows: z
     .array(
       z.object({
@@ -485,12 +488,16 @@ export const aboutDepartmentLayoutUpdateSchema = z.object({
         highlight: z.coerce.boolean().optional().default(false),
       }),
     )
-    .default([]),
-  tableUniversity:     z.string().min(1).max(300),
-  tableDepartment:     z.string().min(1).max(300),
-  tableAddress:        z.string().min(1).max(300),
-  columnOfficeLabel:   z.string().min(1).max(300),
-  columnLocationLabel: z.string().min(1).max(300),
+    .optional(),
+  // Defaulted rather than required: these mirror the Prisma column
+  // defaults, so a submission that omits them (a stale tab, a partial
+  // form) keeps the standard wording instead of erroring on fields the
+  // user was never shown.
+  tableUniversity:     z.string().min(1).max(300).default('Sonargaon University'),
+  tableDepartment:     z.string().min(1).max(300).default('Department of Business Administration'),
+  tableAddress:        z.string().min(1).max(300).default('147/I, Panthapath, Greenroad, Dhaka-1215'),
+  columnOfficeLabel:   z.string().min(1).max(300).default('Name of the Office'),
+  columnLocationLabel: z.string().min(1).max(300).default('Specific Location of the Office'),
   cardTitle:         z.string().min(1).max(300),
   coverUrl:          optionalNullableString,
   coverPublicId:     optionalNullableString,

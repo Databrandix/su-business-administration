@@ -19,12 +19,20 @@ function emptyToNull(v: FormDataEntryValue | null): string | null {
 }
 
 // RoomRowsEditor serializes the whole table as ONE JSON-encoded hidden
-// input. Defensive parse — returns [] on malformed.
+// input.
+//
+// Returns undefined when the field is ABSENT — a form that never carried
+// the editor (a stale tab) must leave the stored rows alone. An empty
+// array is only returned when the field is genuinely present and empty,
+// which is the user deleting every row on purpose. Conflating the two
+// once wiped the whole office directory on an unrelated cover upload.
 function parseJsonArray(fd: FormData, key: string): unknown {
   const raw = fd.get(key);
-  if (typeof raw !== 'string' || !raw.trim()) return [];
+  if (typeof raw !== 'string') return undefined;
+  if (!raw.trim()) return [];
   try {
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed : [];
   } catch {
     return [];
   }
@@ -51,11 +59,15 @@ export async function updateAboutDepartmentLayoutAction(
     heroImageVerticalPercent: formData.get('heroImageVerticalPercent') ?? undefined,
     paragraphs,
     roomRows:            parseJsonArray(formData, 'roomRows'),
-    tableUniversity:     getStr(formData, 'tableUniversity'),
-    tableDepartment:     getStr(formData, 'tableDepartment'),
-    tableAddress:        getStr(formData, 'tableAddress'),
-    columnOfficeLabel:   getStr(formData, 'columnOfficeLabel'),
-    columnLocationLabel: getStr(formData, 'columnLocationLabel'),
+    // These five have sensible fixed defaults and are edited rarely. A
+    // form posted without them — a stale tab open from before the fields
+    // existed, or a future partial form — should keep what is stored
+    // rather than fail validation on inputs the user never saw.
+    tableUniversity:     getStr(formData, 'tableUniversity')     || undefined,
+    tableDepartment:     getStr(formData, 'tableDepartment')     || undefined,
+    tableAddress:        getStr(formData, 'tableAddress')        || undefined,
+    columnOfficeLabel:   getStr(formData, 'columnOfficeLabel')   || undefined,
+    columnLocationLabel: getStr(formData, 'columnLocationLabel') || undefined,
     cardTitle:         getStr(formData, 'cardTitle'),
     coverUrl:          emptyToNull(formData.get('coverUrl')),
     coverPublicId:     emptyToNull(formData.get('coverPublicId')),
@@ -75,10 +87,14 @@ export async function updateAboutDepartmentLayoutAction(
   }
 
   try {
+    // roomRows is undefined when the submitted form had no rows editor.
+    // Prisma skips undefined on update, so the stored directory survives;
+    // a brand-new row still needs a concrete value.
+    const { roomRows, ...rest } = parsed.data;
     await prisma.aboutDepartmentLayout.upsert({
       where: { id: 'singleton' },
-      create: { id: 'singleton', ...parsed.data },
-      update: parsed.data,
+      create: { id: 'singleton', ...rest, roomRows: roomRows ?? [] },
+      update: { ...rest, ...(roomRows !== undefined && { roomRows }) },
     });
   } catch (e) {
     return { ok: false, error: e instanceof Error ? e.message : 'Database error' };

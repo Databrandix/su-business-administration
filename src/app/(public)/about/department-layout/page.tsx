@@ -142,21 +142,27 @@ export default async function DepartmentLayoutPage() {
             <div className="flex justify-center">
               <article className="flex w-full max-w-md flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md">
                 {row.coverUrl ? (
-                  <div className="bg-gray-50">
+                  // Fixed landscape box so the card keeps a consistent
+                  // height whatever shape the uploaded artwork is. Slightly
+                  // taller than the 1200:758 reference, which cropped more
+                  // of the photo than needed. The crop is anchored to the
+                  // top: these covers carry their title in the upper band,
+                  // so a centred crop would cut the heading off — only the
+                  // lower part of the image is trimmed.
+                  <div className="relative aspect-[1200/880] w-full bg-gray-50">
                     <Image
                       src={row.coverUrl}
                       alt={row.cardTitle}
-                      width={800}
-                      height={1000}
-                      sizes="(min-width: 768px) 448px, 100vw"
-                      className="block h-auto w-full"
+                      fill
+                      sizes="(min-width: 640px) 50vw, 100vw"
+                      className="object-cover object-top"
                       priority
                     />
                   </div>
                 ) : (
                   // Cover is still to be uploaded — a placeholder holds the
                   // card's proportions instead of collapsing it.
-                  <div className="flex aspect-[3/4] flex-col items-center justify-center gap-3 border-b border-dashed border-gray-200 bg-gray-50 text-gray-400">
+                  <div className="flex aspect-[1200/880] flex-col items-center justify-center gap-3 border-b border-dashed border-gray-200 bg-gray-50 text-gray-400">
                     <ImageIcon size={32} strokeWidth={1.5} aria-hidden="true" />
                     <span className="text-[13px] font-medium">
                       Cover image coming soon

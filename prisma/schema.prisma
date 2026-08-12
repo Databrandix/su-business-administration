@@ -495,6 +495,17 @@ model AboutDepartmentLayout {
   heroImageVerticalPercent Int      @default(50)
   // Optional intro copy above the card.
   paragraphs               Json     @default("[]")
+  // Office directory rendered as a table:
+  // { office, location, building?, highlight? }[]. `highlight` marks the
+  // department's own offices, which render in bold primary.
+  roomRows                 Json     @default("[]")
+  // Centered header inside the table card.
+  tableUniversity          String   @default("Sonargaon University")
+  tableDepartment          String   @default("Department of Business Administration")
+  tableAddress             String   @default("147/I, Panthapath, Greenroad, Dhaka-1215")
+  // Column headers, so the wording can be tuned without a deploy.
+  columnOfficeLabel        String   @default("Name of the Office")
+  columnLocationLabel      String   @default("Specific Location of the Office")
   // The layout card. Caption under the cover; nullable cover/PDF so the
   // row can exist before the artwork and file are uploaded.
   cardTitle                String   @default("Department Layout")

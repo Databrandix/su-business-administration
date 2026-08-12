@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import type { AboutDepartmentLayout } from '@prisma/client';
 import ImageUploader from '@/components/admin/ImageUploader';
 import HeroImagePositionSlider from '@/components/admin/HeroImagePositionSlider';
+import RoomRowsEditor from '@/components/admin/RoomRowsEditor';
 import {
   updateAboutDepartmentLayoutAction,
   type ActionResult,
@@ -68,6 +69,34 @@ export default function AboutDepartmentLayoutForm({
           defaultValue={paragraphs}
           placeholder="Leave empty to show only the download card."
         />
+      </Card>
+
+      <Card title="Office directory table">
+        <TextField label="University name" name="tableUniversity" required
+                   defaultValue={initial?.tableUniversity ?? 'Sonargaon University'} />
+        <TextField label="Department name" name="tableDepartment" required
+                   defaultValue={initial?.tableDepartment ?? 'Department of Business Administration'} />
+        <TextField label="Address" name="tableAddress" required
+                   defaultValue={initial?.tableAddress ?? '147/I, Panthapath, Greenroad, Dhaka-1215'} />
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <TextField label="Left column header" name="columnOfficeLabel" required
+                     defaultValue={initial?.columnOfficeLabel ?? 'Name of the Office'} />
+          <TextField label="Right column header" name="columnLocationLabel" required
+                     defaultValue={initial?.columnLocationLabel ?? 'Specific Location of the Office'} />
+        </div>
+
+        <div>
+          <p className="mb-1 text-sm font-medium text-gray-700">Offices</p>
+          <p className="mb-2 text-xs text-gray-500">
+            Rows appear in this order — use the arrows to reorder.
+          </p>
+          <RoomRowsEditor
+            name="roomRows"
+            initialValue={initial?.roomRows}
+            defaultBuilding={initial?.tableAddress ?? ''}
+          />
+        </div>
       </Card>
 
       <Card title="Layout card">

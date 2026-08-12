@@ -18,6 +18,18 @@ function emptyToNull(v: FormDataEntryValue | null): string | null {
   return t.length > 0 ? t : null;
 }
 
+// RoomRowsEditor serializes the whole table as ONE JSON-encoded hidden
+// input. Defensive parse — returns [] on malformed.
+function parseJsonArray(fd: FormData, key: string): unknown {
+  const raw = fd.get(key);
+  if (typeof raw !== 'string' || !raw.trim()) return [];
+  try {
+    return JSON.parse(raw);
+  } catch {
+    return [];
+  }
+}
+
 export async function updateAboutDepartmentLayoutAction(
   _prev: ActionResult | { ok: null },
   formData: FormData,
@@ -38,6 +50,12 @@ export async function updateAboutDepartmentLayoutAction(
     heroImagePublicId: emptyToNull(formData.get('heroImagePublicId')),
     heroImageVerticalPercent: formData.get('heroImageVerticalPercent') ?? undefined,
     paragraphs,
+    roomRows:            parseJsonArray(formData, 'roomRows'),
+    tableUniversity:     getStr(formData, 'tableUniversity'),
+    tableDepartment:     getStr(formData, 'tableDepartment'),
+    tableAddress:        getStr(formData, 'tableAddress'),
+    columnOfficeLabel:   getStr(formData, 'columnOfficeLabel'),
+    columnLocationLabel: getStr(formData, 'columnLocationLabel'),
     cardTitle:         getStr(formData, 'cardTitle'),
     coverUrl:          emptyToNull(formData.get('coverUrl')),
     coverPublicId:     emptyToNull(formData.get('coverPublicId')),

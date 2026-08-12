@@ -395,6 +395,23 @@ export const aboutDepartmentLayoutUpdateSchema = z.object({
   heroImagePublicId: optionalNullableString,
   heroImageVerticalPercent: z.coerce.number().int().min(0).max(100).default(50),
   paragraphs:        z.array(z.string().min(1)).default([]),
+  // `building` is the muted second line of the location cell; `highlight`
+  // bolds the department's own offices.
+  roomRows: z
+    .array(
+      z.object({
+        office:    z.string().min(1).max(300),
+        location:  z.string().min(1).max(300),
+        building:  z.string().max(300).optional().default(''),
+        highlight: z.coerce.boolean().optional().default(false),
+      }),
+    )
+    .default([]),
+  tableUniversity:     z.string().min(1).max(300),
+  tableDepartment:     z.string().min(1).max(300),
+  tableAddress:        z.string().min(1).max(300),
+  columnOfficeLabel:   z.string().min(1).max(300),
+  columnLocationLabel: z.string().min(1).max(300),
   cardTitle:         z.string().min(1).max(300),
   coverUrl:          optionalNullableString,
   coverPublicId:     optionalNullableString,

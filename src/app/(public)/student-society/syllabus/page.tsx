@@ -1,6 +1,7 @@
+import { notFound } from 'next/navigation';
 import PageShell from '@/components/layout/PageShell';
 import Container from '@/components/ui/Container';
-import { getSyllabi, getPageHero } from '@/lib/identity';
+import { getSyllabi, getPageHero, isSyllabusPageEnabled } from '@/lib/identity';
 import SyllabusClient from './SyllabusClient';
 
 export const metadata = {
@@ -10,6 +11,11 @@ export const metadata = {
 };
 
 export default async function SyllabusPage() {
+  // The page is served only while its menu item is enabled, so switching
+  // the nav item back on in admin restores the route too — no deploy, and
+  // no window where the menu links somewhere that 404s (or vice versa).
+  if (!(await isSyllabusPageEnabled())) notFound();
+
   const [items, hero] = await Promise.all([
     getSyllabi(),
     getPageHero('student-society-syllabus'),

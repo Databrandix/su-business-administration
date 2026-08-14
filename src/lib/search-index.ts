@@ -3,6 +3,7 @@
 // import SearchItem + search() from '@/lib/search' instead.
 import { cache } from 'react';
 import { prisma } from '@/lib/db';
+import { isSyllabusPageEnabled } from '@/lib/identity';
 import type { SearchItem } from './search';
 
 // Re-export the type from the pure module so existing server-side
@@ -365,8 +366,15 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
     type: 'Scholarship',
   }));
 
+  // While the Syllabus page is switched off in the nav it also 404s, so
+  // keep it out of search rather than offering a dead result.
+  const syllabusEnabled = await isSyllabusPageEnabled();
+  const SYLLABUS_PATH = '/student-society/syllabus';
+
   return [
-    ...staticPages,
+    ...(syllabusEnabled
+      ? staticPages
+      : staticPages.filter((s) => s.href !== SYLLABUS_PATH)),
     ...facultyItems,
     ...programItems,
     ...researchAreaItems,
@@ -380,7 +388,7 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
     ...visitorItems,
     ...researchItems,
     ...transportItems,
-    ...syllabusItems,
+    ...(syllabusEnabled ? syllabusItems : []),
     ...admissionNoticeItems,
     ...prospectusItems,
     ...feeItems,

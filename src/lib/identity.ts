@@ -119,6 +119,19 @@ export const getProgramBySlug = cache(async (slug: string) => {
   });
 });
 
+// Whether /student-society/syllabus is currently served. Driven by the
+// nav item's own isDisabled flag so the menu and the route can never
+// disagree — re-enabling the item in admin brings the page back with it.
+export const isSyllabusPageEnabled = cache(async () => {
+  const item = await prisma.mainNavItem.findFirst({
+    where: { name: 'Syllabus', group: { name: 'Student Society' } },
+    select: { isDisabled: true },
+  });
+  // No nav row at all → leave the page reachable rather than hiding it
+  // by accident.
+  return item ? !item.isDisabled : true;
+});
+
 export const getAdmissionLeadPopup = cache(async () => {
   return prisma.admissionLeadPopup.findUnique({ where: { id: 'singleton' } });
 });

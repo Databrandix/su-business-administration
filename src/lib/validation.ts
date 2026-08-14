@@ -269,7 +269,6 @@ export const facultyCreateSchema = z.object({
   photoPublicId:  optionalNullableString,
 
   email:          z.string().email().nullable().optional().or(z.literal('')),
-  phone:          z.string().nullable().optional(),
   suId:           z.string().nullable().optional(),
   roomNo:         z.string().nullable().optional(),
   // Optional per-faculty office address override; null/empty →
@@ -1159,6 +1158,50 @@ export const newsletterSubscribeSchema = z.object({
 // ─────────────────────────────────────────────────────────────────
 
 const mechaClubSemesterEnum = z.enum(['1', '2', '3', '4', '5', '6', '7', '8']);
+
+// ── Homepage admission-guidance popup ────────────────────────────────
+
+export const admissionLeadCreateSchema = z.object({
+  fullName:  z.string().trim().min(1, 'Please enter your name').max(200),
+  // Accepts the local 01XXXXXXXXX form plus the +880 / 880 variants
+  // people paste from their contacts, and tolerates spaces or dashes.
+  phone: z
+    .string()
+    .trim()
+    .min(1, 'Please enter your mobile number')
+    .max(50)
+    .refine(
+      (v) => /^(?:\+?880[\s-]?|0)1[3-9]\d{8}$/.test(v.replace(/[\s-]/g, '')),
+      'Enter a valid Bangladeshi mobile number, e.g. 01712345678',
+    ),
+  programme: z.string().trim().min(1, 'Please choose a programme').max(300),
+});
+
+export const admissionLeadStatusEnum = z.enum([
+  'new',
+  'contacted',
+  'enrolled',
+  'closed',
+]);
+
+export const admissionLeadPopupUpdateSchema = z.object({
+  isEnabled:            z.coerce.boolean().optional().default(false),
+  heading:              z.string().trim().min(1).max(300),
+  subheading:           z.string().trim().max(500).optional().default(''),
+  nameLabel:            z.string().trim().min(1).max(100),
+  namePlaceholder:      z.string().trim().max(200).optional().default(''),
+  phoneLabel:           z.string().trim().min(1).max(100),
+  phonePlaceholder:     z.string().trim().max(200).optional().default(''),
+  programmeLabel:       z.string().trim().min(1).max(100),
+  programmePlaceholder: z.string().trim().max(200).optional().default(''),
+  submitLabel:          z.string().trim().min(1).max(100),
+  footnote:             z.string().trim().max(300).optional().default(''),
+  successMessage:       z.string().trim().min(1).max(500),
+  // 0 opens the popup immediately; the upper bound stops a typo from
+  // parking it beyond any realistic session.
+  delaySeconds:         z.coerce.number().int().min(0).max(600),
+  cooldownDays:         z.coerce.number().int().min(0).max(365),
+});
 
 export const businessClubApplicationCreateSchema = z.object({
   fullName:   z.string().trim().min(1).max(200),

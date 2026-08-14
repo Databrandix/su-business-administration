@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import HeroSection from '@/components/sections/HeroSection';
+import AdmissionLeadPopup from '@/components/marketing/AdmissionLeadPopup';
 import {
   getDepartmentIdentity,
   getHomeOverview,
@@ -9,6 +10,8 @@ import {
   getNewsHomeTop,
   getEventsHomeTop,
   getNoticesHomeTop,
+  getAdmissionLeadPopup,
+  getProgramsWithCta,
 } from '@/lib/identity';
 import { sanitizeHtml } from '@/lib/sanitize-html';
 
@@ -44,7 +47,17 @@ const ServicesSection = dynamic(() => import('@/components/sections/ServicesSect
 });
 
 export default async function HomePage() {
-  const [dept, overview, programs, researchAreas, newsTop, eventsTop, noticesTop] = await Promise.all([
+  const [
+    dept,
+    overview,
+    programs,
+    researchAreas,
+    newsTop,
+    eventsTop,
+    noticesTop,
+    leadPopup,
+    allPrograms,
+  ] = await Promise.all([
     getDepartmentIdentity(),
     getHomeOverview(),
     getProgramsHomeTop(),
@@ -53,7 +66,13 @@ export default async function HomePage() {
     getNewsHomeTop(),
     getEventsHomeTop(),
     getNoticesHomeTop(),
+    getAdmissionLeadPopup(),
+    getProgramsWithCta(),
   ]);
+
+  // The popup offers whatever is currently published, so a new degree
+  // appears in the dropdown without touching this file.
+  const programmeOptions = allPrograms.map((p) => p.programName);
   return (
     <>
       <HeroSection
@@ -97,6 +116,29 @@ export default async function HomePage() {
       <EventsSection events={eventsTop} />
       <NewsSection news={newsTop} />
       <ServicesSection />
+
+      {/* Lead capture. Rendered only when switched on in admin and there
+          is at least one programme to pick from. */}
+      {leadPopup?.isEnabled && programmeOptions.length > 0 && (
+        <AdmissionLeadPopup
+          settings={{
+            heading:              leadPopup.heading,
+            subheading:           leadPopup.subheading,
+            nameLabel:            leadPopup.nameLabel,
+            namePlaceholder:      leadPopup.namePlaceholder,
+            phoneLabel:           leadPopup.phoneLabel,
+            phonePlaceholder:     leadPopup.phonePlaceholder,
+            programmeLabel:       leadPopup.programmeLabel,
+            programmePlaceholder: leadPopup.programmePlaceholder,
+            submitLabel:          leadPopup.submitLabel,
+            footnote:             leadPopup.footnote,
+            successMessage:       leadPopup.successMessage,
+            delaySeconds:         leadPopup.delaySeconds,
+            cooldownDays:         leadPopup.cooldownDays,
+          }}
+          programmes={programmeOptions}
+        />
+      )}
     </>
   );
 }

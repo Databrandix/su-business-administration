@@ -119,6 +119,10 @@ export const getProgramBySlug = cache(async (slug: string) => {
   });
 });
 
+export const getAdmissionLeadPopup = cache(async () => {
+  return prisma.admissionLeadPopup.findUnique({ where: { id: 'singleton' } });
+});
+
 export const getServiceCharter = cache(async () => {
   const [items, meta] = await Promise.all([
     prisma.serviceCharterItem.findMany({ orderBy: { displayOrder: 'asc' } }),

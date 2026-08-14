@@ -47,6 +47,7 @@ import {
   Rocket,
   ShieldCheck,
   Wrench,
+  UserPlus,
 } from 'lucide-react';
 import { useConfirm } from './ConfirmDialogProvider';
 
@@ -482,6 +483,16 @@ export default function Sidebar({
         >
           <Wrench size={16} />
           Business Club Applications
+        </Link>
+
+        {/* Homepage admission popup — the leads it captures plus the
+            settings that control it, in one operational inbox. */}
+        <Link
+          href="/admin/admission-leads"
+          className={linkClass(!!pathname?.startsWith('/admin/admission-leads'))}
+        >
+          <UserPlus size={16} />
+          Admission Leads
         </Link>
 
         {/* Newsletter — page CMS + subscriber list. Grouped together so

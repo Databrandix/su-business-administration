@@ -7,11 +7,32 @@ import { ChevronRight, Home } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import Container from '../ui/Container';
 
+// Words the naive capitaliser gets wrong: acronyms that must stay
+// upper-case ("bba" → "Bba") and multi-word names that a hyphenated slug
+// flattens ("mba-scm" → "Mba Scm").
+const SLUG_LABELS: Record<string, string> = {
+  'bba':                           'BBA',
+  'mba':                           'MBA',
+  'emba':                          'EMBA',
+  'mbm':                           'MBM',
+  'regular-mba':                   'Regular MBA',
+  'mba-supply-chain-management':   'MBA in Supply Chain Management',
+  'mba-apparel-merchandising':     'MBA in Apparel Merchandising',
+  'mba-textile-fashion-marketing': 'MBA in Textile & Fashion Marketing',
+  'faq':                           'FAQs',
+  'iqac':                          'IQAC',
+};
+
 const slugToTitle = (slug: string) =>
+  SLUG_LABELS[slug] ??
   slug
     .split('-')
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ');
+
+// Section prefixes that group pages in the URL but have no page of their
+// own — linking to them yields a 404, so the crumb renders as plain text.
+const NON_NAVIGABLE_SEGMENTS = new Set(['about', 'admission', 'student-society']);
 
 interface PageShellProps {
   title: string;
@@ -131,17 +152,22 @@ export default function PageShell({
               {segments.map((seg, idx) => {
                 const href = '/' + segments.slice(0, idx + 1).join('/');
                 const isLast = idx === segments.length - 1;
+                // A middle crumb is only a link when its path resolves to
+                // a real page; section prefixes like /about render as text.
+                const isLink = !isLast && !NON_NAVIGABLE_SEGMENTS.has(seg);
                 return (
                   <span key={href} className="inline-flex items-center gap-2">
                     <ChevronRight size={13} className="opacity-50" />
                     {isLast ? (
-                      <span className="text-button-yellow font-semibold">
+                      <span aria-current="page" className="text-button-yellow font-semibold">
                         {slugToTitle(seg)}
                       </span>
-                    ) : (
+                    ) : isLink ? (
                       <a href={href} className="hover:text-button-yellow transition-colors">
                         {slugToTitle(seg)}
                       </a>
+                    ) : (
+                      <span className="text-white/70">{slugToTitle(seg)}</span>
                     )}
                   </span>
                 );

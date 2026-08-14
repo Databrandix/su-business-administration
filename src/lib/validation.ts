@@ -5,7 +5,7 @@ const hexColor = z.string().regex(/^#[0-9a-fA-F]{6}$/, 'Must be a #RRGGBB hex co
 
 // Cloudinary public_id is opaque string; the URL is normally an https URL
 // but we keep both as plain strings so locally-seeded assets (e.g.
-// /assets/hero-1.webp) remain valid until first upload.
+// /assets/hero-2.webp) remain valid until first upload.
 const nullableString = z.string().nullable();
 const optionalNullableString = z.string().nullable().optional();
 

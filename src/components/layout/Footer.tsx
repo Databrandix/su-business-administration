@@ -183,6 +183,10 @@ export default function Footer({
             </div>
           </div>
 
+          {/* Mobile pairing — Quick Link + Campuses. Same trick as the
+              pair above: two columns on phones, then md:contents lets the
+              wrapper dissolve so both rejoin the parent grid on desktop. */}
+          <div className="grid grid-cols-2 gap-6 md:contents">
           <div>
             <h4 className="font-display font-bold text-lg mb-5 border-b border-accent pb-2 inline-block">Quick Link</h4>
             <ul className="space-y-3 text-sm text-white/70">
@@ -228,6 +232,7 @@ export default function Footer({
               </ul>
             </div>
           )}
+          </div>
         </div>
 
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">

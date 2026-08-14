@@ -132,17 +132,10 @@ export default async function ServiceCharterPage() {
                           <span className="block font-semibold text-gray-800">
                             {item.personName}
                           </span>
-                          {item.personPhone && (
-                            <span className="block">
-                              Contact No:{' '}
-                              <a
-                                href={`tel:${item.personPhone.replace(/[^\d+]/g, '')}`}
-                                className={LINK_CLASS}
-                              >
-                                {item.personPhone}
-                              </a>
-                            </span>
-                          )}
+                          {/* personPhone is deliberately not rendered: this
+                              page must not publish staff phone numbers. The
+                              field is still stored and editable in admin,
+                              so the office keeps it for internal reference. */}
                           {item.personEmail && (
                             <span className="block">
                               e-mail:{' '}

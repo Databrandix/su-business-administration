@@ -28,11 +28,11 @@ export default function DepartmentForm({ initial }: { initial: Initial }) {
     <form action={formAction} className="space-y-6">
       {/* ─── Homepage hero copy ─── */}
       <Card title="Homepage hero">
-        <TextField label="Program Name" name="programName"
+        <TextField label="Name" name="programName"
                    defaultValue={initial?.programName ?? ''} />
-        <TextField label="Program Short Form" name="programShortForm"
+        <TextField label="Short Form" name="programShortForm"
                    defaultValue={initial?.programShortForm ?? ''} />
-        <TextField label="Program Subtitle Name" name="programSubtitle"
+        <TextField label="Subtitle Name" name="programSubtitle"
                    defaultValue={initial?.programSubtitle ?? ''} />
       </Card>
 

@@ -168,7 +168,14 @@ export default function HeroSection({
             transition={{ delay: 0.9 }}
             className="flex items-center justify-center gap-2 text-white/90 text-xs md:text-[13px] font-medium tracking-wide"
           >
-            <a href="/" className="hover:text-button-yellow flex items-center gap-1.5 transition-colors">
+            {/* "Home" here means the university site, not this department
+                microsite — the visitor is already on the department home,
+                so linking to "/" would go nowhere. Inner-page breadcrumbs
+                (PageShell) still link to "/" as usual. */}
+            <a
+              href="https://su.edu.bd/"
+              className="hover:text-button-yellow flex items-center gap-1.5 transition-colors"
+            >
               <Home size={13} /> Home
             </a>
             <ChevronRight size={13} className="opacity-50" />

@@ -563,8 +563,13 @@ function NavGroup({
               const isHeading = !child.href && hasKids;
               const RowTag = isHeading ? 'span' : 'a';
 
+              // No `relative` on the row wrapper on purpose: the third-level
+              // flyout anchors to the dropdown panel instead of to this row,
+              // so it lines up with the top of the panel rather than hanging
+              // from whichever row is hovered. Hover still works because it
+              // is driven by `group/item`, not by positioning.
               return (
-                <div key={child.id} className="group/item relative">
+                <div key={child.id} className="group/item">
                   <RowTag
                     {...(isHeading
                       ? {}
@@ -604,9 +609,16 @@ function NavGroup({
                     </span>
                   </RowTag>
 
-                  {/* Third level — flyout to the right of the parent row. */}
+                  {/* Third level — flyout to the right of the dropdown panel.
+                      It anchors to the panel (the row wrapper deliberately
+                      has no `relative`), so its top edge lines up with the
+                      panel's top no matter which row is hovered. Anchoring to
+                      the row instead made a long list — Graduate has eight
+                      programmes — hang well below its trigger, and centring
+                      it on the row pushed it up over the navbar.
+                      max-h/overflow keep it inside short viewports. */}
                   {hasKids && (
-                    <div className="invisible absolute left-full top-0 z-50 -mt-2 ml-1 min-w-[260px] translate-x-2 rounded-lg border border-gray-100 bg-white py-2 opacity-0 shadow-premium transition-all duration-200 group-hover/item:visible group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-within/item:visible group-focus-within/item:translate-x-0 group-focus-within/item:opacity-100">
+                    <div className="invisible absolute left-full top-0 z-50 ml-1 min-w-[260px] max-h-[70vh] overflow-y-auto translate-x-2 rounded-lg border border-gray-100 bg-white py-2 opacity-0 shadow-premium transition-all duration-200 group-hover/item:visible group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-within/item:visible group-focus-within/item:translate-x-0 group-focus-within/item:opacity-100">
                       {kids.map((sub) => (
                         <a
                           key={sub.id}

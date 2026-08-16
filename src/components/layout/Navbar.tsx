@@ -563,13 +563,21 @@ function NavGroup({
               const isHeading = !child.href && hasKids;
               const RowTag = isHeading ? 'span' : 'a';
 
-              // No `relative` on the row wrapper on purpose: the third-level
-              // flyout anchors to the dropdown panel instead of to this row,
-              // so it lines up with the top of the panel rather than hanging
-              // from whichever row is hovered. Hover still works because it
-              // is driven by `group/item`, not by positioning.
+              // Where the third-level flyout anchors depends on how long it
+              // is. A short list hangs from its own row, which reads as
+              // belonging to that row ("Undergraduate" → BBA). A long one
+              // (Graduate has eight programmes) would then run far below its
+              // trigger, so it anchors to the dropdown panel instead and
+              // lines up with the panel's top. `relative` here is what scopes
+              // the flyout to the row; omitting it lets the panel take over
+              // as the positioning context.
+              const anchorToPanel = kids.length > 3;
+
               return (
-                <div key={child.id} className="group/item">
+                <div
+                  key={child.id}
+                  className={`group/item${anchorToPanel ? '' : ' relative'}`}
+                >
                   <RowTag
                     {...(isHeading
                       ? {}
@@ -609,16 +617,18 @@ function NavGroup({
                     </span>
                   </RowTag>
 
-                  {/* Third level — flyout to the right of the dropdown panel.
-                      It anchors to the panel (the row wrapper deliberately
-                      has no `relative`), so its top edge lines up with the
-                      panel's top no matter which row is hovered. Anchoring to
-                      the row instead made a long list — Graduate has eight
-                      programmes — hang well below its trigger, and centring
-                      it on the row pushed it up over the navbar.
-                      max-h/overflow keep it inside short viewports. */}
+                  {/* Third level — flyout to the right. A short list keeps the
+                      original row-anchored placement (`-mt-2` nudges it level
+                      with its row); a long one anchors to the dropdown panel
+                      so it does not hang far below its trigger. See
+                      `anchorToPanel` above. max-h/overflow keep it inside
+                      short viewports. */}
                   {hasKids && (
-                    <div className="invisible absolute left-full top-0 z-50 ml-1 min-w-[260px] max-h-[70vh] overflow-y-auto translate-x-2 rounded-lg border border-gray-100 bg-white py-2 opacity-0 shadow-premium transition-all duration-200 group-hover/item:visible group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-within/item:visible group-focus-within/item:translate-x-0 group-focus-within/item:opacity-100">
+                    <div
+                      className={`invisible absolute left-full top-0 z-50 ml-1 min-w-[260px] max-h-[70vh] overflow-y-auto translate-x-2 rounded-lg border border-gray-100 bg-white py-2 opacity-0 shadow-premium transition-all duration-200 group-hover/item:visible group-hover/item:translate-x-0 group-hover/item:opacity-100 group-focus-within/item:visible group-focus-within/item:translate-x-0 group-focus-within/item:opacity-100${
+                        anchorToPanel ? '' : ' -mt-2'
+                      }`}
+                    >
                       {kids.map((sub) => (
                         <a
                           key={sub.id}

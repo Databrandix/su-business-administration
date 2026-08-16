@@ -186,7 +186,14 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
   // Programs (Phase 1 — DB). Programs with a detail page link there;
   // the rest still fall back to the admission funnel.
   const programItems: SearchItem[] = programRows.map((p) => ({
-    title: `${p.programName} (${p.degreeCode})`,
+    // The degree code is appended so a search for "BBA" matches, but
+    // several programmes already carry it in their own name (e.g.
+    // "Masters in Bank Management (MBM)"). Appending unconditionally
+    // rendered those as "… (MBM) (MBM)", so it is only added when the
+    // name does not already contain it.
+    title: p.programName.includes(`(${p.degreeCode})`)
+      ? p.programName
+      : `${p.programName} (${p.degreeCode})`,
     description: p.description ?? undefined,
     href: p.slug ? `/programs/${p.slug}` : '/admission/requirements',
     type: 'Program',

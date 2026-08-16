@@ -179,9 +179,9 @@ export default function HeroSection({
               <Home size={13} /> Home
             </a>
             <ChevronRight size={13} className="opacity-50" />
-            <a href="#" className="hover:text-button-yellow transition-colors">Dept</a>
-            <ChevronRight size={13} className="opacity-50" />
-            <span className="text-button-yellow font-semibold">{breadcrumbLabel}</span>
+            <span aria-current="page" className="text-button-yellow font-semibold">
+              {breadcrumbLabel}
+            </span>
           </motion.div>
         </Container>
       </div>

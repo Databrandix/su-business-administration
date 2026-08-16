@@ -185,19 +185,31 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
 
   // Programs (Phase 1 — DB). Programs with a detail page link there;
   // the rest still fall back to the admission funnel.
-  const programItems: SearchItem[] = programRows.map((p) => ({
-    // The degree code is appended so a search for "BBA" matches, but
-    // several programmes already carry it in their own name (e.g.
-    // "Masters in Bank Management (MBM)"). Appending unconditionally
-    // rendered those as "… (MBM) (MBM)", so it is only added when the
-    // name does not already contain it.
-    title: p.programName.includes(`(${p.degreeCode})`)
+  const programItems: SearchItem[] = programRows.map((p) => {
+    // A programme whose name already ends in its own code keeps that name
+    // as the title; otherwise the degree code is appended so searching the
+    // code still matches.
+    const nameCarriesCode = /\([^()]+\)\s*$/.test(p.programName);
+    const title = nameCarriesCode
       ? p.programName
-      : `${p.programName} (${p.degreeCode})`,
-    description: p.description ?? undefined,
-    href: p.slug ? `/programs/${p.slug}` : '/admission/requirements',
-    type: 'Program',
-  }));
+      : `${p.programName} (${p.degreeCode})`;
+
+    return {
+      title,
+      // search() matches title and description only — never the slug. If a
+      // programme's name ends in a label that differs from its degreeCode,
+      // the code would be unfindable, so it is appended here instead.
+      // Descriptions are line-clamped in the results list, so the suffix
+      // stays matchable without crowding the card. No programme currently
+      // needs it — the guard exists so renaming one cannot silently make
+      // its code unsearchable.
+      description: nameCarriesCode && !title.includes(p.degreeCode)
+        ? [p.description, p.degreeCode].filter(Boolean).join(' · ')
+        : (p.description ?? undefined),
+      href: p.slug ? `/programs/${p.slug}` : '/admission/requirements',
+      type: 'Program' as const,
+    };
+  });
 
   // Research areas (Phase 1 — DB).
   const researchAreaItems: SearchItem[] = researchAreaRows.map((r) => ({

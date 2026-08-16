@@ -596,9 +596,18 @@ function NavGroup({
                           // they open a flyout, so they must feel interactive
                           // even though they navigate nowhere. A span has no
                           // pointer cursor of its own, so it is set here.
-                          `text-gray-700 hover:bg-accent/5 hover:text-accent${
-                            isHeading ? ' cursor-pointer' : ''
-                          }`
+                          //
+                          // A row that owns a flyout highlights on
+                          // group-hover/item rather than its own :hover, so it
+                          // stays lit while the pointer is over the flyout —
+                          // otherwise moving across to pick a programme drops
+                          // the highlight and the open panel looks orphaned.
+                          // Rows without a flyout keep plain :hover.
+                          `text-gray-700 ${
+                            hasKids
+                              ? 'group-hover/item:bg-accent/5 group-hover/item:text-accent group-focus-within/item:bg-accent/5 group-focus-within/item:text-accent'
+                              : 'hover:bg-accent/5 hover:text-accent'
+                          }${isHeading ? ' cursor-pointer' : ''}`
                     }`}
                     aria-haspopup={hasKids || undefined}
                   >

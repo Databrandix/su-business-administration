@@ -917,6 +917,14 @@ model ResearchPaper {
   // authorPosition — "1st", "Sole author", "2nd & corresponding", …
   authorPosition  String?
 
+  // Self-hosted copy of the paper, uploaded through the CMS rather than
+  // hot-linked from another site. Nullable: many papers are only
+  // reachable via `link` (a DOI or journal page), and a row can be saved
+  // before the file is to hand.
+  pdfUrl          String?  @db.Text
+  pdfPublicId     String?
+  pdfFileName     String?
+
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 

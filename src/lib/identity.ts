@@ -1,5 +1,6 @@
 import { cache } from 'react';
 import { prisma } from '@/lib/db';
+import type { ResearchPaper } from '@prisma/client';
 
 // React.cache() makes the per-request fetch deduplicated across
 // every Server Component that calls it during a single render
@@ -428,6 +429,109 @@ export const getResearchPapers = cache(
 
 export const getResearchPapersCount = cache(async () => {
   return prisma.researchPaper.count();
+});
+
+// ─────────────────────────────────────────────────────────────────
+//  Research papers
+//
+//  One row = one *credited author*, not one paper: a paper co-authored
+//  by two department members is entered twice, once per faculty member,
+//  so each name can carry its own authorRole / facultySlug /
+//  authorPosition and link to the right profile. The public page wants
+//  the opposite shape — one card per paper, listing every author — so
+//  the rows are grouped back together on read.
+//
+//  Grouping key is the normalised title (trimmed, case- and
+//  whitespace-insensitive) because that is the only field the duplicate
+//  rows reliably share; displayOrder, authorPosition and the per-author
+//  fields all differ by design.
+// ─────────────────────────────────────────────────────────────────
+
+export type ResearchPaperAuthor = {
+  name: string;
+  role: string | null;
+  facultySlug: string | null;
+  authorPosition: string | null;
+};
+
+export type GroupedResearchPaper = Omit<
+  ResearchPaper,
+  'authors' | 'authorRole' | 'facultySlug' | 'authorPosition'
+> & { authors: ResearchPaperAuthor[] };
+
+function groupResearchPapers(rows: readonly ResearchPaper[]): GroupedResearchPaper[] {
+  const byTitle = new Map<string, GroupedResearchPaper>();
+
+  for (const row of rows) {
+    const key = row.title.trim().toLowerCase().replace(/\s+/g, ' ');
+    const author: ResearchPaperAuthor = {
+      name: row.authors,
+      role: row.authorRole,
+      facultySlug: row.facultySlug,
+      authorPosition: row.authorPosition,
+    };
+
+    const existing = byTitle.get(key);
+    if (existing) {
+      // Same paper, another credited author. Everything else on the row
+      // describes the publication and is already set from the first row,
+      // so only the author list grows — except `link`, which the source
+      // data sometimes fills in on only one of the duplicate rows.
+      existing.authors.push(author);
+      if (!existing.link && row.link) {
+        existing.link = row.link;
+        existing.linkLabel = row.linkLabel;
+      }
+      // Same for the hosted PDF: whichever duplicate row carries the file
+      // wins, so a paper is downloadable even if only one of its author
+      // rows was given the upload.
+      if (!existing.pdfUrl && row.pdfUrl) {
+        existing.pdfUrl = row.pdfUrl;
+        existing.pdfPublicId = row.pdfPublicId;
+        existing.pdfFileName = row.pdfFileName;
+      }
+      continue;
+    }
+
+    const { authors: _n, authorRole: _r, facultySlug: _s, authorPosition: _p, ...paper } = row;
+    byTitle.set(key, { ...paper, authors: [author] });
+  }
+
+  // Authors within a card follow authorPosition ("1st", "2nd", …) so the
+  // first author leads, mirroring how the paper itself is credited. The
+  // leading integer is the sort key; rows without a parseable position
+  // ("Sole author", blank) sort last, keeping their displayOrder order.
+  for (const paper of byTitle.values()) {
+    paper.authors.sort((a, b) => rankAuthor(a) - rankAuthor(b));
+  }
+
+  return [...byTitle.values()];
+}
+
+function rankAuthor(a: ResearchPaperAuthor): number {
+  const n = Number.parseInt(a.authorPosition ?? '', 10);
+  return Number.isNaN(n) ? Number.MAX_SAFE_INTEGER : n;
+}
+
+// Grouped view for /research. Pagination happens over *cards*, not rows,
+// so the slice is applied after grouping — a page would otherwise hold
+// fewer than PAGE_SIZE cards whenever it contained a co-authored paper.
+export const getGroupedResearchPapers = cache(
+  async (opts?: { skip?: number; take?: number }) => {
+    const grouped = groupResearchPapers(
+      await prisma.researchPaper.findMany({ orderBy: { displayOrder: 'asc' } }),
+    );
+    const skip = opts?.skip ?? 0;
+    return opts?.take === undefined
+      ? grouped.slice(skip)
+      : grouped.slice(skip, skip + opts.take);
+  },
+);
+
+// Card count, i.e. distinct papers — drives the "N Publications" badge
+// and the page count. Deliberately not prisma.count(), which counts rows.
+export const getGroupedResearchPapersCount = cache(async () => {
+  return (await getGroupedResearchPapers()).length;
 });
 
 export const getBusRoutes = cache(async () => {

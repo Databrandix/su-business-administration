@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState, useEffect } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import type { ResearchPaper } from '@prisma/client';
 import {
@@ -9,6 +9,7 @@ import {
   updateResearchPaperAction,
   type ActionResult,
 } from '@/lib/admin-actions/research-papers';
+import ImageUploader from '@/components/admin/ImageUploader';
 
 type State = ActionResult | { ok: null };
 
@@ -16,6 +17,13 @@ export default function ResearchPaperForm({ initial }: { initial: ResearchPaper 
   const isEdit = !!initial;
   const action = isEdit ? updateResearchPaperAction.bind(null, initial!.id) : createResearchPaperAction;
   const [state, formAction, pending] = useActionState<State, FormData>(action, { ok: null });
+  // Mirrors the uploader into hidden inputs so the PDF triple posts with
+  // the rest of the form, the same way SyllabusForm handles its PDF.
+  const [pdf, setPdf] = useState({
+    url:      initial?.pdfUrl ?? '',
+    publicId: initial?.pdfPublicId ?? '',
+    fileName: initial?.pdfFileName ?? '',
+  });
 
   useEffect(() => {
     if (state.ok === true) toast.success(isEdit ? 'Research paper saved' : 'Research paper created');
@@ -89,6 +97,31 @@ export default function ResearchPaperForm({ initial }: { initial: ResearchPaper 
                      defaultValue={initial?.authorPosition ?? ''}
                      placeholder="1st / Sole author / 2nd &amp; corresponding" />
         </div>
+      </Card>
+
+      <Card title="PDF (optional, hosted here)">
+        <p className="text-xs text-gray-500 -mt-2">
+          Upload the paper so <code className="font-mono">/research</code> serves
+          our own copy instead of linking to another site, whose file paths can
+          move without warning. When both a PDF and a link are set, the card
+          shows a &quot;Download PDF&quot; button first and keeps the link
+          beside it. Cloudinary rejects files above 10&nbsp;MB.
+        </p>
+        <ImageUploader
+          kind="research-paper-pdf"
+          name="pdf"
+          accept="application/pdf"
+          initialUrl={pdf.url}
+          initialPublicId={pdf.publicId}
+          initialFileType="pdf"
+          initialFileName={pdf.fileName}
+          onChange={(url, publicId, meta) => {
+            setPdf({ url, publicId, fileName: meta?.fileName ?? '' });
+          }}
+        />
+        <input type="hidden" name="pdfUrl" value={pdf.url} />
+        <input type="hidden" name="pdfPublicId" value={pdf.publicId} />
+        <input type="hidden" name="pdfFileName" value={pdf.fileName} />
       </Card>
 
       {state.ok === false && (

@@ -47,7 +47,8 @@ type Kind =
   | 'journey-cta-hero'
   | 'home-overview-image'
   // Phase 17
-  | 'legal-hero';
+  | 'legal-hero'
+  | 'research-paper-pdf';
 
 // Per-kind ideal upload size hint, surfaced under every image field
 // so admins have a target before opening the file picker. null = no
@@ -84,6 +85,7 @@ const RECOMMENDED_SIZE_BY_KIND: Record<Kind, string | null> = {
   'journey-cta-hero':      'Landscape · 1920×800',
   'home-overview-image':   'Landscape · 1264×843 (3:2)',
   'legal-hero':            'Landscape banner · 1920×500',
+  'research-paper-pdf':    null,
 };
 
 /** Cloudinary's per-file limit on the current plan (10 MB). */

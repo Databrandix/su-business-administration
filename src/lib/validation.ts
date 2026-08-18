@@ -350,6 +350,9 @@ export const uploadKindSchema = z.enum([
   'legal-hero',
   // Homepage department-introduction image (HomeOverview singleton).
   'home-overview-image',
+  // Self-hosted research paper PDFs, so /research links to our own copy
+  // instead of hot-linking another site.
+  'research-paper-pdf',
 ]);
 
 export const uploadSignSchema = z.object({
@@ -804,6 +807,12 @@ export const researchPaperCreateSchema = z.object({
   quartile:        optionalNullableString,
   metrics:         optionalNullableString,
   authorPosition:  optionalNullableString,
+  // Self-hosted PDF, uploaded via the CMS (see uploadKindSchema
+  // 'research-paper-pdf'). Independent of `link`: a paper may have both a
+  // DOI and a local copy, either, or neither.
+  pdfUrl:          optionalNullableString,
+  pdfPublicId:     optionalNullableString,
+  pdfFileName:     optionalNullableString,
 });
 
 export const researchPaperUpdateSchema = researchPaperCreateSchema;

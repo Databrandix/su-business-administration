@@ -129,6 +129,7 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
       select: { slug: true, name: true, role: true, affiliation: true },
     }),
     prisma.researchPaper.findMany({
+      orderBy: { displayOrder: 'asc' },
       select: { title: true, authors: true, area: true },
     }),
     prisma.busRoute.findMany({
@@ -286,9 +287,22 @@ export const getSearchIndex = cache(async (): Promise<SearchItem[]> => {
   }));
 
   // Research papers (Phase 7 — DB)
-  const researchItems: SearchItem[] = researchPaperRows.map((r) => ({
+  //
+  // One row per credited author, so a co-authored paper appears twice in
+  // researchPaperRows. /research renders those as a single card, so the
+  // index collapses them the same way — otherwise searching the title
+  // returns the same publication twice. Co-authors are joined into the
+  // description so either name still matches the one entry.
+  const researchByTitle = new Map<string, { title: string; authors: string[] }>();
+  for (const r of researchPaperRows) {
+    const key = r.title.trim().toLowerCase().replace(/\s+/g, ' ');
+    const entry = researchByTitle.get(key);
+    if (entry) entry.authors.push(r.authors);
+    else researchByTitle.set(key, { title: r.title, authors: [r.authors] });
+  }
+  const researchItems: SearchItem[] = [...researchByTitle.values()].map((r) => ({
     title: r.title,
-    description: r.authors,
+    description: r.authors.join(', '),
     href: '/research',
     type: 'Research',
   }));

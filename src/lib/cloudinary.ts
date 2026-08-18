@@ -82,6 +82,9 @@ const KIND_TO_SUBFOLDER: Record<UploadKind, string> = {
   // Phase 17 — Privacy Policy + Terms & Conditions hero images (shared
   // Cloudinary folder; the same kind is used by both admin form fields).
   'legal-hero':            'legal/hero',
+  // Research paper PDFs served from our own Cloudinary account rather
+  // than hot-linked from su.edu.bd, whose paths are liable to move.
+  'research-paper-pdf':    'research/papers',
 };
 
 function folderFor(kind: UploadKind): string {

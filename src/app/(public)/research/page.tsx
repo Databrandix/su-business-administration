@@ -5,14 +5,15 @@ import {
   Users,
   FileText,
   ExternalLink,
+  Download,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
 import PageShell from '@/components/layout/PageShell';
 import Container from '@/components/ui/Container';
 import {
-  getResearchPapers,
-  getResearchPapersCount,
+  getGroupedResearchPapers,
+  getGroupedResearchPapersCount,
   getPageHero,
 } from '@/lib/identity';
 
@@ -35,14 +36,16 @@ export default async function ResearchPage({
   const rawPage = Array.isArray(sp.page) ? sp.page[0] : sp.page;
   const requestedPage = Math.max(1, Number.parseInt(rawPage ?? '1', 10) || 1);
 
-  const total = await getResearchPapersCount();
+  // Counts distinct papers, not rows: a co-authored paper is stored as
+  // one row per author and renders as a single card.
+  const total = await getGroupedResearchPapersCount();
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
   // A ?page= beyond the end would render an empty grid, so clamp it.
   const pageNum = Math.min(requestedPage, totalPages);
   const skip = (pageNum - 1) * PAGE_SIZE;
 
   const [papers, hero] = await Promise.all([
-    getResearchPapers({ skip, take: PAGE_SIZE }),
+    getGroupedResearchPapers({ skip, take: PAGE_SIZE }),
     getPageHero('research'),
   ]);
 
@@ -103,22 +106,40 @@ export default async function ResearchPage({
                     )}
                   </div>
 
+                  {/* One entry per credited author. Papers written by two
+                      department members arrive as separate rows and are
+                      grouped upstream, so this list is usually length 1. */}
                   <div className="flex items-start gap-2 mb-2 text-[13px] leading-[1.6]">
                     <Users size={13} className="shrink-0 mt-1 text-accent" />
-                    <div className="flex flex-col">
-                      {paper.facultySlug ? (
-                        <Link
-                          href={`/faculty-member/${paper.facultySlug}`}
-                          className="text-gray-700 font-medium hover:text-accent hover:underline"
-                        >
-                          {paper.authors}
-                        </Link>
-                      ) : (
-                        <span className="text-gray-700 font-medium">{paper.authors}</span>
-                      )}
-                      {paper.authorRole && (
-                        <span className="text-[12px] text-gray-500">{paper.authorRole}</span>
-                      )}
+                    <div className="flex flex-col gap-2">
+                      {paper.authors.map((author, i) => (
+                        <div key={`${author.facultySlug ?? author.name}-${i}`} className="flex flex-col">
+                          <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                            {author.facultySlug ? (
+                              <Link
+                                href={`/faculty-member/${author.facultySlug}`}
+                                className="text-gray-700 font-medium hover:text-accent hover:underline"
+                              >
+                                {author.name}
+                              </Link>
+                            ) : (
+                              <span className="text-gray-700 font-medium">{author.name}</span>
+                            )}
+                            {author.authorPosition && (
+                              <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[11px] font-medium text-gray-600">
+                                {/* Source values are inconsistent — "1st", "3rd author",
+                                    "Sole author" — so only append the word when absent. */}
+                                {/author/i.test(author.authorPosition)
+                                  ? author.authorPosition
+                                  : `${author.authorPosition} author`}
+                              </span>
+                            )}
+                          </span>
+                          {author.role && (
+                            <span className="text-[12px] text-gray-500">{author.role}</span>
+                          )}
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -131,7 +152,7 @@ export default async function ResearchPage({
 
                   {/* Journal metadata pills — each renders only when set,
                       so non-indexed papers stay visually uncluttered. */}
-                  {(paper.indexing || paper.quartile || paper.metrics || paper.authorPosition) && (
+                  {(paper.indexing || paper.quartile || paper.metrics) && (
                     <div className="flex flex-wrap gap-2 mt-3">
                       {paper.quartile && (
                         <span className="inline-flex items-center rounded-full bg-accent/10 px-2.5 py-1 text-[11.5px] font-bold text-accent">
@@ -148,29 +169,36 @@ export default async function ResearchPage({
                           {paper.metrics}
                         </span>
                       )}
-                      {paper.authorPosition && (
-                        <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-[11.5px] font-medium text-gray-600">
-                          {/* Source values are inconsistent — "1st", "3rd author",
-                              "Sole author" — so only append the word when absent. */}
-                          {/author/i.test(paper.authorPosition)
-                            ? paper.authorPosition
-                            : `${paper.authorPosition} author`}
-                        </span>
-                      )}
                     </div>
                   )}
 
-                  {paper.link && (
-                    <div className="mt-4">
-                      <a
-                        href={paper.link}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        className="group/link inline-flex items-center gap-1.5 rounded-full border border-primary/20 px-4 py-1.5 text-[12.5px] font-semibold text-primary transition-colors hover:border-accent hover:bg-accent hover:text-white"
-                      >
-                        <ExternalLink size={13} />
-                        {paper.linkLabel || 'View Publication'}
-                      </a>
+                  {/* Our own hosted copy leads; the publisher link stays
+                      alongside it so the DOI / journal page is still one
+                      click away. Either may be absent. */}
+                  {(paper.pdfUrl || paper.link) && (
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {paper.pdfUrl && (
+                        <a
+                          href={paper.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-1.5 text-[12.5px] font-semibold text-white transition-colors hover:bg-accent"
+                        >
+                          <Download size={13} />
+                          Download PDF
+                        </a>
+                      )}
+                      {paper.link && (
+                        <a
+                          href={paper.link}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                          className="group/link inline-flex items-center gap-1.5 rounded-full border border-primary/20 px-4 py-1.5 text-[12.5px] font-semibold text-primary transition-colors hover:border-accent hover:bg-accent hover:text-white"
+                        >
+                          <ExternalLink size={13} />
+                          {paper.linkLabel || 'View Publication'}
+                        </a>
+                      )}
                     </div>
                   )}
                 </div>
